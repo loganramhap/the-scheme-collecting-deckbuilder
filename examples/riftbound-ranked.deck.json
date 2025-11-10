@@ -1,0 +1,46 @@
+{
+  "game": "riftbound",
+  "format": "ranked",
+  "name": "Shadowfen Aggro",
+  "cards": [
+    {
+      "id": "shadowfen-assassin",
+      "count": 3,
+      "name": "Shadowfen Assassin"
+    },
+    {
+      "id": "rift-blade",
+      "count": 4,
+      "name": "Rift Blade"
+    },
+    {
+      "id": "void-walker",
+      "count": 3,
+      "name": "Void Walker"
+    },
+    {
+      "id": "dark-ritual",
+      "count": 2,
+      "name": "Dark Ritual"
+    },
+    {
+      "id": "shadow-strike",
+      "count": 4,
+      "name": "Shadow Strike"
+    }
+  ],
+  "sideboard": [
+    {
+      "id": "rift-shield",
+      "count": 2,
+      "name": "Rift Shield"
+    }
+  ],
+  "metadata": {
+    "author": "deckbuilder",
+    "created": "2025-11-10",
+    "updated": "2025-11-10",
+    "description": "Fast aggro deck using Shadowfen faction cards",
+    "tags": ["aggro", "shadowfen", "ranked"]
+  }
+}

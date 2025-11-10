@@ -1,0 +1,40 @@
+{
+  "game": "mtg",
+  "format": "commander",
+  "name": "Najeela, the Blade-Blossom",
+  "cards": [
+    {
+      "id": "najeela-the-blade-blossom",
+      "count": 1,
+      "name": "Najeela, the Blade-Blossom"
+    },
+    {
+      "id": "sol-ring",
+      "count": 1,
+      "name": "Sol Ring"
+    },
+    {
+      "id": "command-tower",
+      "count": 1,
+      "name": "Command Tower"
+    },
+    {
+      "id": "arcane-signet",
+      "count": 1,
+      "name": "Arcane Signet"
+    },
+    {
+      "id": "chromatic-lantern",
+      "count": 1,
+      "name": "Chromatic Lantern"
+    }
+  ],
+  "sideboard": [],
+  "metadata": {
+    "author": "deckbuilder",
+    "created": "2025-11-10",
+    "updated": "2025-11-10",
+    "description": "Five-color warrior tribal deck focused on combat and extra combat steps",
+    "tags": ["tribal", "warriors", "five-color", "competitive"]
+  }
+}

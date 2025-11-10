@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Deck Viewer</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #1a1a1a;
+            color: #e0e0e0;
+            padding: 20px;
+            margin: 0;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .header {
+            margin-bottom: 30px;
+        }
+        .deck-info {
+            background: #2a2a2a;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        .card-list {
+            background: #2a2a2a;
+            padding: 20px;
+            border-radius: 8px;
+        }
+        .card-item {
+            padding: 10px;
+            background: #333;
+            margin-bottom: 8px;
+            border-radius: 4px;
+            display: flex;
+            justify-content: space-between;
+        }
+        .btn {
+            padding: 10px 20px;
+            background: #0066cc;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+        }
+        .btn:hover {
+            background: #0052a3;
+        }
+        .validation {
+            background: #2a2a2a;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+        .error {
+            color: #f44336;
+        }
+        .warning {
+            color: #ff9800;
+        }
+        .success {
+            color: #4caf50;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1 id="deckName">Loading deck...</h1>
+            <p id="deckMeta"></p>
+            <a href="#" class="btn" id="openInApp">Open in DeckBuilder App</a>
+        </div>
+
+        <div class="deck-info">
+            <h2>Deck Information</h2>
+            <div id="deckDetails"></div>
+        </div>
+
+        <div class="card-list">
+            <h2>Cards (<span id="totalCards">0</span>)</h2>
+            <div id="cardsList"></div>
+        </div>
+
+        <div class="validation">
+            <h2>Validation</h2>
+            <div id="validationResults">Click validate to check deck legality</div>
+            <button class="btn" onclick="validateDeck()" style="margin-top: 10px;">Validate Deck</button>
+        </div>
+    </div>
+
+    <script>
+        let currentDeck = null;
+
+        // Parse deck from URL parameter or embedded data
+        function loadDeck() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const deckData = urlParams.get('deck');
+            
+            if (deckData) {
+                try {
+                    currentDeck = JSON.parse(decodeURIComponent(deckData));
+                    renderDeck();
+                } catch (e) {
+                    console.error('Failed to parse deck:', e);
+                    document.getElementById('deckName').textContent = 'Error loading deck';
+                }
+            }
+        }
+
+        function renderDeck() {
+            if (!currentDeck) return;
+
+            document.getElementById('deckName').textContent = currentDeck.name;
+            document.getElementById('deckMeta').textContent = 
+                `${currentDeck.game.toUpperCase()} • ${currentDeck.format} • by ${currentDeck.metadata.author}`;
+
+            const totalCards = currentDeck.cards.reduce((sum, card) => sum + card.count, 0);
+            document.getElementById('totalCards').textContent = totalCards;
+
+            document.getElementById('deckDetails').innerHTML = `
+                <p><strong>Game:</strong> ${currentDeck.game}</p>
+                <p><strong>Format:</strong> ${currentDeck.format}</p>
+                <p><strong>Author:</strong> ${currentDeck.metadata.author}</p>
+                <p><strong>Created:</strong> ${currentDeck.metadata.created}</p>
+                ${currentDeck.metadata.description ? `<p><strong>Description:</strong> ${currentDeck.metadata.description}</p>` : ''}
+            `;
+
+            const cardsList = document.getElementById('cardsList');
+            cardsList.innerHTML = currentDeck.cards.map(card => `
+                <div class="card-item">
+                    <span>${card.count}x ${card.name || card.id}</span>
+                </div>
+            `).join('');
+
+            // Set up "Open in App" link
+            const appUrl = `http://localhost:5173/deck/${window.location.pathname}`;
+            document.getElementById('openInApp').href = appUrl;
+        }
+
+        async function validateDeck() {
+            if (!currentDeck) return;
+
+            const resultsDiv = document.getElementById('validationResults');
+            resultsDiv.innerHTML = 'Validating...';
+
+            try {
+                const response = await fetch(`/api/deck/validate?content=${encodeURIComponent(JSON.stringify(currentDeck))}`);
+                const validation = await response.json();
+
+                let html = `<p class="${validation.valid ? 'success' : 'error'}">
+                    ${validation.valid ? '✓ Deck is valid' : '✗ Deck has errors'}
+                </p>`;
+
+                if (validation.errors.length > 0) {
+                    html += '<div style="margin-top: 10px;"><strong>Errors:</strong><ul>';
+                    validation.errors.forEach(error => {
+                        html += `<li class="error">${error}</li>`;
+                    });
+                    html += '</ul></div>';
+                }
+
+                if (validation.warnings.length > 0) {
+                    html += '<div style="margin-top: 10px;"><strong>Warnings:</strong><ul>';
+                    validation.warnings.forEach(warning => {
+                        html += `<li class="warning">${warning}</li>`;
+                    });
+                    html += '</ul></div>';
+                }
+
+                resultsDiv.innerHTML = html;
+            } catch (e) {
+                resultsDiv.innerHTML = `<p class="error">Validation failed: ${e.message}</p>`;
+            }
+        }
+
+        // Load deck on page load
+        loadDeck();
+    </script>
+</body>
+</html>
