@@ -9,31 +9,28 @@ const ADMIN_TOKEN = process.env.GITEA_ADMIN_TOKEN;
 router.post('/user', async (req, res) => {
   const { username, email, password } = req.body;
 
-  if (!ADMIN_TOKEN) {
-    return res.status(500).json({ error: 'Admin token not configured' });
-  }
-
   try {
-    // Create user
+    // Try public registration API first (doesn't require admin token)
     const userResponse = await axios.post(
-      `${GITEA_URL}/api/v1/admin/users`,
+      `${GITEA_URL}/user/sign_up`,
+      new URLSearchParams({
+        user_name: username,
+        email: email,
+        password: password,
+        retype: password,
+      }),
       {
-        username,
-        email,
-        password,
-        must_change_password: false,
-        send_notify: false,
-      },
-      {
-        headers: { Authorization: `token ${ADMIN_TOKEN}` },
+        headers: { 
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        maxRedirects: 0,
+        validateStatus: (status) => status === 302 || status === 200,
       }
     );
 
-    // Don't create a "decks" repo - we'll create one repo per deck instead
-
     res.json({
       success: true,
-      user: userResponse.data,
+      message: 'Account created successfully',
     });
   } catch (error) {
     console.error('User provisioning failed:', error.response?.data || error.message);
