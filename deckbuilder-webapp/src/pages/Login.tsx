@@ -1,14 +1,19 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../store/auth';
+import axios from 'axios';
 
 const GITEA_URL = import.meta.env.VITE_GITEA_URL || 'http://localhost:3000';
-const CLIENT_ID = import.meta.env.VITE_GITEA_CLIENT_ID;
-const REDIRECT_URI = import.meta.env.VITE_REDIRECT_URI || 'http://localhost:5173/auth/callback';
 
 export default function Login() {
   const navigate = useNavigate();
-  const { isAuthenticated, token } = useAuthStore();
+  const { isAuthenticated, token, login } = useAuthStore();
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+  const [isSignUp, setIsSignUp] = useState(false);
 
   useEffect(() => {
     // If already authenticated, redirect to dashboard
@@ -17,45 +22,171 @@ export default function Login() {
     }
   }, [isAuthenticated, token, navigate]);
 
-  const handleLogin = () => {
-    if (!CLIENT_ID) {
-      alert('OAuth Client ID is not configured. Please check your .env file and rebuild.');
-      console.error('Missing VITE_GITEA_CLIENT_ID in environment variables');
-      return;
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError('');
+    setLoading(true);
+
+    try {
+      if (isSignUp) {
+        // Create new account
+        await axios.post(`${GITEA_URL}/api/v1/user/sign_up`, {
+          username,
+          email,
+          password,
+        });
+        
+        // Auto-login after signup
+        const { data } = await axios.post(`${GITEA_URL}/api/v1/users/${username}/tokens`, {
+          name: `deckbuilder-${Date.now()}`,
+        }, {
+          auth: {
+            username,
+            password,
+          },
+        });
+
+        await login(data.sha1);
+        navigate('/');
+      } else {
+        // Login
+        const { data } = await axios.post(`${GITEA_URL}/api/v1/users/${username}/tokens`, {
+          name: `deckbuilder-${Date.now()}`,
+        }, {
+          auth: {
+            username,
+            password,
+          },
+        });
+
+        await login(data.sha1);
+        navigate('/');
+      }
+    } catch (err: any) {
+      console.error('Auth failed:', err);
+      if (err.response?.status === 401) {
+        setError('Invalid username or password');
+      } else if (err.response?.status === 422) {
+        setError('Username already exists or invalid email');
+      } else {
+        setError(isSignUp ? 'Sign up failed. Please try again.' : 'Login failed. Please try again.');
+      }
+    } finally {
+      setLoading(false);
     }
-    
-    // Add prompt=login to force re-authentication and show authorization screen
-    const authUrl = `${GITEA_URL}/login/oauth/authorize?client_id=${CLIENT_ID}&redirect_uri=${encodeURIComponent(REDIRECT_URI)}&response_type=code&state=random_state&prompt=login`;
-    window.location.href = authUrl;
   };
 
   return (
     <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', background: 'linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%)' }}>
-      <div className="card" style={{ maxWidth: '450px', textAlign: 'center', padding: '40px' }}>
-        <div style={{ fontSize: '48px', marginBottom: '20px' }}>🃏</div>
-        <h1 style={{ marginBottom: '10px', fontSize: '32px' }}>DeckBuilder</h1>
-        <p style={{ marginBottom: '30px', color: '#999', fontSize: '16px' }}>
-          Git-powered deck management for MTG and Riftbound
-        </p>
-        <button 
-          className="btn btn-primary" 
-          onClick={handleLogin} 
-          style={{ 
-            width: '100%', 
-            padding: '15px',
-            fontSize: '16px',
-            fontWeight: '600',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            gap: '10px'
-          }}
-        >
-          <span>🔐</span>
-          Sign in with Gitea
-        </button>
-        <p style={{ marginTop: '20px', fontSize: '12px', color: '#666' }}>
-          Secure authentication via your Gitea account
+      <div className="card" style={{ maxWidth: '450px', width: '100%', padding: '40px' }}>
+        <div style={{ textAlign: 'center', marginBottom: '30px' }}>
+          <div style={{ fontSize: '48px', marginBottom: '15px' }}>🃏</div>
+          <h1 style={{ marginBottom: '10px', fontSize: '32px' }}>DeckBuilder</h1>
+          <p style={{ color: '#999', fontSize: '16px' }}>
+            Version-controlled deck management
+          </p>
+        </div>
+
+        <form onSubmit={handleSubmit}>
+          <div style={{ marginBottom: '20px' }}>
+            <label style={{ display: 'block', marginBottom: '8px', fontSize: '14px', fontWeight: '500' }}>
+              Username
+            </label>
+            <input
+              type="text"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              placeholder="Choose a username"
+              required
+              disabled={loading}
+              style={{ width: '100%', padding: '12px', fontSize: '14px' }}
+            />
+          </div>
+
+          {isSignUp && (
+            <div style={{ marginBottom: '20px' }}>
+              <label style={{ display: 'block', marginBottom: '8px', fontSize: '14px', fontWeight: '500' }}>
+                Email
+              </label>
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="your@email.com"
+                required
+                disabled={loading}
+                style={{ width: '100%', padding: '12px', fontSize: '14px' }}
+              />
+            </div>
+          )}
+
+          <div style={{ marginBottom: '25px' }}>
+            <label style={{ display: 'block', marginBottom: '8px', fontSize: '14px', fontWeight: '500' }}>
+              Password
+            </label>
+            <input
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder={isSignUp ? "Choose a strong password" : "Enter your password"}
+              required
+              disabled={loading}
+              style={{ width: '100%', padding: '12px', fontSize: '14px' }}
+            />
+          </div>
+
+          {error && (
+            <div style={{ 
+              padding: '12px', 
+              marginBottom: '20px', 
+              background: '#f443361a', 
+              border: '1px solid #f44336',
+              borderRadius: '6px',
+              color: '#f44336',
+              fontSize: '14px'
+            }}>
+              {error}
+            </div>
+          )}
+
+          <button 
+            type="submit"
+            className="btn btn-primary" 
+            disabled={loading}
+            style={{ 
+              width: '100%', 
+              padding: '15px',
+              fontSize: '16px',
+              fontWeight: '600',
+            }}
+          >
+            {loading ? (isSignUp ? 'Creating account...' : 'Signing in...') : (isSignUp ? 'Create Account' : 'Sign In')}
+          </button>
+
+          <div style={{ marginTop: '20px', textAlign: 'center' }}>
+            <button
+              type="button"
+              onClick={() => {
+                setIsSignUp(!isSignUp);
+                setError('');
+              }}
+              disabled={loading}
+              style={{
+                background: 'none',
+                border: 'none',
+                color: '#0066cc',
+                cursor: 'pointer',
+                fontSize: '14px',
+                textDecoration: 'underline',
+              }}
+            >
+              {isSignUp ? 'Already have an account? Sign in' : "Don't have an account? Sign up"}
+            </button>
+          </div>
+        </form>
+
+        <p style={{ marginTop: '25px', fontSize: '12px', color: '#666', textAlign: 'center' }}>
+          🔒 Your decks are automatically backed up with full version history
         </p>
       </div>
     </div>
