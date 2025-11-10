@@ -110,8 +110,6 @@ export default function Login() {
               placeholder="Choose a username"
               required
               disabled={loading}
-              pattern="[a-zA-Z0-9_\-]+"
-              title="Username can only contain letters, numbers, underscores, and hyphens"
               style={{ width: '100%', padding: '12px', fontSize: '14px' }}
             />
             {isSignUp && (
