@@ -1,0 +1,103 @@
+.visual-card-browser {
+  display: flex;
+  gap: 20px;
+  height: 100%;
+  min-height: 600px;
+}
+
+.browser-sidebar {
+  flex: 0 0 280px;
+  overflow-y: auto;
+}
+
+.browser-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.browser-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 20px;
+  background: white;
+  border-radius: 8px;
+  margin-bottom: 16px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.browser-header h3 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: #333;
+}
+
+.card-count {
+  font-size: 14px;
+  color: #666;
+  font-weight: 500;
+}
+
+/* Responsive design */
+@media (max-width: 1024px) {
+  .visual-card-browser {
+    flex-direction: column;
+  }
+
+  .browser-sidebar {
+    flex: 0 0 auto;
+    max-height: 400px;
+  }
+}
+
+@media (max-width: 768px) {
+  .visual-card-browser {
+    gap: 15px;
+    min-height: 500px;
+  }
+
+  .browser-sidebar {
+    max-height: 300px;
+  }
+
+  .browser-header {
+    padding: 12px 16px;
+  }
+
+  .browser-header h3 {
+    font-size: 16px;
+  }
+
+  .card-count {
+    font-size: 13px;
+  }
+}
+
+@media (max-width: 640px) {
+  .visual-card-browser {
+    gap: 12px;
+    min-height: 400px;
+  }
+
+  .browser-sidebar {
+    max-height: 250px;
+  }
+
+  .browser-header {
+    padding: 10px 12px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .browser-header h3 {
+    font-size: 14px;
+  }
+
+  .card-count {
+    font-size: 12px;
+  }
+}

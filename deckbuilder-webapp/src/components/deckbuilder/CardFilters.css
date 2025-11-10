@@ -1,0 +1,272 @@
+.card-filters {
+  background: #f8f9fa;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.card-filters-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.card-filters-header h3 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: #333;
+}
+
+.filter-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.active-filter-count {
+  font-size: 14px;
+  color: #666;
+  font-weight: 500;
+}
+
+.clear-filters-btn {
+  background: #dc3545;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 6px 12px;
+  font-size: 13px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.clear-filters-btn:hover {
+  background: #c82333;
+}
+
+.filter-section {
+  margin-bottom: 20px;
+}
+
+.filter-section:last-child {
+  margin-bottom: 0;
+}
+
+.filter-section label {
+  display: block;
+  font-size: 14px;
+  font-weight: 600;
+  color: #555;
+  margin-bottom: 8px;
+}
+
+.search-input {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+  transition: border-color 0.2s;
+}
+
+.search-input:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+}
+
+.filter-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.filter-chip {
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 20px;
+  padding: 6px 14px;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.2s;
+  color: #555;
+}
+
+.filter-chip:hover {
+  border-color: #007bff;
+  color: #007bff;
+}
+
+.filter-chip.active {
+  background: #007bff;
+  border-color: #007bff;
+  color: white;
+}
+
+.cost-range-inputs {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.cost-input {
+  flex: 1;
+  padding: 8px 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+  transition: border-color 0.2s;
+}
+
+.cost-input:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+}
+
+.cost-separator {
+  font-size: 14px;
+  color: #666;
+}
+
+/* Color-specific styles for MTG colors */
+.color-options {
+  gap: 6px;
+}
+
+.color-chip {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  padding: 0;
+  font-weight: bold;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.color-chip.color-w {
+  background: #f8f6d8;
+  border-color: #e6e0a8;
+  color: #5a5a3a;
+}
+
+.color-chip.color-w.active {
+  background: #f0e68c;
+  border-color: #daa520;
+}
+
+.color-chip.color-u {
+  background: #d0e8f2;
+  border-color: #a0c8e0;
+  color: #1a4d6d;
+}
+
+.color-chip.color-u.active {
+  background: #4682b4;
+  border-color: #1e5a7a;
+  color: white;
+}
+
+.color-chip.color-b {
+  background: #d8d8d8;
+  border-color: #a8a8a8;
+  color: #2a2a2a;
+}
+
+.color-chip.color-b.active {
+  background: #4a4a4a;
+  border-color: #2a2a2a;
+  color: white;
+}
+
+.color-chip.color-r {
+  background: #f8d8d8;
+  border-color: #e0a8a8;
+  color: #6d1a1a;
+}
+
+.color-chip.color-r.active {
+  background: #dc143c;
+  border-color: #a01020;
+  color: white;
+}
+
+.color-chip.color-g {
+  background: #d8f8d8;
+  border-color: #a8e0a8;
+  color: #1a6d1a;
+}
+
+.color-chip.color-g.active {
+  background: #228b22;
+  border-color: #156015;
+  color: white;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .card-filters {
+    padding: 15px;
+  }
+
+  .card-filters-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .filter-chip {
+    font-size: 12px;
+    padding: 5px 12px;
+  }
+
+  .color-chip {
+    width: 32px;
+    height: 32px;
+    font-size: 14px;
+  }
+  
+  .filter-section label {
+    font-size: 13px;
+  }
+  
+  .search-input,
+  .cost-input {
+    font-size: 13px;
+    padding: 8px 10px;
+  }
+}
+
+@media (max-width: 640px) {
+  .card-filters {
+    padding: 12px;
+  }
+  
+  .card-filters-header h3 {
+    font-size: 16px;
+  }
+  
+  .filter-chip {
+    font-size: 11px;
+    padding: 4px 10px;
+  }
+  
+  .color-chip {
+    width: 28px;
+    height: 28px;
+    font-size: 12px;
+  }
+  
+  .cost-range-inputs {
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  .cost-separator {
+    display: none;
+  }
+}

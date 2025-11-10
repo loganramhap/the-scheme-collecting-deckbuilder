@@ -1,93 +1,152 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { giteaService } from '../services/gitea';
-import { cardService } from '../services/cards';
-import { validationService } from '../services/validation';
 import { useDeckStore } from '../store/deck';
-import type { Deck, ValidationResult } from '../types/deck';
-import type { MTGCard } from '../types/card';
+import { useAutoSave } from '../hooks/useAutoSave';
+import { useKeyboardShortcuts } from '../hooks/useKeyboardShortcuts';
+import SaveStatusIndicator from '../components/deckbuilder/SaveStatusIndicator';
+import ManualSaveButton from '../components/deckbuilder/ManualSaveButton';
+import { RiftboundBuilder } from '../components/deckbuilder/RiftboundBuilder';
+import { MTGCommanderBuilder } from '../components/deckbuilder/MTGCommanderBuilder';
+import { DeckStatistics } from '../components/deckbuilder/DeckStatistics';
+import { KeyboardShortcutsHelp } from '../components/deckbuilder/KeyboardShortcutsHelp';
+import type { Deck } from '../types/deck';
+import type { MTGCard, RiftboundCard } from '../types/card';
 
 export default function DeckEditor() {
   const { owner, repo, path } = useParams<{ owner: string; repo: string; path: string }>();
-  const { currentDeck, setDeck, addCard, removeCard, updateCardCount, isDirty, markClean } = useDeckStore();
+  const { currentDeck, setDeck, isDirty, markClean } = useDeckStore();
   const [loading, setLoading] = useState(true);
-  const [validation, setValidation] = useState<ValidationResult | null>(null);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [searchResults, setSearchResults] = useState<MTGCard[]>([]);
-  const [commitMessage, setCommitMessage] = useState('');
-  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [availableCards, setAvailableCards] = useState<(MTGCard | RiftboundCard)[]>([]);
+
+  // Auto-save hook
+  const { status: autoSaveStatus, triggerSave } = useAutoSave(
+    currentDeck,
+    isDirty,
+    owner,
+    repo,
+    path,
+    {
+      enabled: true,
+      debounceMs: 30000, // 30 seconds
+      onSaveSuccess: () => {
+        markClean();
+      },
+      onSaveError: (error) => {
+        console.error('Auto-save failed:', error);
+      },
+    }
+  );
+
+  const loadDeck = async () => {
+    if (!owner || !repo || !path) return;
+
+    setLoading(true);
+    setError(null);
+
+    try {
+      const fileContent = await giteaService.getFileContent(owner, repo, path);
+      const content = atob(fileContent.content);
+      const deck: Deck = JSON.parse(content);
+      setDeck(deck);
+      
+      // Load available cards based on game type
+      if (deck.game === 'mtg') {
+        // For MTG, we'll load cards on-demand through search
+        // For now, set empty array - cards will be loaded via search
+        setAvailableCards([]);
+      } else if (deck.game === 'riftbound') {
+        // Load Riftbound cards from a JSON file or API
+        // For now, use empty array - this should be loaded from a data source
+        setAvailableCards([]);
+      }
+    } catch (err) {
+      console.error('Failed to load deck:', err);
+      setError(err instanceof Error ? err.message : 'Failed to load deck');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    const loadDeck = async () => {
-      if (!owner || !repo || !path) return;
-
-      try {
-        const fileContent = await giteaService.getFileContent(owner, repo, path);
-        const content = atob(fileContent.content);
-        const deck: Deck = JSON.parse(content);
-        setDeck(deck);
-      } catch (error) {
-        console.error('Failed to load deck:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
     loadDeck();
   }, [owner, repo, path, setDeck]);
 
-  const handleSearch = async () => {
-    if (!searchQuery.trim()) return;
+  const manualSaveButtonRef = useRef<HTMLButtonElement>(null);
 
-    try {
-      const results = await cardService.searchMTGCards(searchQuery);
-      setSearchResults(results.slice(0, 10));
-    } catch (error) {
-      console.error('Search failed:', error);
-    }
+  const handleManualSave = async (message: string) => {
+    await triggerSave(message);
   };
 
-  const handleAddCard = (card: MTGCard) => {
-    addCard({
-      id: card.id,
-      count: 1,
-      name: card.name,
-      image_url: card.image_uris?.normal,
-    });
-    setSearchResults([]);
-    setSearchQuery('');
+  const handleDeckUpdate = (updatedDeck: Deck) => {
+    setDeck(updatedDeck);
   };
 
-  const handleValidate = async () => {
-    if (!currentDeck) return;
-
-    const result = currentDeck.game === 'mtg'
-      ? await validationService.validateMTGDeck(currentDeck)
-      : validationService.validateRiftboundDeck(currentDeck);
-
-    setValidation(result);
-  };
-
-  const handleSave = async () => {
-    if (!owner || !repo || !path || !currentDeck || !commitMessage.trim()) return;
-
-    setSaving(true);
-    try {
-      const content = JSON.stringify(currentDeck, null, 2);
-      await giteaService.createOrUpdateFile(owner, repo, path, content, commitMessage);
-      markClean();
-      setCommitMessage('');
-      alert('Deck saved successfully!');
-    } catch (error) {
-      console.error('Failed to save deck:', error);
-      alert('Failed to save deck');
-    } finally {
-      setSaving(false);
-    }
-  };
+  // Keyboard shortcuts
+  useKeyboardShortcuts([
+    {
+      key: 's',
+      ctrl: true,
+      description: 'Save deck',
+      handler: (e) => {
+        e.preventDefault();
+        if (isDirty && manualSaveButtonRef.current) {
+          manualSaveButtonRef.current.click();
+        }
+      },
+    },
+  ]);
 
   if (loading) {
-    return <div className="container"><p>Loading deck...</p></div>;
+    return (
+      <div className="container">
+        <div style={{ textAlign: 'center', padding: '40px' }}>
+          <div className="loading-spinner" style={{ 
+            width: '40px', 
+            height: '40px', 
+            border: '4px solid #333',
+            borderTop: '4px solid #0066cc',
+            borderRadius: '50%',
+            animation: 'spin 1s linear infinite',
+            margin: '0 auto 20px'
+          }}></div>
+          <p>Loading deck...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="container">
+        <div style={{ 
+          textAlign: 'center', 
+          padding: '40px',
+          background: '#2a1a1a',
+          borderRadius: '8px',
+          border: '1px solid #ff4444'
+        }}>
+          <div style={{ fontSize: '48px', marginBottom: '20px' }}>⚠️</div>
+          <h2 style={{ color: '#ff4444', marginBottom: '10px' }}>Failed to Load Deck</h2>
+          <p style={{ color: '#999', marginBottom: '20px' }}>{error}</p>
+          <button 
+            onClick={loadDeck}
+            style={{
+              background: '#0066cc',
+              color: '#fff',
+              border: 'none',
+              borderRadius: '4px',
+              padding: '10px 20px',
+              cursor: 'pointer',
+              fontSize: '14px'
+            }}
+          >
+            Retry
+          </button>
+        </div>
+      </div>
+    );
   }
 
   if (!currentDeck) {
@@ -99,167 +158,66 @@ export default function DeckEditor() {
   return (
     <div className="container">
       <header style={{ marginBottom: '30px' }}>
-        <Link to={`/decks?repo=${owner}/${repo}`} style={{ color: '#0066cc', textDecoration: 'none' }}>
-          ← Back to Decks
-        </Link>
-        <h1 style={{ marginTop: '10px' }}>{currentDeck.name}</h1>
-        <p style={{ color: '#999' }}>
-          {currentDeck.game.toUpperCase()} • {currentDeck.format} • {totalCards} cards
-        </p>
-      </header>
-
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
-        <div>
-          <div className="card">
-            <h2>Card Search</h2>
-            <div style={{ display: 'flex', gap: '10px', marginTop: '15px' }}>
-              <input
-                type="text"
-                placeholder="Search for cards..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
-                style={{ flex: 1 }}
-              />
-              <button className="btn btn-primary" onClick={handleSearch}>
-                Search
-              </button>
-            </div>
-
-            {searchResults.length > 0 && (
-              <div style={{ marginTop: '15px' }}>
-                {searchResults.map((card) => (
-                  <div
-                    key={card.id}
-                    style={{
-                      padding: '10px',
-                      background: '#333',
-                      marginBottom: '10px',
-                      borderRadius: '4px',
-                      display: 'flex',
-                      justifyContent: 'space-between',
-                      alignItems: 'center',
-                    }}
-                  >
-                    <div>
-                      <strong>{card.name}</strong>
-                      <p style={{ fontSize: '12px', color: '#999' }}>{card.type_line}</p>
-                    </div>
-                    <button className="btn btn-primary" onClick={() => handleAddCard(card)}>
-                      Add
-                    </button>
-                  </div>
-                ))}
-              </div>
-            )}
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+          <div>
+            <Link to={`/decks?repo=${owner}/${repo}`} style={{ color: '#0066cc', textDecoration: 'none' }}>
+              ← Back to Decks
+            </Link>
+            <h1 style={{ marginTop: '10px' }}>{currentDeck.name}</h1>
+            <p style={{ color: '#999' }}>
+              {currentDeck.game.toUpperCase()} • {currentDeck.format} • {totalCards} cards
+            </p>
           </div>
-
-          <div className="card">
-            <h2>Validation</h2>
-            <button className="btn btn-primary" onClick={handleValidate} style={{ marginTop: '10px' }}>
-              Validate Deck
-            </button>
-
-            {validation && (
-              <div style={{ marginTop: '15px' }}>
-                <p style={{ color: validation.valid ? '#4caf50' : '#f44336', fontWeight: 'bold' }}>
-                  {validation.valid ? '✓ Deck is valid' : '✗ Deck has errors'}
-                </p>
-                {validation.errors.length > 0 && (
-                  <div style={{ marginTop: '10px' }}>
-                    <strong>Errors:</strong>
-                    <ul style={{ marginTop: '5px', paddingLeft: '20px' }}>
-                      {validation.errors.map((error, i) => (
-                        <li key={i} style={{ color: '#f44336' }}>{error}</li>
-                      ))}
-                    </ul>
-                  </div>
-                )}
-                {validation.warnings.length > 0 && (
-                  <div style={{ marginTop: '10px' }}>
-                    <strong>Warnings:</strong>
-                    <ul style={{ marginTop: '5px', paddingLeft: '20px' }}>
-                      {validation.warnings.map((warning, i) => (
-                        <li key={i} style={{ color: '#ff9800' }}>{warning}</li>
-                      ))}
-                    </ul>
-                  </div>
-                )}
-              </div>
-            )}
+          <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+            <SaveStatusIndicator status={autoSaveStatus} isDirty={isDirty} />
+            <ManualSaveButton
+              ref={manualSaveButtonRef}
+              onSave={handleManualSave}
+              disabled={!isDirty}
+              isSaving={autoSaveStatus.isSaving}
+            />
           </div>
         </div>
+      </header>
 
+      <div style={{ display: 'grid', gridTemplateColumns: '3fr 1fr', gap: '20px' }}>
+        {/* Game-specific visual builder */}
         <div>
-          <div className="card">
-            <h2>Decklist ({totalCards} cards)</h2>
-            <div style={{ marginTop: '15px', maxHeight: '400px', overflowY: 'auto' }}>
-              {currentDeck.cards.map((card) => (
-                <div
-                  key={card.id}
-                  style={{
-                    padding: '10px',
-                    background: '#333',
-                    marginBottom: '10px',
-                    borderRadius: '4px',
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    alignItems: 'center',
-                  }}
-                >
-                  <span>
-                    {card.count}x {card.name || card.id}
-                  </span>
-                  <div style={{ display: 'flex', gap: '5px' }}>
-                    <button
-                      className="btn btn-secondary"
-                      onClick={() => updateCardCount(card.id, card.count - 1)}
-                      style={{ padding: '5px 10px' }}
-                    >
-                      -
-                    </button>
-                    <button
-                      className="btn btn-secondary"
-                      onClick={() => updateCardCount(card.id, card.count + 1)}
-                      style={{ padding: '5px 10px' }}
-                    >
-                      +
-                    </button>
-                    <button
-                      className="btn btn-secondary"
-                      onClick={() => removeCard(card.id)}
-                      style={{ padding: '5px 10px', background: '#d32f2f' }}
-                    >
-                      ×
-                    </button>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {isDirty && (
+          {currentDeck.game === 'riftbound' && (
+            <RiftboundBuilder
+              deck={currentDeck}
+              onDeckUpdate={handleDeckUpdate}
+              availableCards={availableCards as RiftboundCard[]}
+            />
+          )}
+          
+          {currentDeck.game === 'mtg' && currentDeck.format === 'commander' && (
+            <MTGCommanderBuilder
+              deck={currentDeck}
+              onDeckUpdate={handleDeckUpdate}
+              availableCards={availableCards as MTGCard[]}
+            />
+          )}
+          
+          {currentDeck.game === 'mtg' && currentDeck.format !== 'commander' && (
             <div className="card">
-              <h2>Save Changes</h2>
-              <input
-                type="text"
-                placeholder="Commit message..."
-                value={commitMessage}
-                onChange={(e) => setCommitMessage(e.target.value)}
-                style={{ width: '100%', marginTop: '10px' }}
-              />
-              <button
-                className="btn btn-primary"
-                onClick={handleSave}
-                disabled={saving || !commitMessage.trim()}
-                style={{ marginTop: '10px', width: '100%' }}
-              >
-                {saving ? 'Saving...' : 'Commit Changes'}
-              </button>
+              <h2>Visual Builder</h2>
+              <p style={{ color: '#999', marginTop: '10px' }}>
+                Visual deck builder is currently only available for Commander format.
+                Standard MTG formats coming soon!
+              </p>
             </div>
           )}
         </div>
+
+        {/* Deck statistics sidebar */}
+        <div>
+          <DeckStatistics deck={currentDeck} />
+        </div>
       </div>
+
+      {/* Keyboard shortcuts help button */}
+      <KeyboardShortcutsHelp />
     </div>
   );
 }

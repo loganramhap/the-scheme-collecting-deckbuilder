@@ -2,12 +2,13 @@
   "game": "mtg",
   "format": "commander",
   "name": "Najeela, the Blade-Blossom",
+  "commander": {
+    "id": "najeela-the-blade-blossom",
+    "count": 1,
+    "name": "Najeela, the Blade-Blossom"
+  },
+  "colorIdentity": ["W", "U", "B", "R", "G"],
   "cards": [
-    {
-      "id": "najeela-the-blade-blossom",
-      "count": 1,
-      "name": "Najeela, the Blade-Blossom"
-    },
     {
       "id": "sol-ring",
       "count": 1,

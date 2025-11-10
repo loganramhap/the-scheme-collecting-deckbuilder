@@ -1,0 +1,12 @@
+.draggable-card {
+  position: relative;
+  transition: opacity 0.2s ease;
+}
+
+.draggable-card.dragging {
+  opacity: 0.5;
+}
+
+.draggable-card:active {
+  cursor: grabbing;
+}

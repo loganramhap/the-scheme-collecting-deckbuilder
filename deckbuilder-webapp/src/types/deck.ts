@@ -22,6 +22,18 @@ export interface Deck {
   cards: DeckCard[];
   sideboard?: DeckCard[];
   metadata: DeckMetadata;
+  
+  // MTG Commander-specific
+  commander?: DeckCard;
+  colorIdentity?: string[];
+  
+  // Riftbound-specific
+  legend?: DeckCard;
+  battlefield?: DeckCard;
+  runeColors?: string[];
+  
+  // Legacy field
+  featured_card?: DeckCard;
 }
 
 export interface ValidationResult {

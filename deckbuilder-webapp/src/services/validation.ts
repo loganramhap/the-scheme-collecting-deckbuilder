@@ -56,12 +56,45 @@ class ValidationService {
 
     const totalCards = deck.cards.reduce((sum, card) => sum + card.count, 0);
 
-    // Riftbound deck size rules (example)
-    if (totalCards < 30 || totalCards > 40) {
-      errors.push(`Riftbound decks must have 30-40 cards. Current: ${totalCards}`);
+    // Riftbound deck size rules: 30-40 cards
+    if (totalCards < 30) {
+      errors.push(`Riftbound decks must have at least 30 cards. Current: ${totalCards}`);
+    } else if (totalCards > 40) {
+      errors.push(`Riftbound decks cannot have more than 40 cards. Current: ${totalCards}`);
     }
 
-    // Check faction restrictions
+    // Check if legend is set
+    if (!deck.legend) {
+      warnings.push('No Legend selected. A Legend is recommended for Riftbound decks.');
+    }
+
+    // Check if battlefield is set
+    if (!deck.battlefield) {
+      warnings.push('No Battlefield selected. A Battlefield is recommended for Riftbound decks.');
+    }
+
+    // Validate rune color legality
+    const activeRuneColors = deck.runeColors || [];
+    
+    if (activeRuneColors.length > 0) {
+      for (const deckCard of deck.cards) {
+        const card = cardService.getRiftboundCard(deckCard.id);
+        if (card && card.runeColors && card.runeColors.length > 0) {
+          // Check if card has at least one matching rune color
+          const hasMatchingColor = card.runeColors.some(color => 
+            activeRuneColors.includes(color)
+          );
+          
+          if (!hasMatchingColor) {
+            errors.push(
+              `${card.name} has rune colors [${card.runeColors.join(', ')}] which don't match your Legend's colors [${activeRuneColors.join(', ')}]`
+            );
+          }
+        }
+      }
+    }
+
+    // Check faction restrictions (optional - depends on game rules)
     const factions = new Set<string>();
     for (const deckCard of deck.cards) {
       const card = cardService.getRiftboundCard(deckCard.id);
@@ -71,7 +104,7 @@ class ValidationService {
     }
 
     if (factions.size > 2) {
-      errors.push(`Riftbound decks can only contain cards from up to 2 factions`);
+      warnings.push(`Your deck contains cards from ${factions.size} factions. Consider limiting to 2 factions for better synergy.`);
     }
 
     return {

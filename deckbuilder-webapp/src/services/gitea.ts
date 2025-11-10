@@ -143,6 +143,13 @@ class GiteaService {
     );
     return data;
   }
+
+  async deleteRepo(owner: string, repo: string) {
+    await axios.delete(
+      `${GITEA_URL}/api/v1/repos/${owner}/${repo}`,
+      { headers: this.getHeaders() }
+    );
+  }
 }
 
 export const giteaService = new GiteaService();

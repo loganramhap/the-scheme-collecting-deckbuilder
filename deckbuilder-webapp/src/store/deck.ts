@@ -8,6 +8,11 @@ interface DeckState {
   addCard: (card: DeckCard) => void;
   removeCard: (cardId: string) => void;
   updateCardCount: (cardId: string, count: number) => void;
+  setLegend: (card: DeckCard | null) => void;
+  setBattlefield: (card: DeckCard | null) => void;
+  setCommander: (card: DeckCard | null) => void;
+  updateRuneColors: (colors: string[]) => void;
+  updateColorIdentity: (colors: string[]) => void;
   clearDeck: () => void;
   markClean: () => void;
 }
@@ -78,6 +83,66 @@ export const useDeckStore = create<DeckState>((set) => ({
           cards: state.currentDeck.cards.map(c =>
             c.id === cardId ? { ...c, count } : c
           ),
+        },
+        isDirty: true,
+      };
+    }),
+
+  setLegend: (card) =>
+    set((state) => {
+      if (!state.currentDeck) return state;
+      return {
+        currentDeck: {
+          ...state.currentDeck,
+          legend: card || undefined,
+        },
+        isDirty: true,
+      };
+    }),
+
+  setBattlefield: (card) =>
+    set((state) => {
+      if (!state.currentDeck) return state;
+      return {
+        currentDeck: {
+          ...state.currentDeck,
+          battlefield: card || undefined,
+        },
+        isDirty: true,
+      };
+    }),
+
+  setCommander: (card) =>
+    set((state) => {
+      if (!state.currentDeck) return state;
+      return {
+        currentDeck: {
+          ...state.currentDeck,
+          commander: card || undefined,
+        },
+        isDirty: true,
+      };
+    }),
+
+  updateRuneColors: (colors) =>
+    set((state) => {
+      if (!state.currentDeck) return state;
+      return {
+        currentDeck: {
+          ...state.currentDeck,
+          runeColors: colors,
+        },
+        isDirty: true,
+      };
+    }),
+
+  updateColorIdentity: (colors) =>
+    set((state) => {
+      if (!state.currentDeck) return state;
+      return {
+        currentDeck: {
+          ...state.currentDeck,
+          colorIdentity: colors,
         },
         isDirty: true,
       };

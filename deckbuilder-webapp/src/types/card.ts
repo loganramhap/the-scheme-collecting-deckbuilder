@@ -22,6 +22,7 @@ export interface RiftboundCard {
   faction: string;
   rank: string;
   type: string;
+  runeColors?: string[]; // Rune colors for Riftbound cards
   text?: string;
   attack?: number;
   health?: number;

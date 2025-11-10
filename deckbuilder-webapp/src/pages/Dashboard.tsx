@@ -15,7 +15,10 @@ export default function Dashboard() {
   const [newDeckGame, setNewDeckGame] = useState('mtg');
   const [newDeckFormat, setNewDeckFormat] = useState('commander');
   const [activeTab, setActiveTab] = useState<'all' | 'mtg' | 'riftbound'>('all');
-  const [deckMetadata, setDeckMetadata] = useState<Record<string, { game: string; format: string }>>({});
+  const [deckMetadata, setDeckMetadata] = useState<Record<string, { game: string; format: string; tags?: string[]; commanderImage?: string }>>({});
+  const [deletingDeck, setDeletingDeck] = useState<string | null>(null);
+  const [editingTags, setEditingTags] = useState<string | null>(null);
+  const [newTag, setNewTag] = useState('');
 
   useEffect(() => {
     const loadDecks = async () => {
@@ -27,19 +30,33 @@ export default function Dashboard() {
           setDecks(deckRepos);
 
           // Load metadata for each deck to determine game type
-          const metadata: Record<string, { game: string; format: string }> = {};
+          const metadata: Record<string, { game: string; format: string; tags?: string[]; commanderImage?: string }> = {};
           for (const repo of deckRepos) {
             try {
               const fileContent = await giteaService.getFileContent(user.username, repo.name, 'deck.json');
               const content = atob(fileContent.content);
               const deck = JSON.parse(content);
+              
+              // Get commander/featured card image
+              let commanderImage = undefined;
+              if (deck.commander?.image_url) {
+                commanderImage = deck.commander.image_url;
+              } else if (deck.featured_card?.image_url) {
+                commanderImage = deck.featured_card.image_url;
+              } else if (deck.commander?.id && deck.game === 'mtg') {
+                // Try to get from Scryfall if we have an ID
+                commanderImage = `https://api.scryfall.com/cards/${deck.commander.id}?format=image&version=art_crop`;
+              }
+              
               metadata[repo.name] = {
                 game: deck.game || 'mtg',
                 format: deck.format || 'unknown',
+                tags: deck.metadata?.tags || [],
+                commanderImage,
               };
             } catch (error) {
               // If can't read deck file, assume MTG
-              metadata[repo.name] = { game: 'mtg', format: 'unknown' };
+              metadata[repo.name] = { game: 'mtg', format: 'unknown', tags: [] };
             }
           }
           setDeckMetadata(metadata);
@@ -106,6 +123,112 @@ export default function Dashboard() {
       alert('Failed to create deck');
     } finally {
       setCreating(false);
+    }
+  };
+
+  const handleDeleteDeck = async (deckName: string) => {
+    if (!confirm(`Are you sure you want to delete "${deckName}"? This cannot be undone.`)) {
+      return;
+    }
+
+    setDeletingDeck(deckName);
+
+    try {
+      await giteaService.deleteRepo(user!.username, deckName);
+      
+      // Remove from local state
+      setDecks(decks.filter(d => d.name !== deckName));
+      const newMetadata = { ...deckMetadata };
+      delete newMetadata[deckName];
+      setDeckMetadata(newMetadata);
+    } catch (error) {
+      console.error('Failed to delete deck:', error);
+      alert('Failed to delete deck');
+    } finally {
+      setDeletingDeck(null);
+    }
+  };
+
+  const handleAddTag = async (deckName: string, tag: string) => {
+    if (!tag.trim()) return;
+
+    try {
+      // Load current deck
+      const fileContent = await giteaService.getFileContent(user!.username, deckName, 'deck.json');
+      const content = atob(fileContent.content);
+      const deck = JSON.parse(content);
+
+      // Add tag
+      if (!deck.metadata.tags) {
+        deck.metadata.tags = [];
+      }
+      if (!deck.metadata.tags.includes(tag.trim())) {
+        deck.metadata.tags.push(tag.trim());
+      }
+
+      // Save back
+      const newContent = JSON.stringify(deck, null, 2);
+      await giteaService.createOrUpdateFile(
+        user!.username,
+        deckName,
+        'deck.json',
+        newContent,
+        `Add tag: ${tag}`,
+        'main',
+        fileContent.sha
+      );
+
+      // Update local state
+      setDeckMetadata({
+        ...deckMetadata,
+        [deckName]: {
+          ...deckMetadata[deckName],
+          tags: deck.metadata.tags,
+        },
+      });
+
+      setNewTag('');
+    } catch (error) {
+      console.error('Failed to add tag:', error);
+      alert('Failed to add tag');
+    }
+  };
+
+  const handleRemoveTag = async (deckName: string, tagToRemove: string) => {
+    try {
+      // Load current deck
+      const fileContent = await giteaService.getFileContent(user!.username, deckName, 'deck.json');
+      const content = atob(fileContent.content);
+      const deck = JSON.parse(content);
+
+      // Remove tag
+      if (deck.metadata.tags) {
+        deck.metadata.tags = deck.metadata.tags.filter((t: string) => t !== tagToRemove);
+      }
+
+      // Save back
+      const newContent = JSON.stringify(deck, null, 2);
+      await giteaService.createOrUpdateFile(
+        user!.username,
+        deckName,
+        'deck.json',
+        newContent,
+        `Remove tag: ${tagToRemove}`,
+        'main',
+        fileContent.sha
+      );
+
+      // Update local state
+      setDeckMetadata({
+        ...deckMetadata,
+        [deckName]: {
+          ...deckMetadata[deckName],
+          tags: deck.metadata.tags,
+        },
+      });
+    } catch (error) {
+      console.error('Failed to remove tag:', error);
+      alert('Failed to remove tag');
     }
   };
 
@@ -219,24 +342,143 @@ export default function Dashboard() {
                 const gameIcon = meta?.game === 'riftbound' ? '⚔️' : '🃏';
                 
                 return (
-                  <div key={deck.id} className="card" style={{ padding: '20px', cursor: 'pointer', transition: 'transform 0.2s' }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start', marginBottom: '15px' }}>
-                      <div>
-                        <h3 style={{ margin: 0, marginBottom: '5px' }}>{deck.name}</h3>
-                        <span style={{ fontSize: '12px', color: '#666', textTransform: 'uppercase' }}>
-                          {meta?.format || 'Unknown'}
-                        </span>
+                  <div key={deck.id} className="card" style={{ padding: 0, position: 'relative', overflow: 'hidden' }}>
+                    <button
+                      onClick={() => handleDeleteDeck(deck.name)}
+                      disabled={deletingDeck === deck.name}
+                      style={{
+                        position: 'absolute',
+                        top: '10px',
+                        right: '10px',
+                        background: '#d32f2f',
+                        border: 'none',
+                        color: 'white',
+                        borderRadius: '4px',
+                        padding: '6px 10px',
+                        cursor: 'pointer',
+                        fontSize: '12px',
+                        opacity: 0.9,
+                        transition: 'opacity 0.2s',
+                        zIndex: 10,
+                      }}
+                      onMouseEnter={(e) => e.currentTarget.style.opacity = '1'}
+                      onMouseLeave={(e) => e.currentTarget.style.opacity = '0.9'}
+                      title="Delete deck"
+                    >
+                      {deletingDeck === deck.name ? '...' : '🗑️'}
+                    </button>
+
+                    {/* Commander/Featured Card Image */}
+                    {meta?.commanderImage && (
+                      <div style={{ 
+                        width: '100%', 
+                        height: '200px', 
+                        background: `linear-gradient(to bottom, rgba(0,0,0,0.3), rgba(26,26,26,0.9)), url(${meta.commanderImage})`,
+                        backgroundSize: 'cover',
+                        backgroundPosition: 'center',
+                        position: 'relative',
+                      }}>
+                        <div style={{ 
+                          position: 'absolute', 
+                          bottom: '15px', 
+                          left: '20px', 
+                          right: '20px',
+                        }}>
+                          <h3 style={{ margin: 0, marginBottom: '5px', color: 'white', textShadow: '0 2px 4px rgba(0,0,0,0.8)' }}>
+                            {deck.name}
+                          </h3>
+                          <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+                            <span style={{ fontSize: '12px', color: '#ddd', textTransform: 'uppercase', textShadow: '0 1px 2px rgba(0,0,0,0.8)' }}>
+                              {meta?.format || 'Unknown'}
+                            </span>
+                            <span style={{ fontSize: '20px' }}>{gameIcon}</span>
+                          </div>
+                        </div>
                       </div>
-                      <span style={{ fontSize: '24px' }}>{gameIcon}</span>
+                    )}
+
+                    <div style={{ padding: meta?.commanderImage ? '15px 20px 20px' : '20px' }}>
+                      {!meta?.commanderImage && (
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start', marginBottom: '10px', paddingRight: '40px' }}>
+                          <div>
+                            <h3 style={{ margin: 0, marginBottom: '5px' }}>{deck.name}</h3>
+                            <span style={{ fontSize: '12px', color: '#666', textTransform: 'uppercase' }}>
+                              {meta?.format || 'Unknown'}
+                            </span>
+                          </div>
+                          <span style={{ fontSize: '24px' }}>{gameIcon}</span>
+                        </div>
+                      )}
+
+                    <div style={{ marginBottom: '10px', minHeight: '24px' }}>
+                      <div style={{ display: 'flex', gap: '5px', flexWrap: 'wrap', alignItems: 'center' }}>
+                        {meta?.tags && meta.tags.map((tag, i) => (
+                          <span
+                            key={i}
+                            style={{
+                              fontSize: '11px',
+                              padding: '3px 8px',
+                              background: '#333',
+                              borderRadius: '12px',
+                              color: '#0066cc',
+                              display: 'flex',
+                              alignItems: 'center',
+                              gap: '5px',
+                            }}
+                          >
+                            {tag}
+                            <button
+                              onClick={(e) => {
+                                e.preventDefault();
+                                handleRemoveTag(deck.name, tag);
+                              }}
+                              style={{
+                                background: 'none',
+                                border: 'none',
+                                color: '#999',
+                                cursor: 'pointer',
+                                padding: '0',
+                                fontSize: '14px',
+                                lineHeight: '1',
+                              }}
+                              title="Remove tag"
+                            >
+                              ×
+                            </button>
+                          </span>
+                        ))}
+                        <button
+                          onClick={(e) => {
+                            e.preventDefault();
+                            setEditingTags(deck.name);
+                          }}
+                          style={{
+                            background: 'none',
+                            border: '1px dashed #666',
+                            color: '#666',
+                            borderRadius: '12px',
+                            padding: '3px 8px',
+                            cursor: 'pointer',
+                            fontSize: '11px',
+                          }}
+                          title="Add tag"
+                        >
+                          + tag
+                        </button>
+                      </div>
                     </div>
-                    <p style={{ color: '#999', fontSize: '13px', marginBottom: '15px' }}>
-                      {meta?.game === 'riftbound' ? 'Riftbound' : 'Magic: The Gathering'}
-                    </p>
-                    <Link to={`/deck/${deck.owner.username}/${deck.name}/deck.json`} style={{ textDecoration: 'none' }}>
-                      <button className="btn btn-primary" style={{ width: '100%' }}>
-                        Open Deck
-                      </button>
-                    </Link>
+
+                      {!meta?.commanderImage && (
+                        <p style={{ color: '#999', fontSize: '13px', marginBottom: '15px' }}>
+                          {meta?.game === 'riftbound' ? 'Riftbound' : 'Magic: The Gathering'}
+                        </p>
+                      )}
+                      <Link to={`/deck/${deck.owner.username}/${deck.name}/deck.json`} style={{ textDecoration: 'none' }}>
+                        <button className="btn btn-primary" style={{ width: '100%' }}>
+                          Open Deck
+                        </button>
+                      </Link>
+                    </div>
                   </div>
                 );
               })}
@@ -324,6 +566,90 @@ export default function Dashboard() {
           >
             {creating ? 'Creating...' : 'Create Deck'}
           </button>
+        </div>
+      </Modal>
+
+      <Modal
+        isOpen={editingTags !== null}
+        onClose={() => {
+          setEditingTags(null);
+          setNewTag('');
+        }}
+        title="Add Tag"
+      >
+        <p style={{ color: '#999', fontSize: '14px', marginBottom: '20px' }}>
+          Add tags to organize your decks (e.g., "competitive", "budget", "tested")
+        </p>
+
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            if (editingTags && newTag.trim()) {
+              handleAddTag(editingTags, newTag);
+            }
+          }}
+        >
+          <div style={{ marginBottom: '20px' }}>
+            <input
+              type="text"
+              value={newTag}
+              onChange={(e) => setNewTag(e.target.value)}
+              placeholder="Enter tag name..."
+              style={{ width: '100%', padding: '12px', fontSize: '14px' }}
+              autoFocus
+            />
+          </div>
+
+          <div style={{ display: 'flex', gap: '10px' }}>
+            <button
+              type="button"
+              className="btn btn-secondary"
+              onClick={() => {
+                setEditingTags(null);
+                setNewTag('');
+              }}
+              style={{ flex: 1 }}
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              className="btn btn-primary"
+              disabled={!newTag.trim()}
+              style={{ flex: 1 }}
+            >
+              Add Tag
+            </button>
+          </div>
+        </form>
+
+        <div style={{ marginTop: '20px', paddingTop: '20px', borderTop: '1px solid #333' }}>
+          <p style={{ fontSize: '12px', color: '#666', marginBottom: '10px' }}>
+            Suggested tags:
+          </p>
+          <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+            {['competitive', 'casual', 'budget', 'tested', 'wip', 'tournament'].map((tag) => (
+              <button
+                key={tag}
+                onClick={() => {
+                  if (editingTags) {
+                    handleAddTag(editingTags, tag);
+                  }
+                }}
+                style={{
+                  background: '#333',
+                  border: 'none',
+                  color: '#0066cc',
+                  borderRadius: '12px',
+                  padding: '6px 12px',
+                  cursor: 'pointer',
+                  fontSize: '12px',
+                }}
+              >
+                {tag}
+              </button>
+            ))}
+          </div>
         </div>
       </Modal>
     </div>

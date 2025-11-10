@@ -2,6 +2,17 @@
   "game": "riftbound",
   "format": "ranked",
   "name": "Shadowfen Aggro",
+  "legend": {
+    "id": "shadowfen-warlord",
+    "count": 1,
+    "name": "Shadowfen Warlord"
+  },
+  "battlefield": {
+    "id": "dark-swamp",
+    "count": 1,
+    "name": "Dark Swamp"
+  },
+  "runeColors": ["black", "red"],
   "cards": [
     {
       "id": "shadowfen-assassin",

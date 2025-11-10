@@ -1,0 +1,11 @@
+.deck-zone {
+  position: relative;
+}
+
+.deck-zone-active {
+  /* Active drop zone styling handled inline */
+}
+
+.deck-zone-invalid {
+  /* Invalid drop zone styling handled inline */
+}
