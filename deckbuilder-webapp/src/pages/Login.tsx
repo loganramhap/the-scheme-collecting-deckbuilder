@@ -37,6 +37,9 @@ export default function Login() {
           password,
         });
 
+        // Wait a moment for Gitea to fully create the account
+        await new Promise(resolve => setTimeout(resolve, 1000));
+
         // After successful signup, automatically log in
         const { data } = await axios.post(`${GITEA_URL}/api/v1/users/${username}/tokens`, {
           name: `deckbuilder-${Date.now()}`,
