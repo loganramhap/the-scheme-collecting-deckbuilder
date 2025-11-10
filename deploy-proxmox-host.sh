@@ -47,10 +47,20 @@ echo ""
 echo "=== Network Configuration ==="
 read -p "Network bridge (default: vmbr0): " BRIDGE
 BRIDGE=${BRIDGE:-vmbr0}
-read -p "IP address (e.g., 192.168.1.100/24): " IP_ADDRESS
-read -p "Gateway (e.g., 192.168.1.1): " GATEWAY
-read -p "DNS server (default: 8.8.8.8): " NAMESERVER
-NAMESERVER=${NAMESERVER:-8.8.8.8}
+read -p "Use DHCP for IP address? (yes/no, default: yes): " USE_DHCP
+USE_DHCP=${USE_DHCP:-yes}
+
+if [ "$USE_DHCP" = "yes" ]; then
+    IP_CONFIG="dhcp"
+    GATEWAY=""
+    NAMESERVER=""
+else
+    read -p "Static IP address (e.g., 192.168.1.100/24): " IP_ADDRESS
+    read -p "Gateway (e.g., 192.168.1.1): " GATEWAY
+    read -p "DNS server (default: 8.8.8.8): " NAMESERVER
+    NAMESERVER=${NAMESERVER:-8.8.8.8}
+    IP_CONFIG="$IP_ADDRESS"
+fi
 
 echo ""
 echo "=== Application Configuration ==="
@@ -73,8 +83,12 @@ echo "Storage: $STORAGE"
 echo "Disk: ${DISK_SIZE}GB"
 echo "RAM: ${MEMORY}MB"
 echo "CPU: ${CORES} cores"
-echo "IP: $IP_ADDRESS"
-echo "Gateway: $GATEWAY"
+if [ "$USE_DHCP" = "yes" ]; then
+    echo "IP: DHCP (automatic)"
+else
+    echo "IP: $IP_ADDRESS"
+    echo "Gateway: $GATEWAY"
+fi
 echo "Domain: $DOMAIN"
 echo ""
 read -p "Continue with installation? (yes/no): " CONFIRM
@@ -95,6 +109,14 @@ fi
 
 echo ""
 echo "Step 2: Creating LXC container..."
+
+# Build network configuration based on DHCP or static
+if [ "$USE_DHCP" = "yes" ]; then
+    NET_CONFIG="name=eth0,bridge=$BRIDGE,ip=dhcp"
+else
+    NET_CONFIG="name=eth0,bridge=$BRIDGE,ip=$IP_ADDRESS,gw=$GATEWAY"
+fi
+
 pct create $CTID \
     /var/lib/vz/template/cache/$TEMPLATE \
     --hostname $HOSTNAME \
@@ -103,8 +125,8 @@ pct create $CTID \
     --rootfs $STORAGE:${DISK_SIZE} \
     --memory $MEMORY \
     --cores $CORES \
-    --net0 name=eth0,bridge=$BRIDGE,ip=$IP_ADDRESS,gw=$GATEWAY \
-    --nameserver $NAMESERVER \
+    --net0 $NET_CONFIG \
+    $([ -n "$NAMESERVER" ] && echo "--nameserver $NAMESERVER") \
     --features nesting=0 \
     --unprivileged 1 \
     --onboot 1 \
@@ -368,6 +390,18 @@ BACKUPEOF"
 pct exec $CTID -- chmod +x /usr/local/bin/deckbuilder-backup.sh
 pct exec $CTID -- bash -c "(crontab -l 2>/dev/null; echo '0 2 * * * /usr/local/bin/deckbuilder-backup.sh') | crontab -"
 
+# Get the actual IP address (whether DHCP or static)
+if [ "$USE_DHCP" = "yes" ]; then
+    echo "Waiting for DHCP to assign IP address..."
+    sleep 5
+    ACTUAL_IP=$(pct exec $CTID -- hostname -I | awk '{print $1}')
+    if [ -z "$ACTUAL_IP" ]; then
+        ACTUAL_IP="Check with: pct exec $CTID -- hostname -I"
+    fi
+else
+    ACTUAL_IP=$(echo $IP_ADDRESS | cut -d'/' -f1)
+fi
+
 # Save credentials on host
 CREDS_FILE="/root/deckbuilder-ct${CTID}-credentials.txt"
 cat > $CREDS_FILE << EOF
@@ -376,7 +410,8 @@ DeckBuilder Container $CTID Credentials
 
 Container ID: $CTID
 Hostname: $HOSTNAME
-IP Address: $IP_ADDRESS
+IP Address: $ACTUAL_IP
+Network: $([ "$USE_DHCP" = "yes" ] && echo "DHCP" || echo "Static")
 Container Password: $CT_PASSWORD
 
 Database Password: $DB_PASSWORD
@@ -390,7 +425,7 @@ Gitea URL: https://$DOMAIN/gitea/
 Web App URL: https://$DOMAIN/
 
 SSH into container: pct enter $CTID
-                    or: ssh root@$IP_ADDRESS
+                    or: ssh root@$ACTUAL_IP
 
 KEEP THIS FILE SECURE!
 EOF
@@ -404,6 +439,10 @@ echo "============================================"
 echo ""
 echo "Container $CTID has been created and configured!"
 echo ""
+if [ "$USE_DHCP" = "yes" ]; then
+    echo "Container IP Address: $ACTUAL_IP (assigned by DHCP)"
+    echo ""
+fi
 echo "Next steps:"
 echo ""
 echo "1. Upload your project files to the container:"
