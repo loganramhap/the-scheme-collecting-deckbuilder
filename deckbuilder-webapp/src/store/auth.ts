@@ -10,22 +10,47 @@ interface AuthState {
   logout: () => void;
 }
 
-export const useAuthStore = create<AuthState>((set) => ({
-  user: null,
-  token: null,
-  isAuthenticated: false,
+export const useAuthStore = create<AuthState>((set) => {
+  // Initialize from localStorage
+  const savedToken = localStorage.getItem('auth-token');
+  const savedUser = localStorage.getItem('auth-user');
+  
+  let initialState = {
+    user: null as GiteaUser | null,
+    token: null as string | null,
+    isAuthenticated: false,
+  };
 
-  login: async (token: string) => {
-    giteaService.setToken(token);
-    const user = await giteaService.getCurrentUser();
-    set({ user, token, isAuthenticated: true });
-    localStorage.setItem('auth-token', token);
-    localStorage.setItem('auth-user', JSON.stringify(user));
-  },
+  if (savedToken && savedUser) {
+    try {
+      initialState = {
+        user: JSON.parse(savedUser),
+        token: savedToken,
+        isAuthenticated: true,
+      };
+      giteaService.setToken(savedToken);
+    } catch (e) {
+      // Invalid saved data, clear it
+      localStorage.removeItem('auth-token');
+      localStorage.removeItem('auth-user');
+    }
+  }
 
-  logout: () => {
-    set({ user: null, token: null, isAuthenticated: false });
-    localStorage.removeItem('auth-token');
-    localStorage.removeItem('auth-user');
-  },
-}));
+  return {
+    ...initialState,
+
+    login: async (token: string) => {
+      giteaService.setToken(token);
+      const user = await giteaService.getCurrentUser();
+      set({ user, token, isAuthenticated: true });
+      localStorage.setItem('auth-token', token);
+      localStorage.setItem('auth-user', JSON.stringify(user));
+    },
+
+    logout: () => {
+      set({ user: null, token: null, isAuthenticated: false });
+      localStorage.removeItem('auth-token');
+      localStorage.removeItem('auth-user');
+    },
+  };
+});

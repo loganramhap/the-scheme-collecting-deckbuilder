@@ -8,13 +8,14 @@ const REDIRECT_URI = import.meta.env.VITE_REDIRECT_URI || 'http://localhost:5173
 
 export default function Login() {
   const navigate = useNavigate();
-  const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
+  const { isAuthenticated, token } = useAuthStore();
 
   useEffect(() => {
-    if (isAuthenticated) {
+    // If already authenticated, redirect to dashboard
+    if (isAuthenticated && token) {
       navigate('/');
     }
-  }, [isAuthenticated, navigate]);
+  }, [isAuthenticated, token, navigate]);
 
   const handleLogin = () => {
     if (!CLIENT_ID) {
