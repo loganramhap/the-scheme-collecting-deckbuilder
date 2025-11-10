@@ -4,6 +4,7 @@ import { useAuthStore } from '../store/auth';
 import axios from 'axios';
 
 const GITEA_URL = import.meta.env.VITE_GITEA_URL || 'http://localhost:3000';
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
 
 export default function Login() {
   const navigate = useNavigate();
@@ -29,14 +30,14 @@ export default function Login() {
 
     try {
       if (isSignUp) {
-        // Create new account
-        await axios.post(`${GITEA_URL}/api/v1/user/sign_up`, {
+        // Sign up - create account via backend API
+        await axios.post(`${API_URL}/provision/user`, {
           username,
           email,
           password,
         });
-        
-        // Auto-login after signup
+
+        // After successful signup, automatically log in
         const { data } = await axios.post(`${GITEA_URL}/api/v1/users/${username}/tokens`, {
           name: `deckbuilder-${Date.now()}`,
         }, {
@@ -66,8 +67,10 @@ export default function Login() {
       console.error('Auth failed:', err);
       if (err.response?.status === 401) {
         setError('Invalid username or password');
+      } else if (err.response?.status === 409) {
+        setError('Username already exists');
       } else if (err.response?.status === 422) {
-        setError('Username already exists or invalid email');
+        setError('Invalid email or username format');
       } else {
         setError(isSignUp ? 'Sign up failed. Please try again.' : 'Login failed. Please try again.');
       }

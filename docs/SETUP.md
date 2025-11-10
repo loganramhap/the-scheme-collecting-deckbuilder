@@ -80,7 +80,9 @@ go build -o deck-plugin
 
 4. Access viewer at `http://localhost:8080/viewer/`
 
-## Step 4: Setup Backend API (Optional)
+## Step 4: Setup Backend API (Required for Account Creation)
+
+The backend API is **required** if you want users to create accounts through the web interface. Without it, users must be created manually in Gitea.
 
 1. Navigate to API directory:
 ```bash
@@ -97,24 +99,40 @@ npm install
 cp .env.example .env
 ```
 
-4. Edit `.env`:
+4. Get admin token from Gitea:
+   - Log in to Gitea as admin
+   - Go to Settings → Applications
+   - Click "Generate New Token"
+   - Name it "DeckBuilder API"
+   - Select all permissions (especially `admin:user`)
+   - Copy the generated token
+
+5. Edit `.env`:
 ```
 PORT=3001
 GITEA_URL=http://localhost:3000
-GITEA_ADMIN_TOKEN=<admin_token>
+GITEA_ADMIN_TOKEN=<paste_admin_token_here>
 GITEA_CLIENT_ID=<client_id>
 GITEA_CLIENT_SECRET=<client_secret>
 ```
 
-5. Get admin token from Gitea:
-   - Settings → Applications → Generate New Token
-   - Select all permissions
-   - Copy token to `.env`
-
-6. Start API server:
+6. Update web app `.env` to include API URL:
 ```bash
+cd ../deckbuilder-webapp
+```
+
+Add to `.env`:
+```
+VITE_API_URL=http://localhost:3001/api
+```
+
+7. Start API server:
+```bash
+cd ../deckbuilder-api
 npm run dev
 ```
+
+**Note**: The API server must be running for the "Sign Up" feature to work. If the API is not running, users will see an error when trying to create accounts.
 
 ## Step 5: First Login
 

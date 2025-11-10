@@ -22,25 +22,14 @@ router.post('/user', async (req, res) => {
         email,
         password,
         must_change_password: false,
+        send_notify: false,
       },
       {
         headers: { Authorization: `token ${ADMIN_TOKEN}` },
       }
     );
 
-    // Create personal deck repo
-    await axios.post(
-      `${GITEA_URL}/api/v1/admin/users/${username}/repos`,
-      {
-        name: 'decks',
-        description: 'Personal deck collection',
-        private: false,
-        auto_init: true,
-      },
-      {
-        headers: { Authorization: `token ${ADMIN_TOKEN}` },
-      }
-    );
+    // Don't create a "decks" repo - we'll create one repo per deck instead
 
     res.json({
       success: true,
@@ -50,7 +39,7 @@ router.post('/user', async (req, res) => {
     console.error('User provisioning failed:', error.response?.data || error.message);
     
     if (error.response?.status === 422) {
-      return res.status(409).json({ error: 'User already exists' });
+      return res.status(409).json({ error: 'Username already exists' });
     }
     
     res.status(500).json({ error: 'User provisioning failed' });

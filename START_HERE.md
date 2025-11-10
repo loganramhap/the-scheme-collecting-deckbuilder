@@ -106,18 +106,42 @@ ls -la
 
 ---
 
-### Step 7: Build Web App (5 minutes)
+### Step 7: Setup Backend API (3 minutes) - NEW!
+
+**Required for account creation feature:**
+
+```bash
+# Inside container
+cd /var/www/deckbuilder/deckbuilder-api
+
+# Create .env
+cat > .env << EOF
+PORT=3001
+GITEA_URL=http://localhost:3000
+GITEA_ADMIN_TOKEN=paste_your_admin_token_here
+EOF
+
+# Get admin token from Gitea:
+# Settings → Applications → Generate New Token → Select all permissions
+
+# Install and start
+npm install
+npm run dev &
+```
+
+### Step 7.5: Build Web App (5 minutes)
 
 ```bash
 # Inside container
 cd /var/www/deckbuilder/deckbuilder-webapp
 
-# Create .env with your OAuth credentials
+# Create .env with your OAuth credentials AND API URL
 cat > .env << EOF
 VITE_GITEA_URL=http://<container-ip>
 VITE_GITEA_CLIENT_ID=paste_your_client_id_here
 VITE_GITEA_CLIENT_SECRET=paste_your_client_secret_here
 VITE_REDIRECT_URI=http://<container-ip>/auth/callback
+VITE_API_URL=http://localhost:3001/api
 VITE_SCRYFALL_API=https://api.scryfall.com
 EOF
 
@@ -142,13 +166,23 @@ You should see:
 - ✅ DeckBuilder login page
 - ✅ Dark theme
 - ✅ "Sign in with Gitea" button
+- ✅ "Don't have an account? Sign up" link
 
-**Test Login:**
+**Test Account Creation (New!):**
+1. Click "Don't have an account? Sign up"
+2. Fill in username, email, password
+3. Click "Create Account"
+4. Should automatically log in!
+5. Should see Dashboard with your username
+
+**Or Test OAuth Login:**
 1. Click "Sign in with Gitea"
 2. Should redirect to Gitea
 3. Click "Authorize"
 4. Should redirect back to Dashboard
 5. Should see your username!
+
+**Note**: Account creation requires the backend API to be running (see Step 7.5 below).
 
 ---
 

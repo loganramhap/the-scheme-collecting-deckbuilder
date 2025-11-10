@@ -56,9 +56,42 @@ Wait 30 seconds for Gitea to start, then open: http://localhost:3000
 8. Click "Create Application"
 9. **Copy the Client ID and Client Secret**
 
-### Step 3: Configure Web App
+### Step 3: Setup Backend API (Required for Account Creation)
 
 ```bash
+cd deckbuilder-api
+
+# Install dependencies
+npm install
+
+# Copy environment template
+copy .env.example .env
+```
+
+Get admin token from Gitea:
+1. Log in to Gitea (http://localhost:3000)
+2. Go to Settings → Applications
+3. Click "Generate New Token"
+4. Name: "DeckBuilder API"
+5. Select all permissions
+6. Copy the token
+
+Edit `.env` and add your admin token:
+```
+GITEA_ADMIN_TOKEN=your_admin_token_here
+```
+
+Start the API:
+```bash
+npm run dev
+```
+
+Keep this terminal running!
+
+### Step 4: Configure Web App
+
+```bash
+# Open new terminal
 cd deckbuilder-webapp
 
 # Copy environment template
@@ -72,9 +105,10 @@ Update these lines in `.env`:
 ```
 VITE_GITEA_CLIENT_ID=your_client_id_here
 VITE_GITEA_CLIENT_SECRET=your_client_secret_here
+VITE_API_URL=http://localhost:3001/api
 ```
 
-### Step 4: Install and Run Web App
+### Step 5: Install and Run Web App
 
 ```bash
 # Install dependencies (first time only)
@@ -84,12 +118,15 @@ npm install
 npm run dev
 ```
 
-### Step 5: Test the Application
+### Step 6: Test the Application
 
 1. Open http://localhost:5173
-2. Click "Sign in with Gitea"
-3. Authorize the application
-4. You should see the dashboard!
+2. Click "Don't have an account? Sign up"
+3. Create a new account (username, email, password)
+4. You'll be automatically logged in!
+5. Or click "Sign in with Gitea" to use OAuth
+
+**Note**: The backend API must be running for account creation to work!
 
 ---
 
@@ -170,7 +207,11 @@ docker-compose down
 # View Gitea logs
 docker-compose logs -f gitea
 
-# Start web app
+# Start backend API (required for account creation)
+cd deckbuilder-api
+npm run dev
+
+# Start web app (in new terminal)
 cd deckbuilder-webapp
 npm run dev
 
@@ -179,4 +220,25 @@ npm run build
 
 # Check for errors
 npm run lint
+```
+
+## Running Everything
+
+You need **3 terminals**:
+
+**Terminal 1 - Gitea** (Docker):
+```bash
+docker-compose up -d
+```
+
+**Terminal 2 - Backend API**:
+```bash
+cd deckbuilder-api
+npm run dev
+```
+
+**Terminal 3 - Web App**:
+```bash
+cd deckbuilder-webapp
+npm run dev
 ```
