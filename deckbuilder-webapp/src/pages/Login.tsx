@@ -17,7 +17,14 @@ export default function Login() {
   }, [isAuthenticated, navigate]);
 
   const handleLogin = () => {
-    const authUrl = `${GITEA_URL}/login/oauth/authorize?client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}&response_type=code&state=random_state`;
+    if (!CLIENT_ID) {
+      alert('OAuth Client ID is not configured. Please check your .env file and rebuild.');
+      console.error('Missing VITE_GITEA_CLIENT_ID in environment variables');
+      return;
+    }
+    
+    const authUrl = `${GITEA_URL}/login/oauth/authorize?client_id=${CLIENT_ID}&redirect_uri=${encodeURIComponent(REDIRECT_URI)}&response_type=code&state=random_state`;
+    console.log('OAuth URL:', authUrl);
     window.location.href = authUrl;
   };
 
