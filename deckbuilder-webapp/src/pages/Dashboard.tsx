@@ -3,12 +3,17 @@ import { Link } from 'react-router-dom';
 import { useAuthStore } from '../store/auth';
 import { giteaService } from '../services/gitea';
 import type { GiteaRepo } from '../types/gitea';
+import Modal from '../components/Modal';
 
 export default function Dashboard() {
   const { user, logout } = useAuthStore();
   const [decks, setDecks] = useState<GiteaRepo[]>([]);
   const [loading, setLoading] = useState(true);
   const [creating, setCreating] = useState(false);
+  const [showCreateModal, setShowCreateModal] = useState(false);
+  const [newDeckName, setNewDeckName] = useState('');
+  const [newDeckGame, setNewDeckGame] = useState('mtg');
+  const [newDeckFormat, setNewDeckFormat] = useState('commander');
 
   useEffect(() => {
     const loadDecks = async () => {
@@ -29,31 +34,21 @@ export default function Dashboard() {
     loadDecks();
   }, [user]);
 
-  const createNewDeck = async () => {
-    const deckName = prompt('Enter deck name:');
-    if (!deckName) return;
-
-    const game = prompt('Game type (mtg or riftbound):', 'mtg');
-    if (!game || !['mtg', 'riftbound'].includes(game)) {
-      alert('Invalid game type. Must be "mtg" or "riftbound"');
-      return;
-    }
-
-    const format = prompt('Format (e.g., commander, modern, standard):', 'commander');
-    if (!format) return;
+  const handleCreateDeck = async () => {
+    if (!newDeckName.trim()) return;
 
     setCreating(true);
 
     try {
       // Create a repo for this deck (1 repo = 1 deck)
-      const repoName = deckName.toLowerCase().replace(/\s+/g, '-');
+      const repoName = newDeckName.toLowerCase().replace(/\s+/g, '-');
       await giteaService.createRepo(repoName, false);
 
       // Create the deck file
       const newDeck = {
-        game,
-        format,
-        name: deckName,
+        game: newDeckGame,
+        format: newDeckFormat,
+        name: newDeckName,
         cards: [],
         sideboard: [],
         metadata: {
@@ -81,7 +76,11 @@ export default function Dashboard() {
         setDecks(deckRepos);
       }
 
-      alert('Deck created successfully!');
+      // Reset form and close modal
+      setShowCreateModal(false);
+      setNewDeckName('');
+      setNewDeckGame('mtg');
+      setNewDeckFormat('commander');
     } catch (error) {
       console.error('Failed to create deck:', error);
       alert('Failed to create deck');
@@ -108,11 +107,10 @@ export default function Dashboard() {
           </div>
           <button 
             className="btn btn-primary" 
-            onClick={createNewDeck}
-            disabled={creating}
+            onClick={() => setShowCreateModal(true)}
             style={{ background: '#4caf50', padding: '12px 24px', fontSize: '16px' }}
           >
-            {creating ? 'Creating...' : '+ New Deck'}
+            + New Deck
           </button>
         </div>
 
@@ -129,7 +127,7 @@ export default function Dashboard() {
             </p>
             <button 
               className="btn btn-primary" 
-              onClick={createNewDeck}
+              onClick={() => setShowCreateModal(true)}
               style={{ background: '#4caf50', padding: '15px 30px', fontSize: '16px' }}
             >
               Create Your First Deck
@@ -156,6 +154,89 @@ export default function Dashboard() {
           </div>
         )}
       </div>
+
+      <Modal
+        isOpen={showCreateModal}
+        onClose={() => setShowCreateModal(false)}
+        title="Create New Deck"
+      >
+        <div style={{ marginBottom: '20px' }}>
+          <label style={{ display: 'block', marginBottom: '8px', fontSize: '14px', fontWeight: '500' }}>
+            Deck Name
+          </label>
+          <input
+            type="text"
+            value={newDeckName}
+            onChange={(e) => setNewDeckName(e.target.value)}
+            placeholder="e.g., Najeela Warriors"
+            style={{ width: '100%', padding: '12px', fontSize: '14px' }}
+            autoFocus
+          />
+        </div>
+
+        <div style={{ marginBottom: '20px' }}>
+          <label style={{ display: 'block', marginBottom: '8px', fontSize: '14px', fontWeight: '500' }}>
+            Game
+          </label>
+          <select
+            value={newDeckGame}
+            onChange={(e) => setNewDeckGame(e.target.value)}
+            style={{ width: '100%', padding: '12px', fontSize: '14px' }}
+          >
+            <option value="mtg">Magic: The Gathering</option>
+            <option value="riftbound">Riftbound</option>
+          </select>
+        </div>
+
+        <div style={{ marginBottom: '25px' }}>
+          <label style={{ display: 'block', marginBottom: '8px', fontSize: '14px', fontWeight: '500' }}>
+            Format
+          </label>
+          {newDeckGame === 'mtg' ? (
+            <select
+              value={newDeckFormat}
+              onChange={(e) => setNewDeckFormat(e.target.value)}
+              style={{ width: '100%', padding: '12px', fontSize: '14px' }}
+            >
+              <option value="commander">Commander</option>
+              <option value="modern">Modern</option>
+              <option value="standard">Standard</option>
+              <option value="legacy">Legacy</option>
+              <option value="vintage">Vintage</option>
+              <option value="pauper">Pauper</option>
+            </select>
+          ) : (
+            <select
+              value={newDeckFormat}
+              onChange={(e) => setNewDeckFormat(e.target.value)}
+              style={{ width: '100%', padding: '12px', fontSize: '14px' }}
+            >
+              <option value="ranked">Ranked</option>
+              <option value="casual">Casual</option>
+              <option value="draft">Draft</option>
+            </select>
+          )}
+        </div>
+
+        <div style={{ display: 'flex', gap: '10px' }}>
+          <button
+            className="btn btn-secondary"
+            onClick={() => setShowCreateModal(false)}
+            disabled={creating}
+            style={{ flex: 1 }}
+          >
+            Cancel
+          </button>
+          <button
+            className="btn btn-primary"
+            onClick={handleCreateDeck}
+            disabled={creating || !newDeckName.trim()}
+            style={{ flex: 1, background: '#4caf50' }}
+          >
+            {creating ? 'Creating...' : 'Create Deck'}
+          </button>
+        </div>
+      </Modal>
     </div>
   );
 }
