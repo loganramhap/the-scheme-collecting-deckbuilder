@@ -14,6 +14,8 @@ export default function Dashboard() {
   const [newDeckName, setNewDeckName] = useState('');
   const [newDeckGame, setNewDeckGame] = useState('mtg');
   const [newDeckFormat, setNewDeckFormat] = useState('commander');
+  const [activeTab, setActiveTab] = useState<'all' | 'mtg' | 'riftbound'>('all');
+  const [deckMetadata, setDeckMetadata] = useState<Record<string, { game: string; format: string }>>({});
 
   useEffect(() => {
     const loadDecks = async () => {
@@ -23,6 +25,24 @@ export default function Dashboard() {
           // Filter to only show deck repos (exclude system repos)
           const deckRepos = userRepos.filter(repo => !repo.name.startsWith('.'));
           setDecks(deckRepos);
+
+          // Load metadata for each deck to determine game type
+          const metadata: Record<string, { game: string; format: string }> = {};
+          for (const repo of deckRepos) {
+            try {
+              const fileContent = await giteaService.getFileContent(user.username, repo.name, 'deck.json');
+              const content = atob(fileContent.content);
+              const deck = JSON.parse(content);
+              metadata[repo.name] = {
+                game: deck.game || 'mtg',
+                format: deck.format || 'unknown',
+              };
+            } catch (error) {
+              // If can't read deck file, assume MTG
+              metadata[repo.name] = { game: 'mtg', format: 'unknown' };
+            }
+          }
+          setDeckMetadata(metadata);
         } catch (error) {
           console.error('Failed to load decks:', error);
         } finally {
@@ -114,6 +134,60 @@ export default function Dashboard() {
           </button>
         </div>
 
+        {/* Game filter tabs */}
+        {decks.length > 0 && (
+          <div style={{ display: 'flex', gap: '10px', marginBottom: '25px', borderBottom: '2px solid #333', paddingBottom: '10px' }}>
+            <button
+              onClick={() => setActiveTab('all')}
+              style={{
+                background: 'none',
+                border: 'none',
+                color: activeTab === 'all' ? '#0066cc' : '#999',
+                fontSize: '16px',
+                fontWeight: activeTab === 'all' ? '600' : '400',
+                cursor: 'pointer',
+                padding: '8px 16px',
+                borderBottom: activeTab === 'all' ? '2px solid #0066cc' : 'none',
+                marginBottom: '-12px',
+              }}
+            >
+              All Decks ({decks.length})
+            </button>
+            <button
+              onClick={() => setActiveTab('mtg')}
+              style={{
+                background: 'none',
+                border: 'none',
+                color: activeTab === 'mtg' ? '#0066cc' : '#999',
+                fontSize: '16px',
+                fontWeight: activeTab === 'mtg' ? '600' : '400',
+                cursor: 'pointer',
+                padding: '8px 16px',
+                borderBottom: activeTab === 'mtg' ? '2px solid #0066cc' : 'none',
+                marginBottom: '-12px',
+              }}
+            >
+              🃏 MTG ({decks.filter(d => deckMetadata[d.name]?.game === 'mtg').length})
+            </button>
+            <button
+              onClick={() => setActiveTab('riftbound')}
+              style={{
+                background: 'none',
+                border: 'none',
+                color: activeTab === 'riftbound' ? '#0066cc' : '#999',
+                fontSize: '16px',
+                fontWeight: activeTab === 'riftbound' ? '600' : '400',
+                cursor: 'pointer',
+                padding: '8px 16px',
+                borderBottom: activeTab === 'riftbound' ? '2px solid #0066cc' : 'none',
+                marginBottom: '-12px',
+              }}
+            >
+              ⚔️ Riftbound ({decks.filter(d => deckMetadata[d.name]?.game === 'riftbound').length})
+            </button>
+          </div>
+        )}
+
         {loading ? (
           <div style={{ textAlign: 'center', padding: '40px' }}>
             <p>Loading your decks...</p>
@@ -135,22 +209,37 @@ export default function Dashboard() {
           </div>
         ) : (
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '20px' }}>
-            {decks.map((deck) => (
-              <div key={deck.id} className="card" style={{ padding: '20px', cursor: 'pointer', transition: 'transform 0.2s' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start', marginBottom: '15px' }}>
-                  <h3 style={{ margin: 0 }}>{deck.name}</h3>
-                  <span style={{ fontSize: '24px' }}>🎴</span>
-                </div>
-                <p style={{ color: '#999', fontSize: '13px', marginBottom: '15px' }}>
-                  Deck collection
-                </p>
-                <Link to={`/deck/${deck.owner.username}/${deck.name}/deck.json`} style={{ textDecoration: 'none' }}>
-                  <button className="btn btn-primary" style={{ width: '100%' }}>
-                    Open Deck
-                  </button>
-                </Link>
-              </div>
-            ))}
+            {decks
+              .filter(deck => {
+                if (activeTab === 'all') return true;
+                return deckMetadata[deck.name]?.game === activeTab;
+              })
+              .map((deck) => {
+                const meta = deckMetadata[deck.name];
+                const gameIcon = meta?.game === 'riftbound' ? '⚔️' : '🃏';
+                
+                return (
+                  <div key={deck.id} className="card" style={{ padding: '20px', cursor: 'pointer', transition: 'transform 0.2s' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start', marginBottom: '15px' }}>
+                      <div>
+                        <h3 style={{ margin: 0, marginBottom: '5px' }}>{deck.name}</h3>
+                        <span style={{ fontSize: '12px', color: '#666', textTransform: 'uppercase' }}>
+                          {meta?.format || 'Unknown'}
+                        </span>
+                      </div>
+                      <span style={{ fontSize: '24px' }}>{gameIcon}</span>
+                    </div>
+                    <p style={{ color: '#999', fontSize: '13px', marginBottom: '15px' }}>
+                      {meta?.game === 'riftbound' ? 'Riftbound' : 'Magic: The Gathering'}
+                    </p>
+                    <Link to={`/deck/${deck.owner.username}/${deck.name}/deck.json`} style={{ textDecoration: 'none' }}>
+                      <button className="btn btn-primary" style={{ width: '100%' }}>
+                        Open Deck
+                      </button>
+                    </Link>
+                  </div>
+                );
+              })}
           </div>
         )}
       </div>
