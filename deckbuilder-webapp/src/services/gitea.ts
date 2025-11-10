@@ -49,9 +49,6 @@ class GiteaService {
   }
 
   async createBranch(owner: string, repo: string, branchName: string, fromBranch: string = 'main') {
-    const branches = await this.getBranches(owner, repo);
-    const sourceBranch = branches.find(b => b.name === fromBranch);
-    
     await axios.post(
       `${GITEA_URL}/api/v1/repos/${owner}/${repo}/branches`,
       { new_branch_name: branchName, old_branch_name: fromBranch },
