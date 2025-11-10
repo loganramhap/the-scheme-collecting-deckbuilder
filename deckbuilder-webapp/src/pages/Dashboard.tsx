@@ -138,13 +138,13 @@ export default function Dashboard() {
         ) : (
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '20px' }}>
             {decks.map((deck) => (
-              <div key={deck.id} className="card" style={{ padding: '20px', cursor: 'pointer', transition: 'transform 0.2s', ':hover': { transform: 'translateY(-2px)' } }}>
+              <div key={deck.id} className="card" style={{ padding: '20px', cursor: 'pointer', transition: 'transform 0.2s' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start', marginBottom: '15px' }}>
                   <h3 style={{ margin: 0 }}>{deck.name}</h3>
                   <span style={{ fontSize: '24px' }}>🎴</span>
                 </div>
                 <p style={{ color: '#999', fontSize: '13px', marginBottom: '15px' }}>
-                  Last updated: {new Date(deck.updated_at || deck.created_at).toLocaleDateString()}
+                  Deck collection
                 </p>
                 <Link to={`/deck/${deck.owner.username}/${deck.name}/deck.json`} style={{ textDecoration: 'none' }}>
                   <button className="btn btn-primary" style={{ width: '100%' }}>
