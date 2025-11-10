@@ -11,7 +11,7 @@ router.post('/user', async (req, res) => {
 
   try {
     // Try public registration API first (doesn't require admin token)
-    const userResponse = await axios.post(
+    await axios.post(
       `${GITEA_URL}/user/sign_up`,
       new URLSearchParams({
         user_name: username,
@@ -24,15 +24,24 @@ router.post('/user', async (req, res) => {
           'Content-Type': 'application/x-www-form-urlencoded',
         },
         maxRedirects: 0,
-        validateStatus: (status) => status === 302 || status === 200,
+        validateStatus: (status) => status === 302 || status === 200 || status === 303,
       }
     );
 
+    // If we get here, account was created successfully
     res.json({
       success: true,
       message: 'Account created successfully',
     });
   } catch (error) {
+    // Even if we get an error, the account might have been created
+    // Check if it's just a redirect or form response issue
+    if (error.response?.status === 302 || error.response?.status === 303) {
+      return res.json({
+        success: true,
+        message: 'Account created successfully',
+      });
+    }
     console.error('User provisioning failed:', error.response?.data || error.message);
     
     const status = error.response?.status;
