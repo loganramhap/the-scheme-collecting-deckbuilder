@@ -65,12 +65,20 @@ export default function Login() {
       }
     } catch (err: any) {
       console.error('Auth failed:', err);
-      if (err.response?.status === 401) {
+      
+      // Use the specific error message from the backend if available
+      const backendError = err.response?.data?.error;
+      
+      if (backendError) {
+        setError(backendError);
+      } else if (err.response?.status === 401) {
         setError('Invalid username or password');
       } else if (err.response?.status === 409) {
-        setError('Username already exists');
-      } else if (err.response?.status === 422) {
-        setError('Invalid email or username format');
+        setError('Username already taken');
+      } else if (err.response?.status === 400) {
+        setError('Invalid username, email, or password format');
+      } else if (err.code === 'ERR_NETWORK') {
+        setError('Cannot connect to server. Please try again later.');
       } else {
         setError(isSignUp ? 'Sign up failed. Please try again.' : 'Login failed. Please try again.');
       }
@@ -102,8 +110,15 @@ export default function Login() {
               placeholder="Choose a username"
               required
               disabled={loading}
+              pattern="[a-zA-Z0-9_-]+"
+              title="Username can only contain letters, numbers, underscores, and hyphens"
               style={{ width: '100%', padding: '12px', fontSize: '14px' }}
             />
+            {isSignUp && (
+              <p style={{ fontSize: '12px', color: '#999', marginTop: '4px' }}>
+                Letters, numbers, underscores, and hyphens only
+              </p>
+            )}
           </div>
 
           {isSignUp && (
@@ -134,8 +149,14 @@ export default function Login() {
               placeholder={isSignUp ? "Choose a strong password" : "Enter your password"}
               required
               disabled={loading}
+              minLength={isSignUp ? 6 : undefined}
               style={{ width: '100%', padding: '12px', fontSize: '14px' }}
             />
+            {isSignUp && (
+              <p style={{ fontSize: '12px', color: '#999', marginTop: '4px' }}>
+                At least 6 characters
+              </p>
+            )}
           </div>
 
           {error && (
