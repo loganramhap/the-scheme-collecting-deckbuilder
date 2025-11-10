@@ -44,6 +44,53 @@ export default function DeckList() {
 
   const [owner, repoName] = repo.split('/');
 
+  const createNewDeck = async () => {
+    const deckName = prompt('Enter deck name:');
+    if (!deckName) return;
+
+    const game = prompt('Game type (mtg or riftbound):', 'mtg');
+    if (!game || !['mtg', 'riftbound'].includes(game)) {
+      alert('Invalid game type. Must be "mtg" or "riftbound"');
+      return;
+    }
+
+    const format = prompt('Format (e.g., commander, modern, standard):', 'commander');
+    if (!format) return;
+
+    const newDeck = {
+      game,
+      format,
+      name: deckName,
+      cards: [],
+      sideboard: [],
+      metadata: {
+        author: 'user',
+        created: new Date().toISOString().split('T')[0],
+        description: '',
+      },
+    };
+
+    try {
+      const fileName = `decks/${deckName.toLowerCase().replace(/\s+/g, '-')}.deck.json`;
+      const content = JSON.stringify(newDeck, null, 2);
+      
+      await giteaService.createOrUpdateFile(
+        owner,
+        repoName,
+        fileName,
+        content,
+        `Create new deck: ${deckName}`,
+        'main'
+      );
+
+      alert('Deck created successfully!');
+      window.location.reload();
+    } catch (error) {
+      console.error('Failed to create deck:', error);
+      alert('Failed to create deck');
+    }
+  };
+
   return (
     <div className="container">
       <header style={{ marginBottom: '30px' }}>
@@ -52,10 +99,24 @@ export default function DeckList() {
       </header>
 
       <div className="card">
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+          <h2>Your Decks</h2>
+          <button 
+            className="btn btn-primary" 
+            onClick={createNewDeck}
+            style={{ background: '#4caf50' }}
+          >
+            + Create New Deck
+          </button>
+        </div>
         {loading ? (
           <p>Loading decks...</p>
         ) : decks.length === 0 ? (
-          <p>No decks found in this repository.</p>
+          <div style={{ textAlign: 'center', padding: '40px' }}>
+            <div style={{ fontSize: '48px', marginBottom: '20px' }}>🃏</div>
+            <p style={{ marginBottom: '20px', color: '#999' }}>No decks found in this repository.</p>
+            <p style={{ color: '#666', fontSize: '14px' }}>Click "Create New Deck" above to get started!</p>
+          </div>
         ) : (
           <div style={{ display: 'grid', gap: '15px' }}>
             {decks.map((deck) => (

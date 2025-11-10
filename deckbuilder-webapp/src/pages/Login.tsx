@@ -23,21 +23,39 @@ export default function Login() {
       return;
     }
     
-    const authUrl = `${GITEA_URL}/login/oauth/authorize?client_id=${CLIENT_ID}&redirect_uri=${encodeURIComponent(REDIRECT_URI)}&response_type=code&state=random_state`;
-    console.log('OAuth URL:', authUrl);
+    // Add prompt=login to force re-authentication and show authorization screen
+    const authUrl = `${GITEA_URL}/login/oauth/authorize?client_id=${CLIENT_ID}&redirect_uri=${encodeURIComponent(REDIRECT_URI)}&response_type=code&state=random_state&prompt=login`;
     window.location.href = authUrl;
   };
 
   return (
-    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
-      <div className="card" style={{ maxWidth: '400px', textAlign: 'center' }}>
-        <h1 style={{ marginBottom: '20px' }}>DeckBuilder</h1>
-        <p style={{ marginBottom: '30px', color: '#999' }}>
+    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', background: 'linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%)' }}>
+      <div className="card" style={{ maxWidth: '450px', textAlign: 'center', padding: '40px' }}>
+        <div style={{ fontSize: '48px', marginBottom: '20px' }}>🃏</div>
+        <h1 style={{ marginBottom: '10px', fontSize: '32px' }}>DeckBuilder</h1>
+        <p style={{ marginBottom: '30px', color: '#999', fontSize: '16px' }}>
           Git-powered deck management for MTG and Riftbound
         </p>
-        <button className="btn btn-primary" onClick={handleLogin} style={{ width: '100%' }}>
+        <button 
+          className="btn btn-primary" 
+          onClick={handleLogin} 
+          style={{ 
+            width: '100%', 
+            padding: '15px',
+            fontSize: '16px',
+            fontWeight: '600',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: '10px'
+          }}
+        >
+          <span>🔐</span>
           Sign in with Gitea
         </button>
+        <p style={{ marginTop: '20px', fontSize: '12px', color: '#666' }}>
+          Secure authentication via your Gitea account
+        </p>
       </div>
     </div>
   );

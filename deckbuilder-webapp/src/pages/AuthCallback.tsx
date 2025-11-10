@@ -45,11 +45,12 @@ export default function AuthCallback() {
 
   if (error) {
     return (
-      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
-        <div className="card">
-          <h2>Authentication Error</h2>
-          <p>{error}</p>
-          <button className="btn btn-primary" onClick={() => navigate('/login')}>
+      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', background: 'linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%)' }}>
+        <div className="card" style={{ maxWidth: '400px', textAlign: 'center', padding: '40px' }}>
+          <div style={{ fontSize: '48px', marginBottom: '20px' }}>⚠️</div>
+          <h2 style={{ marginBottom: '15px' }}>Authentication Error</h2>
+          <p style={{ color: '#f44336', marginBottom: '25px' }}>{error}</p>
+          <button className="btn btn-primary" onClick={() => navigate('/login')} style={{ width: '100%' }}>
             Try Again
           </button>
         </div>
@@ -58,10 +59,28 @@ export default function AuthCallback() {
   }
 
   return (
-    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
-      <div className="card">
-        <h2>Authenticating...</h2>
+    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', background: 'linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%)' }}>
+      <div className="card" style={{ maxWidth: '400px', textAlign: 'center', padding: '40px' }}>
+        <div style={{ fontSize: '48px', marginBottom: '20px' }}>
+          <div className="spinner" style={{ 
+            width: '50px', 
+            height: '50px', 
+            border: '4px solid #333',
+            borderTop: '4px solid #0066cc',
+            borderRadius: '50%',
+            animation: 'spin 1s linear infinite',
+            margin: '0 auto'
+          }}></div>
+        </div>
+        <h2 style={{ marginBottom: '10px' }}>Authenticating...</h2>
+        <p style={{ color: '#999', fontSize: '14px' }}>Please wait while we sign you in</p>
       </div>
+      <style>{`
+        @keyframes spin {
+          0% { transform: rotate(0deg); }
+          100% { transform: rotate(360deg); }
+        }
+      `}</style>
     </div>
   );
 }
