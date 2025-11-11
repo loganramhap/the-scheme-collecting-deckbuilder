@@ -1,10 +1,14 @@
 /**
- * Script to download Riftbound card images locally
+ * Script to download Riftbound card images locally and convert to WebP
  * Run with: node scripts/download-card-images.js
+ * 
+ * Requirements:
+ *   npm install sharp
  * 
  * Options:
  *   --force    Re-download all images even if they exist
  *   --limit N  Only download first N images (for testing)
+ *   --quality N  WebP quality (1-100, default: 85)
  */
 
 const https = require('https');
@@ -12,11 +16,22 @@ const http = require('http');
 const fs = require('fs');
 const path = require('path');
 
+// Try to load sharp for WebP conversion
+let sharp;
+try {
+  sharp = require('sharp');
+} catch (e) {
+  console.error('Error: sharp module not found. Install it with: npm install sharp');
+  process.exit(1);
+}
+
 // Parse command line arguments
 const args = process.argv.slice(2);
 const forceDownload = args.includes('--force');
 const limitIndex = args.indexOf('--limit');
 const limit = limitIndex >= 0 ? parseInt(args[limitIndex + 1]) : null;
+const qualityIndex = args.indexOf('--quality');
+const webpQuality = qualityIndex >= 0 ? parseInt(args[qualityIndex + 1]) : 85;
 
 // Read the card data
 const cardsPath = path.join(__dirname, '../data/riftbound-cards.json');
@@ -88,10 +103,27 @@ function downloadImage(url, filepath, retries = 3) {
   });
 }
 
+async function convertToWebP(inputPath, outputPath, quality = 85) {
+  try {
+    await sharp(inputPath)
+      .webp({ quality })
+      .toFile(outputPath);
+    
+    // Delete original file
+    fs.unlinkSync(inputPath);
+    
+    return true;
+  } catch (error) {
+    console.error(`    WebP conversion failed: ${error.message}`);
+    return false;
+  }
+}
+
 async function downloadAllImages() {
   const totalCards = limit ? Math.min(limit, cards.length) : cards.length;
   console.log(`Found ${cards.length} cards${limit ? ` (limiting to ${limit})` : ''}`);
   console.log(`Force download: ${forceDownload}`);
+  console.log(`WebP quality: ${webpQuality}`);
   console.log(`Images directory: ${imagesDir}\n`);
   
   let downloaded = 0;
@@ -116,41 +148,61 @@ async function downloadAllImages() {
     }
     
     try {
-      // Determine file extension from URL
-      const urlPath = new URL(card.image_url).pathname;
-      const ext = path.extname(urlPath) || '.png';
-      
       // Create a safe filename from card ID (remove invalid characters)
       const safeId = card.id.replace(/[\/\\:*?"<>|]/g, '-');
-      const filename = `${safeId}${ext}`;
-      const filepath = path.join(imagesDir, filename);
+      const webpFilename = `${safeId}.webp`;
+      const webpPath = path.join(imagesDir, webpFilename);
       
       // Skip if already downloaded (unless force flag is set)
-      if (!forceDownload && fs.existsSync(filepath)) {
+      if (!forceDownload && fs.existsSync(webpPath)) {
         console.log(`[${i + 1}/${totalCards}] Skipping ${card.name} - already exists`);
         skipped++;
         
         // Update card to use local path
-        card.image_url = `/images/riftbound/${filename}`;
+        card.image_url = `/images/riftbound/${webpFilename}`;
         continue;
       }
       
       console.log(`[${i + 1}/${totalCards}] Downloading ${card.name}...`);
       console.log(`  URL: ${card.image_url}`);
       
-      await downloadImage(card.image_url, filepath);
+      // Download to temporary file first
+      const urlPath = new URL(card.image_url).pathname;
+      const ext = path.extname(urlPath) || '.png';
+      const tempFilename = `${safeId}_temp${ext}`;
+      const tempPath = path.join(imagesDir, tempFilename);
+      
+      await downloadImage(card.image_url, tempPath);
       
       // Verify file was created and has content
-      const stats = fs.statSync(filepath);
-      if (stats.size === 0) {
+      const tempStats = fs.statSync(tempPath);
+      if (tempStats.size === 0) {
         throw new Error('Downloaded file is empty');
       }
       
-      // Update card to use local path
-      card.image_url = `/images/riftbound/${filename}`;
+      console.log(`  ✓ Downloaded (${(tempStats.size / 1024).toFixed(1)} KB)`);
+      console.log(`  Converting to WebP...`);
+      
+      // Convert to WebP
+      const converted = await convertToWebP(tempPath, webpPath, webpQuality);
+      
+      if (!converted) {
+        // If conversion failed, keep original
+        fs.renameSync(tempPath, path.join(imagesDir, `${safeId}${ext}`));
+        card.image_url = `/images/riftbound/${safeId}${ext}`;
+        console.log(`  ⚠ Kept original format`);
+      } else {
+        // Check WebP file size
+        const webpStats = fs.statSync(webpPath);
+        const savings = ((1 - webpStats.size / tempStats.size) * 100).toFixed(1);
+        
+        // Update card to use local WebP path
+        card.image_url = `/images/riftbound/${webpFilename}`;
+        
+        console.log(`  ✓ Converted to WebP (${(webpStats.size / 1024).toFixed(1)} KB, ${savings}% smaller)`);
+      }
       
       downloaded++;
-      console.log(`  ✓ Saved to ${filename} (${(stats.size / 1024).toFixed(1)} KB)`);
       
       // Small delay to avoid overwhelming the server
       await new Promise(resolve => setTimeout(resolve, 200));
