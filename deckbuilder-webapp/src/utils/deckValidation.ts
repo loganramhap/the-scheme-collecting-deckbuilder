@@ -58,13 +58,15 @@ export function validateDeck(
   format: string,
   specialSlots?: Record<string, any>
 ): ValidationResult {
-  const rules = VALIDATION_RULES[game]?.[format];
+  // For Riftbound, always use standard format regardless of what's specified
+  const actualFormat = game === 'riftbound' ? 'standard' : format;
+  const rules = VALIDATION_RULES[game]?.[actualFormat];
   
   if (!rules) {
     return {
       isValid: true,
       errors: [],
-      warnings: [`No validation rules found for ${game} ${format}`],
+      warnings: [`No validation rules found for ${game} ${actualFormat}`],
     };
   }
 

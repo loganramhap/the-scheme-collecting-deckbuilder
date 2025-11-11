@@ -107,3 +107,28 @@
   width: 300px;
   height: 420px;
 }
+
+/* Battlefield cards (horizontal layout) */
+.card-image-battlefield {
+  aspect-ratio: 16/9 !important;
+  height: auto !important;
+}
+
+.card-image-battlefield.card-image-small {
+  width: 140px;
+  height: auto;
+}
+
+.card-image-battlefield.card-image-normal {
+  width: 280px;
+  height: auto;
+}
+
+.card-image-battlefield.card-image-large {
+  width: 420px;
+  height: auto;
+}
+
+.card-image-battlefield .card-image {
+  object-fit: contain;
+}

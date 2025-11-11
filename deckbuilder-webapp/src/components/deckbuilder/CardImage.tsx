@@ -18,6 +18,11 @@ export const CardImage: React.FC<CardImageProps> = React.memo(({
   const [imageLoaded, setImageLoaded] = useState(false);
   const [imageError, setImageError] = useState(false);
 
+  // Check if this is a battlefield card (horizontal layout)
+  const isBattlefield = 'type' in card && 
+    (card.type?.toLowerCase() === 'battlefield' || 
+     ('card_type' in card && (card as any).card_type?.toLowerCase() === 'battlefield'));
+
   const handleImageLoad = () => {
     setImageLoaded(true);
     setImageError(false);
@@ -36,7 +41,7 @@ export const CardImage: React.FC<CardImageProps> = React.memo(({
   };
 
   return (
-    <div className={`card-image-container card-image-${size} ${className}`}>
+    <div className={`card-image-container card-image-${size} ${isBattlefield ? 'card-image-battlefield' : ''} ${className}`}>
       {/* Loading skeleton */}
       {(isLoading || !imageLoaded) && !imageError && (
         <div className="card-image-skeleton">
