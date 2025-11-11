@@ -68,8 +68,23 @@ export const CardGrid: React.FC<CardGridProps> = ({
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  // Calculate columns based on container width (responsive)
-  const containerWidth = typeof window !== 'undefined' ? Math.min(window.innerWidth - 40, 1360) : 1360;
+  // Measure actual container width
+  const containerRef = React.useRef<HTMLDivElement>(null);
+  const [containerWidth, setContainerWidth] = useState(1200);
+
+  useEffect(() => {
+    const updateWidth = () => {
+      if (containerRef.current) {
+        setContainerWidth(containerRef.current.offsetWidth);
+      }
+    };
+
+    updateWidth();
+    window.addEventListener('resize', updateWidth);
+    return () => window.removeEventListener('resize', updateWidth);
+  }, []);
+
+  // Calculate columns based on actual container width
   const columnCount = Math.max(1, Math.floor(containerWidth / columnWidth));
   const rowCount = Math.ceil(cards.length / columnCount);
 
@@ -254,7 +269,7 @@ export const CardGrid: React.FC<CardGridProps> = ({
   }
 
   return (
-    <div className="card-grid-container">
+    <div className="card-grid-container" ref={containerRef}>
       {gridElement}
       <CardPreview card={hoveredCard} position={previewPosition} />
     </div>

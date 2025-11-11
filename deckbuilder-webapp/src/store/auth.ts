@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import type { GiteaUser } from '../types/gitea';
 import { giteaService } from '../services/gitea';
+import { clearAllCaches } from '../utils/cacheManager';
 
 interface AuthState {
   user: GiteaUser | null;
@@ -51,6 +52,9 @@ export const useAuthStore = create<AuthState>((set) => {
       set({ user: null, token: null, isAuthenticated: false });
       localStorage.removeItem('auth-token');
       localStorage.removeItem('auth-user');
+      
+      // Clear all caches on logout
+      clearAllCaches();
     },
   };
 });

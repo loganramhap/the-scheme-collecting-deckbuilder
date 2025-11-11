@@ -1,10 +1,13 @@
 import { create } from 'zustand';
 import type { Deck, DeckCard } from '../types/deck';
+import type { DeckCommit } from '../types/versioning';
 
 interface DeckState {
   currentDeck: Deck | null;
   isDirty: boolean;
-  setDeck: (deck: Deck) => void;
+  restoredFromCommit: DeckCommit | null;
+  setDeck: (deck: Deck, markDirty?: boolean) => void;
+  setRestoredDeck: (deck: Deck, commit: DeckCommit) => void;
   addCard: (card: DeckCard) => void;
   removeCard: (cardId: string) => void;
   updateCardCount: (cardId: string, count: number) => void;
@@ -20,8 +23,11 @@ interface DeckState {
 export const useDeckStore = create<DeckState>((set) => ({
   currentDeck: null,
   isDirty: false,
+  restoredFromCommit: null,
 
-  setDeck: (deck) => set({ currentDeck: deck, isDirty: false }),
+  setDeck: (deck, markDirty = false) => set({ currentDeck: deck, isDirty: markDirty, restoredFromCommit: null }),
+
+  setRestoredDeck: (deck, commit) => set({ currentDeck: deck, isDirty: true, restoredFromCommit: commit }),
 
   addCard: (card) =>
     set((state) => {
@@ -148,7 +154,7 @@ export const useDeckStore = create<DeckState>((set) => ({
       };
     }),
 
-  clearDeck: () => set({ currentDeck: null, isDirty: false }),
+  clearDeck: () => set({ currentDeck: null, isDirty: false, restoredFromCommit: null }),
 
-  markClean: () => set({ isDirty: false }),
+  markClean: () => set({ isDirty: false, restoredFromCommit: null }),
 }));

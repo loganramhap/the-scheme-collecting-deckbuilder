@@ -1,5 +1,5 @@
 import { useEffect, useRef, useCallback, useState } from 'react';
-import { giteaService } from '../services/gitea';
+import { versionControlService } from '../services/versionControl';
 import type { Deck } from '../types/deck';
 
 export interface AutoSaveStatus {
@@ -17,7 +17,7 @@ export interface UseAutoSaveOptions {
 
 export interface UseAutoSaveReturn {
   status: AutoSaveStatus;
-  triggerSave: (customMessage?: string) => Promise<void>;
+  triggerSave: (customMessage?: string) => Promise<string | undefined>;
   resetTimer: () => void;
 }
 
@@ -29,6 +29,7 @@ export interface UseAutoSaveReturn {
  * @param owner - Repository owner
  * @param repo - Repository name
  * @param path - File path in repository
+ * @param branch - Branch name (defaults to 'main')
  * @param options - Configuration options
  */
 export function useAutoSave(
@@ -37,6 +38,7 @@ export function useAutoSave(
   owner: string | undefined,
   repo: string | undefined,
   path: string | undefined,
+  branch: string = 'main',
   options: UseAutoSaveOptions = {}
 ): UseAutoSaveReturn {
   const {
@@ -54,14 +56,18 @@ export function useAutoSave(
 
   const saveTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const lastDeckRef = useRef<string | null>(null);
+  const previousDeckRef = useRef<Deck | null>(null);
 
   /**
    * Performs the actual save operation to Gitea
+   * @param customMessage - Optional custom commit message
+   * @param isManualSave - Whether this is a manual save (not auto-save)
+   * @returns The commit SHA if successful
    */
   const performSave = useCallback(
-    async (customMessage?: string) => {
+    async (customMessage?: string, isManualSave: boolean = false): Promise<string | undefined> => {
       if (!deck || !owner || !repo || !path) {
-        return;
+        return undefined;
       }
 
       setStatus((prev) => ({ ...prev, isSaving: true, error: null }));
@@ -69,15 +75,30 @@ export function useAutoSave(
       try {
         const content = JSON.stringify(deck, null, 2);
         
-        // Generate auto-save message if not provided
-        const message = customMessage || generateAutoSaveMessage(deck);
+        // Generate commit message with change details
+        let message: string;
+        const isAutoSave = !isManualSave && !customMessage;
+        
+        if (customMessage) {
+          // Use custom message provided by user
+          message = customMessage;
+        } else if (isAutoSave && previousDeckRef.current) {
+          // Generate auto-save message with diff details (async for large decks)
+          message = await versionControlService.generateAutoSaveMessageAsync(previousDeckRef.current, deck);
+        } else {
+          // Fallback to basic auto-save message
+          message = generateBasicAutoSaveMessage(deck);
+        }
 
-        await giteaService.createOrUpdateFile(
+        // Use versionControlService to commit with proper metadata
+        const commit = await versionControlService.commitDeck(
           owner,
           repo,
-          path,
-          content,
-          message
+          branch,
+          deck,
+          message,
+          isAutoSave,
+          path
         );
 
         setStatus({
@@ -86,10 +107,13 @@ export function useAutoSave(
           error: null,
         });
 
-        // Update last saved deck reference
+        // Update references for next save
         lastDeckRef.current = content;
+        previousDeckRef.current = JSON.parse(content) as Deck;
 
         onSaveSuccess?.();
+        
+        return commit.sha;
       } catch (error) {
         const errorMessage = error instanceof Error ? error.message : 'Unknown error';
         setStatus((prev) => ({
@@ -99,23 +123,27 @@ export function useAutoSave(
         }));
 
         onSaveError?.(error instanceof Error ? error : new Error(errorMessage));
+        return undefined;
       }
     },
-    [deck, owner, repo, path, onSaveSuccess, onSaveError]
+    [deck, owner, repo, path, branch, onSaveSuccess, onSaveError]
   );
 
   /**
    * Triggers an immediate save, bypassing the debounce timer
+   * @param customMessage - Optional custom commit message
+   * @returns The commit SHA if successful
    */
   const triggerSave = useCallback(
-    async (customMessage?: string) => {
+    async (customMessage?: string): Promise<string | undefined> => {
       // Clear any pending auto-save
       if (saveTimerRef.current) {
         clearTimeout(saveTimerRef.current);
         saveTimerRef.current = null;
       }
 
-      await performSave(customMessage);
+      // Manual saves are marked as such (not auto-save)
+      return await performSave(customMessage, true);
     },
     [performSave]
   );
@@ -129,6 +157,15 @@ export function useAutoSave(
       saveTimerRef.current = null;
     }
   }, []);
+
+  /**
+   * Initialize previous deck reference when deck is first loaded
+   */
+  useEffect(() => {
+    if (deck && !previousDeckRef.current) {
+      previousDeckRef.current = JSON.parse(JSON.stringify(deck)) as Deck;
+    }
+  }, [deck]);
 
   /**
    * Auto-save effect - triggers save after debounce period when deck is dirty
@@ -149,9 +186,10 @@ export function useAutoSave(
       clearTimeout(saveTimerRef.current);
     }
 
-    // Set new timer
+    // Set new timer for auto-save
     saveTimerRef.current = setTimeout(() => {
-      performSave();
+      // Auto-save without custom message (isManualSave = false)
+      performSave(undefined, false);
     }, debounceMs);
 
     // Cleanup on unmount or when dependencies change
@@ -170,9 +208,9 @@ export function useAutoSave(
 }
 
 /**
- * Generates a descriptive auto-save commit message based on deck changes
+ * Generates a basic auto-save commit message (fallback when no previous deck state)
  */
-function generateAutoSaveMessage(deck: Deck): string {
+function generateBasicAutoSaveMessage(deck: Deck): string {
   const totalCards = deck.cards.reduce((sum, card) => sum + card.count, 0);
   const timestamp = new Date().toLocaleTimeString();
   

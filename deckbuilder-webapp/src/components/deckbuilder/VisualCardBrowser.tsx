@@ -35,13 +35,6 @@ export const VisualCardBrowser: React.FC<VisualCardBrowserProps> = ({
 
   return (
     <div className="visual-card-browser">
-      <div className="browser-sidebar">
-        <CardFilters
-          filters={filters}
-          onFilterChange={onFilterChange}
-          gameType={gameType}
-        />
-      </div>
       <div className="browser-main">
         <div className="browser-header">
           <h3>Card Pool</h3>
@@ -56,6 +49,13 @@ export const VisualCardBrowser: React.FC<VisualCardBrowserProps> = ({
           onCardIncrement={onCardIncrement}
           onCardDecrement={onCardDecrement}
           maxCopiesPerCard={maxCopiesPerCard}
+        />
+      </div>
+      <div className="browser-sidebar">
+        <CardFilters
+          filters={filters}
+          onFilterChange={onFilterChange}
+          gameType={gameType}
         />
       </div>
     </div>

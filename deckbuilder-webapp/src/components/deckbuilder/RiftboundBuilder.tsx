@@ -102,15 +102,16 @@ export const RiftboundBuilder: React.FC<RiftboundBuilderProps> = ({
   }
 
   return (
-    <div className="riftbound-builder" style={{ display: 'flex', gap: '20px', height: 'calc(100vh - 120px)' }}>
+    <div className="riftbound-builder" style={{ display: 'flex', gap: '20px', height: 'calc(100vh - 120px)', overflow: 'hidden' }}>
       {/* Left sidebar: Legend, Battlefield, Rune Indicator, and Deck Stats */}
       <div style={{ 
         display: 'flex',
         flexDirection: 'column',
         gap: '20px',
-        width: '320px',
+        width: '280px',
         flexShrink: 0,
-        overflowY: 'auto'
+        overflowY: 'auto',
+        overflowX: 'hidden'
       }}>
         <div style={{ 
           padding: '20px',
@@ -192,13 +193,8 @@ export const RiftboundBuilder: React.FC<RiftboundBuilderProps> = ({
         display: 'flex',
         flexDirection: 'column',
         minWidth: 0,
-        background: '#1a1a1a',
-        borderRadius: '8px',
-        padding: '20px',
-        overflowY: 'auto'
+        overflow: 'hidden'
       }}>
-        <h2 style={{ margin: '0 0 20px 0' }}>Card Browser</h2>
-
         {/* Visual Card Browser wrapped in DeckZone for drag and drop */}
         <DeckZone 
           onCardDrop={handleCardAdd}

@@ -1,10 +1,19 @@
 import axios from 'axios';
 import type { GiteaUser, GiteaRepo, GiteaBranch, GiteaCommit, GiteaPullRequest, GiteaFileContent } from '../types/gitea';
+import type { DeckCommit, DeckBranch } from '../types/versioning';
+import type { Deck } from '../types/deck';
+import { LRUCache } from '../utils/lruCache';
 
 const GITEA_URL = import.meta.env.VITE_GITEA_URL || 'http://localhost:3000';
 
 class GiteaService {
   private token: string | null = null;
+  private deckVersionCache: LRUCache<string, Deck>;
+
+  constructor() {
+    // Initialize LRU cache with max 10 deck versions
+    this.deckVersionCache = new LRUCache<string, Deck>(10);
+  }
 
   setToken(token: string) {
     this.token = token;
@@ -149,6 +158,238 @@ class GiteaService {
       `${GITEA_URL}/api/v1/repos/${owner}/${repo}`,
       { headers: this.getHeaders() }
     );
+  }
+
+  /**
+   * Get commit history for a branch with pagination
+   * @param owner Repository owner
+   * @param repo Repository name
+   * @param branch Branch name (defaults to 'main')
+   * @param page Page number (defaults to 1)
+   * @param perPage Number of commits per page (defaults to 20)
+   * @returns Array of DeckCommit objects
+   */
+  async getCommitHistory(
+    owner: string,
+    repo: string,
+    branch: string = 'main',
+    page: number = 1,
+    perPage: number = 20
+  ): Promise<DeckCommit[]> {
+    const { data } = await axios.get<GiteaCommit[]>(
+      `${GITEA_URL}/api/v1/repos/${owner}/${repo}/commits`,
+      {
+        headers: this.getHeaders(),
+        params: {
+          sha: branch,
+          page,
+          limit: perPage,
+        },
+      }
+    );
+
+    // Transform Gitea commits to DeckCommit format
+    return data.map((giteaCommit) => {
+      // Check if this is an auto-save commit by looking at the message
+      const isAutoSave = giteaCommit.commit.message.startsWith('Auto-save:');
+      
+      // Try to parse changes summary from commit message
+      let changesSummary: DeckCommit['changesSummary'] | undefined;
+      const summaryMatch = giteaCommit.commit.message.match(/Added (\d+) cards?, removed (\d+) cards?, modified (\d+) cards?/i);
+      if (summaryMatch) {
+        changesSummary = {
+          cardsAdded: parseInt(summaryMatch[1], 10),
+          cardsRemoved: parseInt(summaryMatch[2], 10),
+          cardsModified: parseInt(summaryMatch[3], 10),
+        };
+      }
+
+      return {
+        sha: giteaCommit.sha,
+        message: giteaCommit.commit.message,
+        author: {
+          name: giteaCommit.commit.author.name,
+          email: giteaCommit.commit.author.email,
+          date: giteaCommit.commit.author.date,
+        },
+        committer: {
+          name: giteaCommit.commit.committer.name,
+          email: giteaCommit.commit.committer.email,
+          date: giteaCommit.commit.committer.date,
+        },
+        parents: giteaCommit.parents.map((p) => p.sha),
+        isAutoSave,
+        changesSummary,
+      };
+    });
+  }
+
+  /**
+   * Get deck state at a specific commit
+   * @param owner Repository owner
+   * @param repo Repository name
+   * @param sha Commit SHA
+   * @param deckPath Path to deck file (defaults to 'deck.json')
+   * @returns Deck object at the specified commit
+   */
+  async getDeckAtCommit(
+    owner: string,
+    repo: string,
+    sha: string,
+    deckPath: string = 'deck.json'
+  ): Promise<Deck> {
+    // Create cache key
+    const cacheKey = `${owner}/${repo}/${sha}/${deckPath}`;
+
+    // Check cache first
+    const cachedDeck = this.deckVersionCache.get(cacheKey);
+    if (cachedDeck) {
+      return cachedDeck;
+    }
+
+    // Fetch from API
+    const { data } = await axios.get<GiteaFileContent>(
+      `${GITEA_URL}/api/v1/repos/${owner}/${repo}/contents/${deckPath}`,
+      {
+        headers: this.getHeaders(),
+        params: {
+          ref: sha,
+        },
+      }
+    );
+
+    // Decode the base64 content
+    const decodedContent = decodeURIComponent(escape(atob(data.content)));
+    const deck = JSON.parse(decodedContent) as Deck;
+
+    // Store in cache
+    this.deckVersionCache.set(cacheKey, deck);
+
+    return deck;
+  }
+
+  /**
+   * Create a new Git branch
+   * @param owner Repository owner
+   * @param repo Repository name
+   * @param branchName New branch name
+   * @param fromBranch Source branch (defaults to 'main')
+   * @returns Created DeckBranch object
+   */
+  async createBranchFromRef(
+    owner: string,
+    repo: string,
+    branchName: string,
+    fromBranch: string = 'main'
+  ): Promise<DeckBranch> {
+    // Create the branch using existing method
+    await this.createBranch(owner, repo, branchName, fromBranch);
+
+    // Fetch the newly created branch to get its details
+    const branches = await this.listBranches(owner, repo);
+    const newBranch = branches.find((b) => b.name === branchName);
+
+    if (!newBranch) {
+      throw new Error(`Failed to create branch: ${branchName}`);
+    }
+
+    return newBranch;
+  }
+
+  /**
+   * List all branches in a repository
+   * @param owner Repository owner
+   * @param repo Repository name
+   * @returns Array of DeckBranch objects
+   */
+  async listBranches(owner: string, repo: string): Promise<DeckBranch[]> {
+    const { data } = await axios.get<GiteaBranch[]>(
+      `${GITEA_URL}/api/v1/repos/${owner}/${repo}/branches`,
+      { headers: this.getHeaders() }
+    );
+
+    // Get repository info to determine the default branch
+    const repoInfo = await this.getRepoInfo(owner, repo);
+    const defaultBranch = repoInfo.default_branch;
+
+    return data.map((branch) => ({
+      name: branch.name,
+      commit: {
+        sha: branch.commit.id,
+        message: branch.commit.message,
+        date: new Date().toISOString(), // Gitea branch API doesn't include date, would need separate commit fetch
+      },
+      protected: branch.name === defaultBranch,
+    }));
+  }
+
+  /**
+   * Get repository information
+   * @param owner Repository owner
+   * @param repo Repository name
+   * @returns Repository information
+   */
+  async getRepoInfo(owner: string, repo: string): Promise<GiteaRepo> {
+    const { data } = await axios.get<GiteaRepo>(
+      `${GITEA_URL}/api/v1/repos/${owner}/${repo}`,
+      { headers: this.getHeaders() }
+    );
+    return data;
+  }
+
+  /**
+   * Clear the deck version cache
+   * Should be called on logout or when cache needs to be invalidated
+   */
+  clearDeckVersionCache(): void {
+    this.deckVersionCache.clear();
+  }
+
+  /**
+   * Merge a source branch into a target branch
+   * @param owner Repository owner
+   * @param repo Repository name
+   * @param sourceBranch Source branch to merge from
+   * @param targetBranch Target branch to merge into
+   * @param message Merge commit message
+   * @returns The merge commit
+   */
+  async mergeBranch(
+    owner: string,
+    repo: string,
+    sourceBranch: string,
+    targetBranch: string,
+    message: string
+  ): Promise<DeckCommit> {
+    // Gitea's merge API uses the pull request merge endpoint
+    // First, we need to create a pull request, then merge it
+    // For a simpler approach, we'll use the merge endpoint directly if available
+    
+    const { data } = await axios.post<GiteaCommit>(
+      `${GITEA_URL}/api/v1/repos/${owner}/${repo}/merge-base/${targetBranch}/${sourceBranch}`,
+      {
+        message,
+      },
+      { headers: this.getHeaders() }
+    );
+
+    // Transform to DeckCommit format
+    return {
+      sha: data.sha,
+      message: data.commit.message,
+      author: {
+        name: data.commit.author.name,
+        email: data.commit.author.email,
+        date: data.commit.author.date,
+      },
+      committer: {
+        name: data.commit.committer.name,
+        email: data.commit.committer.email,
+        date: data.commit.committer.date,
+      },
+      parents: data.parents.map((p) => p.sha),
+      isAutoSave: false,
+    };
   }
 }
 
