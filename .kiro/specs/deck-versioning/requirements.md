@@ -135,3 +135,18 @@ This spec defines the requirements for implementing deck versioning and history 
 3. THE System SHALL allow clicking on timeline nodes to view that version
 4. THE System SHALL highlight merge commits with a special icon
 5. THE System SHALL display the timeline in reverse chronological order (newest first)
+
+### Requirement 11: Per-Card Change Annotations
+
+**User Story:** As a deck builder, I want to add specific reasons for each card I add or remove, so that I can remember my exact reasoning for individual card changes.
+
+#### Acceptance Criteria
+
+1. WHEN saving a deck with changes, THE System SHALL display a list of added and removed cards
+2. THE System SHALL provide an optional text input for each changed card to add a reason
+3. THE System SHALL allow annotations up to 200 characters per card
+4. THE System SHALL store card annotations as part of the commit metadata
+5. THE System SHALL display card annotations in the diff viewer
+6. THE System SHALL display card annotations in the commit history details
+7. THE System SHALL provide quick reason templates like "Testing", "Meta shift", "Underperforming"
+8. THE System SHALL allow bulk annotation for multiple cards with the same reason

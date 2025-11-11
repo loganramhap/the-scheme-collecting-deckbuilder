@@ -40,4 +40,7 @@ export type {
   DeckBranch,
   DeckDiff as VersioningDeckDiff,
   CommitTemplate,
+  CardChangeAnnotation,
+  AnnotatedCommit,
+  AnnotationTemplate,
 } from './versioning';

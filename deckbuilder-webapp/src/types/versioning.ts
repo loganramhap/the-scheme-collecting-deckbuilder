@@ -74,3 +74,32 @@ export interface CommitTemplate {
   template: string; // Template with placeholders
   category: 'testing' | 'optimization' | 'meta' | 'custom';
 }
+
+/**
+ * Represents an annotation for a specific card change
+ */
+export interface CardChangeAnnotation {
+  cardId: string; // ID of the changed card
+  cardName: string; // Name for display
+  changeType: 'added' | 'removed' | 'modified';
+  reason?: string; // User's reason for the change (max 200 chars)
+  oldCount?: number; // Previous quantity (for modified)
+  newCount?: number; // New quantity (for modified)
+}
+
+/**
+ * Represents a commit with card-level annotations
+ */
+export interface AnnotatedCommit extends DeckCommit {
+  cardAnnotations?: CardChangeAnnotation[];
+}
+
+/**
+ * Represents a template for quick annotation reasons
+ */
+export interface AnnotationTemplate {
+  id: string;
+  label: string;
+  reason: string;
+  category: 'testing' | 'meta' | 'performance' | 'synergy' | 'cost';
+}

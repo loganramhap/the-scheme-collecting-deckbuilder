@@ -685,32 +685,154 @@
 
   - _Requirements: All_
 
-## Phase 10: Testing and Documentation
+## Phase 10: Per-Card Annotations
 
-- [ ]* 31. Write unit tests
-  - [ ]* 31.1 Test DeckDiffService.calculateDiff with various scenarios
-  - [ ]* 31.2 Test VersionControlService methods with mocked Gitea API
-  - [ ]* 31.3 Test commit message generation logic
-  - [ ]* 31.4 Test branch name validation
+- [x] 31. Create annotation data structures
+
+
+
+
+
+
+
+
+  - [x] 31.1 Add CardChangeAnnotation interface to types/versioning.ts
+
+  - [x] 31.2 Add AnnotatedCommit interface extending DeckCommit
+
+
+
+
+  - [x] 31.3 Add AnnotationTemplate interface for quick reasons
+
+
+  - [x] 31.4 Export new types from types/index.ts
+
+  - _Requirements: 11.4, 11.7_
+
+- [x] 32. Build CardChangeAnnotator component
+
+
+
+
+
+  - [x] 32.1 Create component to display list of changed cards
+
+
+  - [x] 32.2 Add text input for each card's reason (200 char limit)
+
+  - [x] 32.3 Add template dropdown with quick reasons
+
+  - [x] 32.4 Implement bulk annotation for multiple cards
+
+  - [x] 32.5 Add character counter per annotation
+
+  - [x] 32.6 Display card images for visual reference
+
+  - _Requirements: 11.1, 11.2, 11.3, 11.7, 11.8_
+
+- [x] 33. Create annotation templates
+  - [x] 33.1 Define default annotation templates (Testing, Meta shift, etc.)
+  - [x] 33.2 Store templates in constants file
+  - [x] 33.3 Allow custom templates in localStorage
+
+  - _Requirements: 11.7_
+
+- [x] 34. Update CommitMessageModal for annotations
+
+
+
+
+
+  - [x] 34.1 Add CardChangeAnnotator to modal
+
+
+  - [x] 34.2 Pass deckDiff prop to show changes
+
+  - [x] 34.3 Collect annotations on commit
+
+  - [x] 34.4 Update onCommit callback to include annotations
+
+  - [x] 34.5 Show annotation summary in commit preview
+
+  - _Requirements: 11.1, 11.2, 11.3_
+-
+
+- [x] 35. Update version control service for annotations
+
+  - [x] 35.1 Modify commitDeck to accept annotations parameter
+  - [x] 35.2 Store annotations in commit metadata/message
+  - [x] 35.3 Parse annotations when loading commit history
+  - [x] 35.4 Update commit message format to include annotations
+
+  - _Requirements: 11.4_
+
+- [x] 36. Update DiffViewer to show annotations
+
+
+
+
+  - [x] 36.1 Display annotation icons for cards with reasons
+
+
+  - [x] 36.2 Show annotations as tooltips on hover
+
+  - [x] 36.3 Add inline annotation display option
+
+  - [x] 36.4 Style annotations with different colors by category
+
+  - _Requirements: 11.5_
+
+- [x] 37. Update HistoryPanel to show annotations
+
+
+
+
+
+  - [x] 37.1 Add annotation indicators to commit list
+
+
+  - [x] 37.2 Show annotation count in commit summary
+
+
+  - [x] 37.3 Display annotations in commit details view
+
+
+  - [x] 37.4 Add filter to show only annotated commits
+
+
+  - _Requirements: 11.6_
+
+## Phase 11: Testing and Documentation
+
+- [ ]* 38. Write unit tests
+  - [ ]* 38.1 Test DeckDiffService.calculateDiff with various scenarios
+  - [ ]* 38.2 Test VersionControlService methods with mocked Gitea API
+  - [ ]* 38.3 Test commit message generation logic
+  - [ ]* 38.4 Test branch name validation
+  - [ ]* 38.5 Test annotation parsing and formatting
   - _Requirements: All_
 
-- [ ]* 32. Write integration tests
-  - [ ]* 32.1 Test full save flow with commit message
-  - [ ]* 32.2 Test history loading and pagination
-  - [ ]* 32.3 Test branch creation and switching
-  - [ ]* 32.4 Test merge with and without conflicts
+- [ ]* 39. Write integration tests
+  - [ ]* 39.1 Test full save flow with commit message and annotations
+  - [ ]* 39.2 Test history loading and pagination
+  - [ ]* 39.3 Test branch creation and switching
+  - [ ]* 39.4 Test merge with and without conflicts
+  - [ ]* 39.5 Test annotation display in diff viewer
   - _Requirements: All_
 
-- [ ]* 33. Write E2E tests
-  - [ ]* 33.1 Test user saves deck with custom message
-  - [ ]* 33.2 Test user views history and restores old version
-  - [ ]* 33.3 Test user creates branch, makes changes, merges back
-  - [ ]* 33.4 Test user compares two versions
+- [ ]* 40. Write E2E tests
+  - [ ]* 40.1 Test user saves deck with custom message and card annotations
+  - [ ]* 40.2 Test user views history and sees annotations
+  - [ ]* 40.3 Test user creates branch, makes changes, merges back
+  - [ ]* 40.4 Test user compares two versions and sees annotations
+  - [ ]* 40.5 Test bulk annotation workflow
   - _Requirements: All_
 
-- [ ]* 34. Create user documentation
-  - [ ]* 34.1 Write guide for commit messages
-  - [ ]* 34.2 Write guide for viewing history
-  - [ ]* 34.3 Write guide for branching and merging
-  - [ ]* 34.4 Add tooltips and help text in UI
+- [ ]* 41. Create user documentation
+  - [ ]* 41.1 Write guide for commit messages and annotations
+  - [ ]* 41.2 Write guide for viewing history with annotations
+  - [ ]* 41.3 Write guide for branching and merging
+  - [ ]* 41.4 Add tooltips and help text in UI
+  - [ ]* 41.5 Document annotation best practices
   - _Requirements: All_

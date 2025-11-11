@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import Modal from '../Modal';
 import type { Deck } from '../../types/deck';
-import type { DeckCommit, DeckDiff } from '../../types/versioning';
+import type { AnnotatedCommit, DeckDiff, CardChangeAnnotation } from '../../types/versioning';
 import { deckDiffService } from '../../services/deckDiff';
 
 interface DiffViewerProps {
@@ -9,15 +9,15 @@ interface DiffViewerProps {
   onClose: () => void;
   oldDeck: Deck;
   newDeck: Deck;
-  oldCommit: DeckCommit;
-  newCommit: DeckCommit;
+  oldCommit: AnnotatedCommit;
+  newCommit: AnnotatedCommit;
 }
 
 type ViewMode = 'side-by-side' | 'unified';
 
 /**
  * Component for displaying visual comparison of two deck versions
- * Based on Requirements 3.2, 3.3, 3.4, 3.5, 3.6
+ * Based on Requirements 3.2, 3.3, 3.4, 3.5, 3.6, 11.5
  */
 export const DiffViewer: React.FC<DiffViewerProps> = ({
   isOpen,
@@ -28,9 +28,13 @@ export const DiffViewer: React.FC<DiffViewerProps> = ({
   newCommit,
 }) => {
   const [viewMode, setViewMode] = useState<ViewMode>('side-by-side');
+  const [showInlineAnnotations, setShowInlineAnnotations] = useState<boolean>(false);
   
   // Calculate diff between the two decks
   const diff = deckDiffService.calculateDiff(oldDeck, newDeck);
+  
+  // Get annotations from the new commit (most recent changes)
+  const annotations = newCommit.cardAnnotations || [];
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} title="Compare Versions">
@@ -86,14 +90,29 @@ export const DiffViewer: React.FC<DiffViewerProps> = ({
           >
             Unified
           </button>
+          <button
+            className={`view-toggle-btn annotation-toggle ${showInlineAnnotations ? 'active' : ''}`}
+            onClick={() => setShowInlineAnnotations(!showInlineAnnotations)}
+            title="Toggle inline annotations"
+          >
+            {showInlineAnnotations ? '📝 Hide Annotations' : '📝 Show Annotations'}
+          </button>
         </div>
 
         {/* Diff content */}
         <div className="diff-content">
           {viewMode === 'side-by-side' ? (
-            <SideBySideView diff={diff} />
+            <SideBySideView 
+              diff={diff} 
+              annotations={annotations}
+              showInlineAnnotations={showInlineAnnotations}
+            />
           ) : (
-            <UnifiedView diff={diff} />
+            <UnifiedView 
+              diff={diff}
+              annotations={annotations}
+              showInlineAnnotations={showInlineAnnotations}
+            />
           )}
         </div>
 
@@ -246,6 +265,16 @@ export const DiffViewer: React.FC<DiffViewerProps> = ({
             border-color: #3b82f6;
           }
 
+          .view-toggle-btn.annotation-toggle {
+            flex: 0 0 auto;
+            min-width: fit-content;
+          }
+
+          .view-toggle-btn.annotation-toggle.active {
+            background-color: #8b5cf6;
+            border-color: #8b5cf6;
+          }
+
           .diff-content {
             flex: 1;
             overflow-y: auto;
@@ -264,7 +293,15 @@ export const DiffViewer: React.FC<DiffViewerProps> = ({
  */
 const SideBySideView: React.FC<{
   diff: DeckDiff;
-}> = ({ diff }) => {
+  annotations: CardChangeAnnotation[];
+  showInlineAnnotations: boolean;
+}> = ({ diff, annotations, showInlineAnnotations }) => {
+  // Helper to find annotation for a card
+  const findAnnotation = (cardId: string, cardName: string): CardChangeAnnotation | undefined => {
+    return annotations.find(
+      (a) => a.cardId === cardId || a.cardName === cardName
+    );
+  };
   return (
     <div className="side-by-side-view">
       {/* Special slots section */}
@@ -312,6 +349,8 @@ const SideBySideView: React.FC<{
                   key={`removed-${card.id}`}
                   card={card}
                   changeType="removed"
+                  annotation={findAnnotation(card.id, card.name || card.id)}
+                  showInlineAnnotation={showInlineAnnotations}
                 />
               ))}
               
@@ -321,6 +360,8 @@ const SideBySideView: React.FC<{
                   key={`modified-old-${mod.card.id}`}
                   card={{ ...mod.card, count: mod.oldCount }}
                   changeType="modified"
+                  annotation={findAnnotation(mod.card.id, mod.card.name || mod.card.id)}
+                  showInlineAnnotation={showInlineAnnotations}
                 />
               ))}
             </div>
@@ -335,6 +376,8 @@ const SideBySideView: React.FC<{
                   key={`added-${card.id}`}
                   card={card}
                   changeType="added"
+                  annotation={findAnnotation(card.id, card.name || card.id)}
+                  showInlineAnnotation={showInlineAnnotations}
                 />
               ))}
               
@@ -344,6 +387,8 @@ const SideBySideView: React.FC<{
                   key={`modified-new-${mod.card.id}`}
                   card={{ ...mod.card, count: mod.newCount }}
                   changeType="modified"
+                  annotation={findAnnotation(mod.card.id, mod.card.name || mod.card.id)}
+                  showInlineAnnotation={showInlineAnnotations}
                 />
               ))}
             </div>
@@ -410,7 +455,17 @@ const SideBySideView: React.FC<{
 /**
  * Unified view showing all changes in a single list
  */
-const UnifiedView: React.FC<{ diff: DeckDiff }> = ({ diff }) => {
+const UnifiedView: React.FC<{
+  diff: DeckDiff;
+  annotations: CardChangeAnnotation[];
+  showInlineAnnotations: boolean;
+}> = ({ diff, annotations, showInlineAnnotations }) => {
+  // Helper to find annotation for a card
+  const findAnnotation = (cardId: string, cardName: string): CardChangeAnnotation | undefined => {
+    return annotations.find(
+      (a) => a.cardId === cardId || a.cardName === cardName
+    );
+  };
   return (
     <div className="unified-view">
       {/* Special slots section */}
@@ -455,6 +510,8 @@ const UnifiedView: React.FC<{ diff: DeckDiff }> = ({ diff }) => {
               key={`added-${card.id}`}
               card={card}
               changeType="added"
+              annotation={findAnnotation(card.id, card.name || card.id)}
+              showInlineAnnotation={showInlineAnnotations}
             />
           ))}
           
@@ -464,6 +521,8 @@ const UnifiedView: React.FC<{ diff: DeckDiff }> = ({ diff }) => {
               key={`removed-${card.id}`}
               card={card}
               changeType="removed"
+              annotation={findAnnotation(card.id, card.name || card.id)}
+              showInlineAnnotation={showInlineAnnotations}
             />
           ))}
           
@@ -475,6 +534,8 @@ const UnifiedView: React.FC<{ diff: DeckDiff }> = ({ diff }) => {
               changeType="modified"
               oldCount={mod.oldCount}
               newCount={mod.newCount}
+              annotation={findAnnotation(mod.card.id, mod.card.name || mod.card.id)}
+              showInlineAnnotation={showInlineAnnotations}
             />
           ))}
         </div>
@@ -499,15 +560,57 @@ const UnifiedView: React.FC<{ diff: DeckDiff }> = ({ diff }) => {
 };
 
 /**
+ * Helper function to determine annotation category from reason text
+ * Used for color-coding annotations by category
+ */
+const getAnnotationCategory = (reason: string): string => {
+  const lowerReason = reason.toLowerCase();
+  
+  // Testing keywords
+  if (lowerReason.includes('test') || lowerReason.includes('trying')) {
+    return 'testing';
+  }
+  
+  // Meta keywords
+  if (lowerReason.includes('meta') || lowerReason.includes('counter') || lowerReason.includes('popular')) {
+    return 'meta';
+  }
+  
+  // Performance keywords
+  if (lowerReason.includes('underperform') || lowerReason.includes('overperform') || 
+      lowerReason.includes('win rate') || lowerReason.includes('performed')) {
+    return 'performance';
+  }
+  
+  // Synergy keywords
+  if (lowerReason.includes('synergy') || lowerReason.includes('combo') || 
+      lowerReason.includes('theme') || lowerReason.includes('tribal')) {
+    return 'synergy';
+  }
+  
+  // Cost keywords
+  if (lowerReason.includes('mana') || lowerReason.includes('curve') || 
+      lowerReason.includes('budget') || lowerReason.includes('cost') || 
+      lowerReason.includes('efficient')) {
+    return 'cost';
+  }
+  
+  return 'custom';
+};
+
+/**
  * Component for displaying a single card in the diff view
  * Handles styling for added (green), removed (red), and modified (yellow) cards
+ * Requirement 11.5: Display annotations with icons and tooltips
  */
 const CardDiffItem: React.FC<{
   card: import('../../types/deck').DeckCard;
   changeType: 'added' | 'removed' | 'modified';
   oldCount?: number;
   newCount?: number;
-}> = ({ card, changeType, oldCount, newCount }) => {
+  annotation?: CardChangeAnnotation;
+  showInlineAnnotation?: boolean;
+}> = ({ card, changeType, oldCount, newCount, annotation, showInlineAnnotation }) => {
   const getChangeIcon = () => {
     switch (changeType) {
       case 'added':
@@ -526,6 +629,25 @@ const CardDiffItem: React.FC<{
     return `${card.count}x`;
   };
 
+  const getCategoryColor = (category?: string): string => {
+    switch (category) {
+      case 'testing':
+        return '#3b82f6'; // blue
+      case 'meta':
+        return '#8b5cf6'; // purple
+      case 'performance':
+        return '#ef4444'; // red
+      case 'synergy':
+        return '#10b981'; // green
+      case 'cost':
+        return '#f59e0b'; // amber
+      default:
+        return '#6b7280'; // gray
+    }
+  };
+
+  const hasAnnotation = annotation && annotation.reason;
+
   return (
     <div className={`card-diff-item ${changeType}`}>
       <div className="change-indicator">{getChangeIcon()}</div>
@@ -543,8 +665,29 @@ const CardDiffItem: React.FC<{
       )}
       
       <div className="card-info">
-        <div className="card-name">{card.name || card.id}</div>
+        <div className="card-name-row">
+          <div className="card-name">{card.name || card.id}</div>
+          {/* Annotation icon - Requirement 11.5 */}
+          {hasAnnotation && (
+            <div 
+              className="annotation-icon"
+              style={{ backgroundColor: getCategoryColor(annotation.reason ? getAnnotationCategory(annotation.reason) : undefined) }}
+              title={annotation.reason}
+            >
+              📝
+            </div>
+          )}
+        </div>
         <div className="card-count">{getCountDisplay()}</div>
+        {/* Inline annotation display - Requirement 11.5 */}
+        {hasAnnotation && showInlineAnnotation && (
+          <div 
+            className="inline-annotation"
+            style={{ borderLeftColor: getCategoryColor(getAnnotationCategory(annotation.reason!)) }}
+          >
+            {annotation.reason}
+          </div>
+        )}
       </div>
 
       <style>{`
@@ -629,13 +772,37 @@ const CardDiffItem: React.FC<{
           min-width: 0;
         }
 
+        .card-name-row {
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+        }
+
         .card-name {
+          flex: 1;
           font-size: 0.875rem;
           font-weight: 600;
           color: #374151;
           overflow: hidden;
           text-overflow: ellipsis;
           white-space: nowrap;
+        }
+
+        .annotation-icon {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          width: 1.5rem;
+          height: 1.5rem;
+          border-radius: 50%;
+          font-size: 0.75rem;
+          flex-shrink: 0;
+          cursor: help;
+          transition: transform 0.15s ease;
+        }
+
+        .annotation-icon:hover {
+          transform: scale(1.2);
         }
 
         .card-count {
@@ -647,6 +814,19 @@ const CardDiffItem: React.FC<{
         .card-diff-item.modified .card-count {
           font-weight: 600;
           color: #ca8a04;
+        }
+
+        .inline-annotation {
+          margin-top: 0.25rem;
+          padding: 0.5rem;
+          padding-left: 0.75rem;
+          font-size: 0.75rem;
+          font-style: italic;
+          color: #4b5563;
+          background-color: rgba(255, 255, 255, 0.5);
+          border-left: 3px solid;
+          border-radius: 0.25rem;
+          line-height: 1.4;
         }
       `}</style>
     </div>

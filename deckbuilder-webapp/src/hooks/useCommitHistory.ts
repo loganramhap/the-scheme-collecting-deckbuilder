@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { giteaService } from '../services/gitea';
-import type { DeckCommit } from '../types/versioning';
+import { versionControlService } from '../services/versionControl';
+import type { AnnotatedCommit } from '../types/versioning';
 
 interface UseCommitHistoryOptions {
   owner: string;
@@ -11,7 +12,7 @@ interface UseCommitHistoryOptions {
 }
 
 interface UseCommitHistoryResult {
-  commits: DeckCommit[];
+  commits: AnnotatedCommit[];
   isLoading: boolean;
   error: Error | null;
   hasMore: boolean;
@@ -22,7 +23,7 @@ interface UseCommitHistoryResult {
 
 // Cache structure: key = "owner/repo/branch", value = { commits, timestamp }
 interface CacheEntry {
-  commits: DeckCommit[];
+  commits: AnnotatedCommit[];
   timestamp: number;
   page: number;
 }
@@ -65,7 +66,7 @@ export function useCommitHistory({
   perPage = 20,
   enabled = true,
 }: UseCommitHistoryOptions): UseCommitHistoryResult {
-  const [commits, setCommits] = useState<DeckCommit[]>([]);
+  const [commits, setCommits] = useState<AnnotatedCommit[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<Error | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
@@ -92,10 +93,10 @@ export function useCommitHistory({
   }, []);
 
   /**
-   * Fetch commits for a specific page
+   * Fetch commits for a specific page and parse annotations
    */
   const fetchCommits = useCallback(
-    async (page: number): Promise<DeckCommit[]> => {
+    async (page: number): Promise<AnnotatedCommit[]> => {
       if (!enabled) {
         return [];
       }
@@ -108,7 +109,8 @@ export function useCommitHistory({
           page,
           perPage
         );
-        return fetchedCommits;
+        // Parse annotations from commit messages
+        return versionControlService.parseCommitsAnnotations(fetchedCommits);
       } catch (err) {
         throw err instanceof Error ? err : new Error('Failed to fetch commit history');
       }

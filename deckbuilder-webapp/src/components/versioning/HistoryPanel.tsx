@@ -41,6 +41,8 @@ export const HistoryPanel: React.FC<HistoryPanelProps> = ({
   const [viewMode, setViewMode] = useState<'list' | 'timeline'>('list');
   const [selectedCommits, setSelectedCommits] = useState<string[]>([]);
   const [focusedCommitIndex, setFocusedCommitIndex] = useState<number>(-1);
+  const [expandedCommit, setExpandedCommit] = useState<string | null>(null);
+  const [showOnlyAnnotated, setShowOnlyAnnotated] = useState(false);
   const [isDiffViewerOpen, setIsDiffViewerOpen] = useState(false);
   const [isRestoreDialogOpen, setIsRestoreDialogOpen] = useState(false);
   const [restoreCommit, setRestoreCommit] = useState<DeckCommit | null>(null);
@@ -87,6 +89,8 @@ export const HistoryPanel: React.FC<HistoryPanelProps> = ({
       setViewMode('list');
       setSelectedCommits([]);
       setFocusedCommitIndex(-1);
+      setExpandedCommit(null);
+      setShowOnlyAnnotated(false);
       setIsDiffViewerOpen(false);
       setIsRestoreDialogOpen(false);
       setRestoreCommit(null);
@@ -144,6 +148,11 @@ export const HistoryPanel: React.FC<HistoryPanelProps> = ({
         return [prev[1], sha];
       }
     });
+  }, []);
+
+  const handleToggleExpand = useCallback((sha: string, event: React.MouseEvent) => {
+    event.stopPropagation();
+    setExpandedCommit((prev) => prev === sha ? null : sha);
   }, []);
 
   const handleCompare = useCallback(async () => {
@@ -337,6 +346,14 @@ export const HistoryPanel: React.FC<HistoryPanelProps> = ({
     return sha.substring(0, 7);
   };
 
+  // Filter commits based on annotation filter
+  const filteredCommits = showOnlyAnnotated
+    ? commits.filter(commit => commit.cardAnnotations && commit.cardAnnotations.length > 0)
+    : commits;
+
+  // Count annotated commits
+  const annotatedCount = commits.filter(commit => commit.cardAnnotations && commit.cardAnnotations.length > 0).length;
+
   if (!isOpen) {
     return null;
   }
@@ -352,6 +369,21 @@ export const HistoryPanel: React.FC<HistoryPanelProps> = ({
         <div className="history-panel-header">
           <h2 className="history-panel-title">Commit History</h2>
           <div className="history-panel-header-actions">
+            {/* Annotation filter toggle */}
+            {annotatedCount > 0 && (
+              <button
+                className={`filter-toggle-btn ${showOnlyAnnotated ? 'active' : ''}`}
+                onClick={() => setShowOnlyAnnotated(!showOnlyAnnotated)}
+                aria-label={showOnlyAnnotated ? "Show all commits" : "Show only annotated commits"}
+                title={showOnlyAnnotated ? "Show all commits" : `Show only annotated commits (${annotatedCount})`}
+              >
+                <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor">
+                  <path d="M2 3.5A1.5 1.5 0 0 1 3.5 2h9A1.5 1.5 0 0 1 14 3.5v9a1.5 1.5 0 0 1-1.5 1.5h-9A1.5 1.5 0 0 1 2 12.5v-9zM3.5 3a.5.5 0 0 0-.5.5v9a.5.5 0 0 0 .5.5h9a.5.5 0 0 0 .5-.5v-9a.5.5 0 0 0-.5-.5h-9z"/>
+                  <path d="M5 6.5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5zm0 2a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5zm0 2a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5z"/>
+                </svg>
+                {showOnlyAnnotated && <span className="filter-count">{annotatedCount}</span>}
+              </button>
+            )}
             {/* View toggle */}
             <div className="view-toggle">
               <button
@@ -419,6 +451,18 @@ export const HistoryPanel: React.FC<HistoryPanelProps> = ({
             </div>
           )}
 
+          {!error && showOnlyAnnotated && filteredCommits.length === 0 && commits.length > 0 && (
+            <div className="history-panel-empty">
+              <p>No annotated commits found</p>
+              <button
+                className="btn btn-sm btn-secondary"
+                onClick={() => setShowOnlyAnnotated(false)}
+              >
+                Show All Commits
+              </button>
+            </div>
+          )}
+
           {/* Timeline View */}
           {viewMode === 'timeline' && !error && commits.length > 0 && (
             <div className="timeline-view-wrapper">
@@ -449,7 +493,7 @@ export const HistoryPanel: React.FC<HistoryPanelProps> = ({
           )}
 
           {/* List View */}
-          {viewMode === 'list' && commits.map((commit, index) => {
+          {viewMode === 'list' && filteredCommits.map((commit, index) => {
             const isSelected = selectedCommits.includes(commit.sha);
             const isFocused = focusedCommitIndex === index;
             const isAutoSave = commit.isAutoSave;
@@ -485,6 +529,15 @@ export const HistoryPanel: React.FC<HistoryPanelProps> = ({
                     {isAutoSave && (
                       <span className="commit-badge">Auto-save</span>
                     )}
+                    {commit.cardAnnotations && commit.cardAnnotations.length > 0 && (
+                      <span className="commit-badge annotation-badge" title={`${commit.cardAnnotations.length} card${commit.cardAnnotations.length > 1 ? 's' : ''} annotated`}>
+                        <svg width="12" height="12" viewBox="0 0 16 16" fill="currentColor" style={{ marginRight: '4px' }}>
+                          <path d="M2 3.5A1.5 1.5 0 0 1 3.5 2h9A1.5 1.5 0 0 1 14 3.5v9a1.5 1.5 0 0 1-1.5 1.5h-9A1.5 1.5 0 0 1 2 12.5v-9zM3.5 3a.5.5 0 0 0-.5.5v9a.5.5 0 0 0 .5.5h9a.5.5 0 0 0 .5-.5v-9a.5.5 0 0 0-.5-.5h-9z"/>
+                          <path d="M5 6.5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5zm0 2a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5zm0 2a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5z"/>
+                        </svg>
+                        {commit.cardAnnotations.length}
+                      </span>
+                    )}
                   </div>
 
                   <div className="commit-meta">
@@ -495,21 +548,33 @@ export const HistoryPanel: React.FC<HistoryPanelProps> = ({
                     <span className="commit-sha">{getShortSha(commit.sha)}</span>
                   </div>
 
-                  {commit.changesSummary && (
+                  {(commit.changesSummary || (commit.cardAnnotations && commit.cardAnnotations.length > 0)) && (
                     <div className="commit-changes">
-                      {commit.changesSummary.cardsAdded > 0 && (
-                        <span className="change-stat added">
-                          +{commit.changesSummary.cardsAdded}
-                        </span>
+                      {commit.changesSummary && (
+                        <>
+                          {commit.changesSummary.cardsAdded > 0 && (
+                            <span className="change-stat added">
+                              +{commit.changesSummary.cardsAdded}
+                            </span>
+                          )}
+                          {commit.changesSummary.cardsRemoved > 0 && (
+                            <span className="change-stat removed">
+                              -{commit.changesSummary.cardsRemoved}
+                            </span>
+                          )}
+                          {commit.changesSummary.cardsModified > 0 && (
+                            <span className="change-stat modified">
+                              ~{commit.changesSummary.cardsModified}
+                            </span>
+                          )}
+                        </>
                       )}
-                      {commit.changesSummary.cardsRemoved > 0 && (
-                        <span className="change-stat removed">
-                          -{commit.changesSummary.cardsRemoved}
-                        </span>
-                      )}
-                      {commit.changesSummary.cardsModified > 0 && (
-                        <span className="change-stat modified">
-                          ~{commit.changesSummary.cardsModified}
+                      {commit.cardAnnotations && commit.cardAnnotations.length > 0 && (
+                        <span className="change-stat annotated" title="Cards with annotations">
+                          <svg width="10" height="10" viewBox="0 0 16 16" fill="currentColor" style={{ marginRight: '2px' }}>
+                            <path d="M2 3.5A1.5 1.5 0 0 1 3.5 2h9A1.5 1.5 0 0 1 14 3.5v9a1.5 1.5 0 0 1-1.5 1.5h-9A1.5 1.5 0 0 1 2 12.5v-9z"/>
+                          </svg>
+                          {commit.cardAnnotations.length}
                         </span>
                       )}
                     </div>
@@ -518,6 +583,26 @@ export const HistoryPanel: React.FC<HistoryPanelProps> = ({
 
                 {/* Actions */}
                 <div className="commit-actions">
+                  {commit.cardAnnotations && commit.cardAnnotations.length > 0 && (
+                    <button
+                      className="btn btn-sm btn-expand"
+                      onClick={(e) => handleToggleExpand(commit.sha, e)}
+                      title={expandedCommit === commit.sha ? "Hide annotations" : "Show annotations"}
+                    >
+                      <svg 
+                        width="12" 
+                        height="12" 
+                        viewBox="0 0 16 16" 
+                        fill="currentColor"
+                        style={{ 
+                          transform: expandedCommit === commit.sha ? 'rotate(180deg)' : 'rotate(0deg)',
+                          transition: 'transform 0.2s ease'
+                        }}
+                      >
+                        <path fillRule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
+                      </svg>
+                    </button>
+                  )}
                   {currentDeck && (
                     <button
                       className="btn btn-sm btn-compare-current"
@@ -543,6 +628,41 @@ export const HistoryPanel: React.FC<HistoryPanelProps> = ({
                     </button>
                   )}
                 </div>
+
+                {/* Expanded Annotations Section */}
+                {expandedCommit === commit.sha && commit.cardAnnotations && commit.cardAnnotations.length > 0 && (
+                  <div className="commit-annotations">
+                    <div className="annotations-header">
+                      <h4>Card Changes</h4>
+                    </div>
+                    <div className="annotations-list">
+                      {commit.cardAnnotations.map((annotation, idx) => (
+                        <div key={idx} className={`annotation-item ${annotation.changeType}`}>
+                          <div className="annotation-icon">
+                            {annotation.changeType === 'added' && <span className="change-symbol">+</span>}
+                            {annotation.changeType === 'removed' && <span className="change-symbol">−</span>}
+                            {annotation.changeType === 'modified' && <span className="change-symbol">~</span>}
+                          </div>
+                          <div className="annotation-details">
+                            <div className="annotation-card-name">
+                              {annotation.cardName}
+                              {annotation.changeType === 'modified' && annotation.oldCount !== undefined && annotation.newCount !== undefined && (
+                                <span className="annotation-count-change">
+                                  ({annotation.oldCount} → {annotation.newCount})
+                                </span>
+                              )}
+                            </div>
+                            {annotation.reason && (
+                              <div className="annotation-reason">
+                                {annotation.reason}
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
               </div>
             );
           })}
@@ -645,6 +765,46 @@ export const HistoryPanel: React.FC<HistoryPanelProps> = ({
             display: flex;
             align-items: center;
             gap: 0.75rem;
+          }
+
+          .filter-toggle-btn {
+            background-color: #ffffff;
+            border: 1px solid #e5e7eb;
+            color: #6b7280;
+            cursor: pointer;
+            padding: 0.375rem 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.25rem;
+            border-radius: 0.375rem;
+            transition: all 0.15s ease;
+            font-size: 0.75rem;
+            font-weight: 500;
+          }
+
+          .filter-toggle-btn:hover {
+            background-color: #f3f4f6;
+            color: #374151;
+          }
+
+          .filter-toggle-btn.active {
+            background-color: #dbeafe;
+            color: #1e40af;
+            border-color: #3b82f6;
+          }
+
+          .filter-toggle-btn svg {
+            display: block;
+          }
+
+          .filter-count {
+            font-size: 0.625rem;
+            font-weight: 600;
+            background-color: #3b82f6;
+            color: white;
+            padding: 0.125rem 0.375rem;
+            border-radius: 0.25rem;
           }
 
           .view-toggle {
@@ -851,6 +1011,15 @@ export const HistoryPanel: React.FC<HistoryPanelProps> = ({
             color: #78350f;
           }
 
+          .annotation-badge {
+            background-color: #dbeafe;
+            color: #1e40af;
+            display: flex;
+            align-items: center;
+            text-transform: none;
+            font-weight: 500;
+          }
+
           .commit-meta {
             display: flex;
             align-items: center;
@@ -901,11 +1070,124 @@ export const HistoryPanel: React.FC<HistoryPanelProps> = ({
             color: #92400e;
           }
 
+          .change-stat.annotated {
+            background-color: #dbeafe;
+            color: #1e40af;
+            display: flex;
+            align-items: center;
+          }
+
           .commit-actions {
             flex-shrink: 0;
             display: flex;
             align-items: center;
             gap: 0.5rem;
+          }
+
+          .commit-annotations {
+            margin-top: 0.75rem;
+            padding-top: 0.75rem;
+            border-top: 1px solid #e5e7eb;
+          }
+
+          .annotations-header {
+            margin-bottom: 0.5rem;
+          }
+
+          .annotations-header h4 {
+            margin: 0;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: #6b7280;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+          }
+
+          .annotations-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+          }
+
+          .annotation-item {
+            display: flex;
+            gap: 0.5rem;
+            padding: 0.5rem;
+            border-radius: 0.375rem;
+            background-color: #f9fafb;
+            border-left: 3px solid transparent;
+          }
+
+          .annotation-item.added {
+            background-color: #f0fdf4;
+            border-left-color: #22c55e;
+          }
+
+          .annotation-item.removed {
+            background-color: #fef2f2;
+            border-left-color: #ef4444;
+          }
+
+          .annotation-item.modified {
+            background-color: #fffbeb;
+            border-left-color: #f59e0b;
+          }
+
+          .annotation-icon {
+            flex-shrink: 0;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            font-weight: 700;
+            font-size: 0.875rem;
+          }
+
+          .annotation-item.added .annotation-icon {
+            background-color: #dcfce7;
+            color: #166534;
+          }
+
+          .annotation-item.removed .annotation-icon {
+            background-color: #fee2e2;
+            color: #991b1b;
+          }
+
+          .annotation-item.modified .annotation-icon {
+            background-color: #fef3c7;
+            color: #92400e;
+          }
+
+          .change-symbol {
+            display: block;
+            line-height: 1;
+          }
+
+          .annotation-details {
+            flex: 1;
+            min-width: 0;
+          }
+
+          .annotation-card-name {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: #111827;
+            margin-bottom: 0.25rem;
+          }
+
+          .annotation-count-change {
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: #6b7280;
+            margin-left: 0.375rem;
+          }
+
+          .annotation-reason {
+            font-size: 0.75rem;
+            color: #6b7280;
+            line-height: 1.4;
           }
 
           .btn {
@@ -963,6 +1245,19 @@ export const HistoryPanel: React.FC<HistoryPanelProps> = ({
 
           .btn-restore:hover:not(:disabled) {
             background-color: #059669;
+          }
+
+          .btn-expand {
+            background-color: #f3f4f6;
+            color: #374151;
+            padding: 0.375rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+          }
+
+          .btn-expand:hover:not(:disabled) {
+            background-color: #e5e7eb;
           }
 
           .btn:active:not(:disabled) {

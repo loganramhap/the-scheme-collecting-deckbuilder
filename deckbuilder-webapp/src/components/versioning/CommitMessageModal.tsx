@@ -2,8 +2,9 @@ import React, { useState, useEffect } from 'react';
 import Modal from '../Modal';
 import { CommitTemplates } from './CommitTemplates';
 import { RecentMessages } from './RecentMessages';
+import { CardChangeAnnotator } from './CardChangeAnnotator';
 import { Spinner } from '../Spinner';
-import type { CommitTemplate, DeckDiff } from '../../types/versioning';
+import type { CommitTemplate, DeckDiff, CardChangeAnnotation } from '../../types/versioning';
 import {
   validateCommitMessage,
   extractPlaceholders,
@@ -14,7 +15,7 @@ import { deckDiffService } from '../../services/deckDiff';
 interface CommitMessageModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onCommit: (message: string) => Promise<void>;
+  onCommit: (message: string, annotations?: CardChangeAnnotation[]) => Promise<void>;
   suggestedMessage?: string;
   diff?: DeckDiff;
   recentMessages?: string[];
@@ -36,6 +37,7 @@ export const CommitMessageModal: React.FC<CommitMessageModalProps> = ({
   const [selectedTemplateId, setSelectedTemplateId] = useState<string>();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string>();
+  const [annotations, setAnnotations] = useState<CardChangeAnnotation[]>([]);
 
   // Initialize message with suggested message when modal opens
   useEffect(() => {
@@ -52,6 +54,7 @@ export const CommitMessageModal: React.FC<CommitMessageModalProps> = ({
       setSelectedTemplateId(undefined);
       setIsSubmitting(false);
       setError(undefined);
+      setAnnotations([]);
     }
   }, [isOpen]);
 
@@ -102,7 +105,9 @@ export const CommitMessageModal: React.FC<CommitMessageModalProps> = ({
     setError(undefined);
 
     try {
-      await onCommit(message.trim());
+      // Filter out annotations without reasons (optional annotations)
+      const filledAnnotations = annotations.filter(a => a.reason && a.reason.trim());
+      await onCommit(message.trim(), filledAnnotations.length > 0 ? filledAnnotations : undefined);
       // Modal will be closed by parent component
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to commit changes');
@@ -127,6 +132,10 @@ export const CommitMessageModal: React.FC<CommitMessageModalProps> = ({
   const charCount = message.length;
   const isValid = charCount >= 1 && charCount <= 500;
   const changesSummary = diff ? deckDiffService.summarizeChanges(diff) : null;
+  
+  // Calculate annotation summary
+  const annotatedCount = annotations.filter(a => a.reason && a.reason.trim()).length;
+  const totalChanges = diff ? (diff.added.length + diff.removed.length + diff.modified.length) : 0;
 
   return (
     <Modal isOpen={isOpen} onClose={handleCancel} title="Commit Changes">
@@ -136,6 +145,11 @@ export const CommitMessageModal: React.FC<CommitMessageModalProps> = ({
           <div className="changes-preview">
             <label className="changes-preview-label">Changes:</label>
             <div className="changes-preview-content">{changesSummary}</div>
+            {annotatedCount > 0 && (
+              <div className="annotation-summary">
+                📝 {annotatedCount} of {totalChanges} changes annotated
+              </div>
+            )}
           </div>
         )}
 
@@ -152,6 +166,15 @@ export const CommitMessageModal: React.FC<CommitMessageModalProps> = ({
           onSelectTemplate={handleTemplateSelect}
           selectedTemplateId={selectedTemplateId}
         />
+
+        {/* Card change annotations */}
+        {diff && totalChanges > 0 && (
+          <CardChangeAnnotator
+            diff={diff}
+            annotations={annotations}
+            onAnnotationsChange={setAnnotations}
+          />
+        )}
 
         {/* Message input */}
         <div className="message-input-container">
@@ -233,6 +256,15 @@ export const CommitMessageModal: React.FC<CommitMessageModalProps> = ({
           .changes-preview-content {
             font-size: 0.875rem;
             color: #374151;
+          }
+
+          .annotation-summary {
+            margin-top: 0.5rem;
+            padding-top: 0.5rem;
+            border-top: 1px solid #e5e7eb;
+            font-size: 0.75rem;
+            color: #6b7280;
+            font-weight: 500;
           }
 
           .message-input-container {

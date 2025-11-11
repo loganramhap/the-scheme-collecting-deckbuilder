@@ -4,10 +4,10 @@ import { giteaService } from '../../services/gitea';
 import { deckDiffService } from '../../services/deckDiff';
 import { useDeckStore } from '../../store/deck';
 import type { Deck } from '../../types/deck';
-import type { DeckDiff } from '../../types/versioning';
+import type { DeckDiff, CardChangeAnnotation } from '../../types/versioning';
 
 interface ManualSaveButtonProps {
-  onSave: (message: string) => Promise<void>;
+  onSave: (message: string, annotations?: CardChangeAnnotation[]) => Promise<void>;
   disabled?: boolean;
   isSaving?: boolean;
   owner?: string;
@@ -86,9 +86,9 @@ const ManualSaveButton = forwardRef<HTMLButtonElement, ManualSaveButtonProps>(
     }
   };
 
-  const handleCommit = async (message: string) => {
+  const handleCommit = async (message: string, annotations?: CardChangeAnnotation[]) => {
     try {
-      await onSave(message);
+      await onSave(message, annotations);
       
       // Save to recent messages
       const updatedMessages = [message, ...recentMessages.filter(m => m !== message)].slice(0, 5);

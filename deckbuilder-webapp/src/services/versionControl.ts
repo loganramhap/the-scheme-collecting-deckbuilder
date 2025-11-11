@@ -1,7 +1,7 @@
 import { giteaService } from './gitea';
 import { deckDiffService } from './deckDiff';
 import type { Deck } from '../types/deck';
-import type { DeckCommit, DeckDiff } from '../types/versioning';
+import type { DeckCommit, DeckDiff, CardChangeAnnotation, AnnotatedCommit } from '../types/versioning';
 
 /**
  * Service for version control operations on decks
@@ -77,6 +77,111 @@ class VersionControlService {
   }
 
   /**
+   * Format card annotations into a structured string for commit message
+   * @param annotations Array of card change annotations
+   * @returns Formatted annotation string
+   */
+  private formatAnnotations(annotations: CardChangeAnnotation[]): string {
+    if (!annotations || annotations.length === 0) {
+      return '';
+    }
+
+    const lines: string[] = ['\n\n--- Card Changes ---'];
+    
+    for (const annotation of annotations) {
+      const changeSymbol = annotation.changeType === 'added' ? '+' : 
+                          annotation.changeType === 'removed' ? '-' : '~';
+      
+      let line = `${changeSymbol} ${annotation.cardName}`;
+      
+      if (annotation.changeType === 'modified' && annotation.oldCount !== undefined && annotation.newCount !== undefined) {
+        line += ` (${annotation.oldCount} → ${annotation.newCount})`;
+      }
+      
+      if (annotation.reason) {
+        line += `: ${annotation.reason}`;
+      }
+      
+      lines.push(line);
+    }
+    
+    return lines.join('\n');
+  }
+
+  /**
+   * Parse card annotations from a commit message
+   * @param message Commit message that may contain annotations
+   * @returns Object with the main message and parsed annotations
+   */
+  private parseAnnotations(message: string): { message: string; annotations: CardChangeAnnotation[] } {
+    const annotationMarker = '--- Card Changes ---';
+    const parts = message.split(annotationMarker);
+    
+    if (parts.length < 2) {
+      // No annotations in this commit
+      return { message: message.trim(), annotations: [] };
+    }
+
+    const mainMessage = parts[0].trim();
+    const annotationsText = parts[1].trim();
+    const annotations: CardChangeAnnotation[] = [];
+
+    // Parse each annotation line
+    const lines = annotationsText.split('\n');
+    for (const line of lines) {
+      const trimmedLine = line.trim();
+      if (!trimmedLine) continue;
+
+      // Match pattern: [+|-|~] CardName [(oldCount → newCount)]: reason
+      const match = trimmedLine.match(/^([+\-~])\s+(.+?)(?:\s+\((\d+)\s+→\s+(\d+)\))?(?::\s+(.+))?$/);
+      
+      if (match) {
+        const [, symbol, cardName, oldCount, newCount, reason] = match;
+        
+        const changeType = symbol === '+' ? 'added' : 
+                          symbol === '-' ? 'removed' : 'modified';
+        
+        const annotation: CardChangeAnnotation = {
+          cardId: cardName.toLowerCase().replace(/\s+/g, '-'), // Generate ID from name
+          cardName: cardName.trim(),
+          changeType,
+          reason: reason?.trim(),
+          oldCount: oldCount ? parseInt(oldCount, 10) : undefined,
+          newCount: newCount ? parseInt(newCount, 10) : undefined,
+        };
+        
+        annotations.push(annotation);
+      }
+    }
+
+    return { message: mainMessage, annotations };
+  }
+
+  /**
+   * Convert a DeckCommit to an AnnotatedCommit by parsing annotations from the message
+   * @param commit The commit to convert
+   * @returns AnnotatedCommit with parsed annotations
+   */
+  parseCommitAnnotations(commit: DeckCommit): AnnotatedCommit {
+    const parsed = this.parseAnnotations(commit.message);
+    
+    return {
+      ...commit,
+      message: parsed.message,
+      cardAnnotations: parsed.annotations,
+    };
+  }
+
+  /**
+   * Convert an array of DeckCommits to AnnotatedCommits
+   * @param commits Array of commits to convert
+   * @returns Array of AnnotatedCommits with parsed annotations
+   */
+  parseCommitsAnnotations(commits: DeckCommit[]): AnnotatedCommit[] {
+    return commits.map(commit => this.parseCommitAnnotations(commit));
+  }
+
+  /**
    * Generate auto-save commit message based on deck changes
    * @param diff Diff between old and new deck versions
    * @returns Formatted auto-save commit message
@@ -138,7 +243,7 @@ class VersionControlService {
   }
 
   /**
-   * Commit current deck state with message
+   * Commit current deck state with message and optional card annotations
    * @param owner Repository owner
    * @param repo Repository name
    * @param branch Branch name
@@ -146,7 +251,8 @@ class VersionControlService {
    * @param message Commit message
    * @param _isAutoSave Whether this is an auto-save commit (tracked via message format)
    * @param deckPath Path to deck file (defaults to 'deck.json')
-   * @returns The created commit
+   * @param cardAnnotations Optional array of card change annotations
+   * @returns The created commit with annotations
    */
   async commitDeck(
     owner: string,
@@ -155,8 +261,9 @@ class VersionControlService {
     deck: Deck,
     message: string,
     _isAutoSave: boolean = false,
-    deckPath: string = 'deck.json'
-  ): Promise<DeckCommit> {
+    deckPath: string = 'deck.json',
+    cardAnnotations?: CardChangeAnnotation[]
+  ): Promise<AnnotatedCommit> {
     return this.retryWithBackoff(async () => {
       try {
         // Get the current file SHA if it exists
@@ -169,6 +276,12 @@ class VersionControlService {
           currentSha = undefined;
         }
 
+        // Format the commit message with annotations if provided
+        let fullMessage = message;
+        if (cardAnnotations && cardAnnotations.length > 0) {
+          fullMessage += this.formatAnnotations(cardAnnotations);
+        }
+
         // Serialize deck to JSON
         const deckJson = JSON.stringify(deck, null, 2);
 
@@ -178,7 +291,7 @@ class VersionControlService {
           repo,
           deckPath,
           deckJson,
-          message,
+          fullMessage,
           branch,
           currentSha
         );
@@ -190,7 +303,17 @@ class VersionControlService {
           throw new Error('Failed to retrieve commit after save');
         }
 
-        return commits[0];
+        // Parse annotations from the commit message and return as AnnotatedCommit
+        const commit = commits[0];
+        const parsed = this.parseAnnotations(commit.message);
+        
+        const annotatedCommit: AnnotatedCommit = {
+          ...commit,
+          message: parsed.message, // Use the main message without annotations section
+          cardAnnotations: parsed.annotations,
+        };
+
+        return annotatedCommit;
       } catch (error) {
         // Handle specific error cases
         if (error instanceof Error) {
@@ -266,7 +389,7 @@ class VersionControlService {
     message: string,
     deckPath: string = 'deck.json'
   ): Promise<{
-    commit: DeckCommit;
+    commit: AnnotatedCommit;
     conflicts: DeckDiff | null;
     mergedDeck: Deck;
   }> {
@@ -354,7 +477,7 @@ class VersionControlService {
     resolvedDeck: Deck,
     message: string,
     deckPath: string = 'deck.json'
-  ): Promise<DeckCommit> {
+  ): Promise<AnnotatedCommit> {
     return this.retryWithBackoff(async () => {
       try {
         // Commit the resolved deck to the target branch
