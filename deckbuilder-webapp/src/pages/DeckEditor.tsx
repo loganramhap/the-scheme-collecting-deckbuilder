@@ -10,6 +10,7 @@ import { RiftboundBuilder } from '../components/deckbuilder/RiftboundBuilder';
 import { MTGCommanderBuilder } from '../components/deckbuilder/MTGCommanderBuilder';
 import { DeckStatistics } from '../components/deckbuilder/DeckStatistics';
 import { KeyboardShortcutsHelp } from '../components/deckbuilder/KeyboardShortcutsHelp';
+import { loadRiftboundCards } from '../services/riftboundCards';
 import type { Deck } from '../types/deck';
 import type { MTGCard, RiftboundCard } from '../types/card';
 
@@ -57,9 +58,10 @@ export default function DeckEditor() {
         // For now, set empty array - cards will be loaded via search
         setAvailableCards([]);
       } else if (deck.game === 'riftbound') {
-        // Load Riftbound cards from a JSON file or API
-        // For now, use empty array - this should be loaded from a data source
-        setAvailableCards([]);
+        // Load Riftbound cards from JSON file
+        const riftboundCards = await loadRiftboundCards();
+        console.log(`Loaded ${riftboundCards.length} Riftbound cards`);
+        setAvailableCards(riftboundCards);
       }
     } catch (err) {
       console.error('Failed to load deck:', err);
