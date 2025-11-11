@@ -24,6 +24,25 @@ export function useCardImage(card: Card | null): UseCardImageResult {
     setError(null);
 
     try {
+      // Determine the image URL based on card type
+      const sourceUrl = getCardImageUrl(card!);
+      
+      if (!sourceUrl) {
+        throw new Error('No image URL available for this card');
+      }
+
+      // For Riftbound cards, use direct URL without caching (CORS issues)
+      const isRiftbound = 'image_url' in card! && !('image_uris' in card!);
+      
+      if (isRiftbound) {
+        if (isMounted.current) {
+          setImageUrl(sourceUrl);
+          setIsLoading(false);
+        }
+        return;
+      }
+
+      // For MTG cards, use caching
       // Try to get from cache first
       const cachedUrl = await cardImageCache.get(card!.id);
       
@@ -31,13 +50,6 @@ export function useCardImage(card: Card | null): UseCardImageResult {
         setImageUrl(cachedUrl);
         setIsLoading(false);
         return;
-      }
-
-      // Determine the image URL based on card type
-      const sourceUrl = getCardImageUrl(card!);
-      
-      if (!sourceUrl) {
-        throw new Error('No image URL available for this card');
       }
 
       // Cache the image (this will fetch it)

@@ -67,20 +67,79 @@ export function filterByColor(
  * Get all unique card types
  */
 export function getCardTypes(cards: RiftboundCard[]): string[] {
-  const types = new Set(cards.map(card => card.type));
+  const types = new Set(
+    cards
+      .map(card => card.type || card.card_type)
+      .filter((type): type is string => type !== undefined && type !== '')
+  );
   return Array.from(types).sort();
 }
 
 /**
- * Get all unique colors
+ * Get all unique colors/domains
  */
 export function getColors(cards: RiftboundCard[]): string[] {
   const colors = new Set(
     cards
-      .map(card => card.color)
-      .filter((color): color is string => color !== undefined)
+      .map(card => card.color || card.domain)
+      .filter((color): color is string => color !== undefined && color !== '')
   );
   return Array.from(colors).sort();
+}
+
+/**
+ * Get all unique rarities
+ */
+export function getRarities(cards: RiftboundCard[]): string[] {
+  const rarities = new Set(
+    cards
+      .map(card => card.rarity)
+      .filter((rarity): rarity is string => rarity !== undefined && rarity !== '')
+  );
+  return Array.from(rarities).sort();
+}
+
+/**
+ * Get all unique sets
+ */
+export function getSets(cards: RiftboundCard[]): string[] {
+  const sets = new Set(
+    cards
+      .map(card => card.set)
+      .filter((set): set is string => set !== undefined && set !== '')
+  );
+  return Array.from(sets).sort();
+}
+
+/**
+ * Get energy cost range
+ */
+export function getEnergyCostRange(cards: RiftboundCard[]): { min: number; max: number } {
+  const costs = cards
+    .map(card => card.energy || card.cost)
+    .filter((cost): cost is number => cost !== undefined);
+  
+  if (costs.length === 0) {
+    return { min: 0, max: 10 };
+  }
+  
+  return {
+    min: Math.min(...costs),
+    max: Math.max(...costs)
+  };
+}
+
+/**
+ * Get all filter options from cards
+ */
+export function getFilterOptions(cards: RiftboundCard[]) {
+  return {
+    types: getCardTypes(cards),
+    colors: getColors(cards),
+    rarities: getRarities(cards),
+    sets: getSets(cards),
+    energyCostRange: getEnergyCostRange(cards)
+  };
 }
 
 /**
