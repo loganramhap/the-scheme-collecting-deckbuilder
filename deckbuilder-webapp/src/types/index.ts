@@ -15,7 +15,7 @@ export type {
 export type { DragItem } from './dnd';
 
 // Filter types
-export type { FilterState } from './filters';
+export type { CardFilters } from './filters';
 
 // Gitea types
 export type {

@@ -1,5 +1,5 @@
 import { useState, useCallback } from 'react';
-import { getErrorMessage, isRetryableError } from '../utils/errorHandling';
+import { getErrorMessage } from '../utils/errorHandling';
 
 interface UseAsyncOperationOptions {
   onSuccess?: (result: any) => void;

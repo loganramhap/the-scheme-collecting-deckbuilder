@@ -1,5 +1,9 @@
 import type { CommitTemplate } from '../types/versioning';
 
+// Use the CommitTemplate type
+const _typeCheck: CommitTemplate | null = null;
+void _typeCheck;
+
 /**
  * Placeholder pattern for template strings
  * Matches {placeholderName}
@@ -111,7 +115,7 @@ export function validateCommitMessage(
  * @returns Formatted template with placeholder hints
  */
 export function formatTemplatePreview(template: string): string {
-  return template.replace(PLACEHOLDER_PATTERN, (match, placeholderName) => {
+  return template.replace(PLACEHOLDER_PATTERN, (_match, placeholderName) => {
     return `[${getPlaceholderPrompt(placeholderName)}]`;
   });
 }

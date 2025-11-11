@@ -668,6 +668,7 @@
 
 
 
+
   - [x] 30.1 Ctrl+H to open history panel
 
 

@@ -1,4 +1,4 @@
-import type { DeckCard, Deck } from './deck';
+import type { DeckCard } from './deck';
 
 /**
  * Represents a Git commit for a deck

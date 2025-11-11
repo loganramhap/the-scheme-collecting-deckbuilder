@@ -24,7 +24,8 @@ interface ErrorResponse {
 }
 
 type WorkerMessage = DiffRequest;
-type WorkerResponse = DiffResponse | ErrorResponse;
+// WorkerResponse type for future use
+// type WorkerResponse = DiffResponse | ErrorResponse;
 
 /**
  * Calculate differences between two decks
