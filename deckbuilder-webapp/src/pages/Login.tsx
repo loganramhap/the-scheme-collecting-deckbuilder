@@ -43,6 +43,7 @@ export default function Login() {
         // After successful signup, automatically log in
         const { data } = await axios.post(`${GITEA_URL}/api/v1/users/${username}/tokens`, {
           name: `deckbuilder-${Date.now()}`,
+          scopes: ['read:user', 'write:user', 'read:repository', 'write:repository'],
         }, {
           auth: {
             username,
@@ -56,6 +57,7 @@ export default function Login() {
         // Login
         const { data } = await axios.post(`${GITEA_URL}/api/v1/users/${username}/tokens`, {
           name: `deckbuilder-${Date.now()}`,
+          scopes: ['read:user', 'write:user', 'read:repository', 'write:repository'],
         }, {
           auth: {
             username,
