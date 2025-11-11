@@ -11,7 +11,6 @@ import SaveStatusIndicator from '../components/deckbuilder/SaveStatusIndicator';
 import ManualSaveButton from '../components/deckbuilder/ManualSaveButton';
 import { RiftboundBuilder } from '../components/deckbuilder/RiftboundBuilder';
 import { MTGCommanderBuilder } from '../components/deckbuilder/MTGCommanderBuilder';
-import { DeckStatistics } from '../components/deckbuilder/DeckStatistics';
 import { KeyboardShortcutsHelp } from '../components/deckbuilder/KeyboardShortcutsHelp';
 import { HistoryPanel } from '../components/versioning/HistoryPanel';
 import { BranchSelector } from '../components/versioning/BranchSelector';
@@ -252,7 +251,7 @@ export default function DeckEditor() {
           <h2 style={{ color: '#ff4444', marginBottom: '10px' }}>Failed to Load Deck</h2>
           <p style={{ color: '#999', marginBottom: '20px' }}>{error}</p>
           <button 
-            onClick={loadDeck}
+            onClick={() => loadDeck()}
             style={{
               background: '#0066cc',
               color: '#fff',
@@ -422,34 +421,26 @@ export default function DeckEditor() {
         />
       )}
 
-      {/* MTG uses grid layout with sidebar */}
+      {/* MTG uses full-width layout */}
       {currentDeck.game === 'mtg' && (
-        <div style={{ display: 'grid', gridTemplateColumns: '3fr 1fr', gap: '20px' }}>
-          {/* Game-specific visual builder */}
-          <div>
-            {currentDeck.format === 'commander' && (
-              <MTGCommanderBuilder
-                deck={currentDeck}
-                onDeckUpdate={handleDeckUpdate}
-                availableCards={availableCards as MTGCard[]}
-              />
-            )}
-            
-            {currentDeck.format !== 'commander' && (
-              <div className="card">
-                <h2>Visual Builder</h2>
-                <p style={{ color: '#999', marginTop: '10px' }}>
-                  Visual deck builder is currently only available for Commander format.
-                  Standard MTG formats coming soon!
-                </p>
-              </div>
-            )}
-          </div>
-
-          {/* Deck statistics sidebar */}
-          <div>
-            <DeckStatistics deck={currentDeck} />
-          </div>
+        <div>
+          {currentDeck.format === 'commander' && (
+            <MTGCommanderBuilder
+              deck={currentDeck}
+              onDeckUpdate={handleDeckUpdate}
+              availableCards={availableCards as MTGCard[]}
+            />
+          )}
+          
+          {currentDeck.format !== 'commander' && (
+            <div className="card">
+              <h2>Visual Builder</h2>
+              <p style={{ color: '#999', marginTop: '10px' }}>
+                Visual deck builder is currently only available for Commander format.
+                Standard MTG formats coming soon!
+              </p>
+            </div>
+          )}
         </div>
       )}
 

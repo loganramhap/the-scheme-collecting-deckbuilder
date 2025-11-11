@@ -1,4 +1,4 @@
-import { Deck, DeckCard } from '../types/deck';
+import { Deck } from '../types/deck';
 import { RiftboundCard } from '../types/card';
 import { isBasicRune, isBattlefield, isLegend } from './riftboundCardTypes';
 
