@@ -114,7 +114,7 @@ function validateRiftboundDeck(
   cards: any[],
   specialSlots: Record<string, any> | undefined,
   errors: string[],
-  warnings: string[]
+  _warnings: string[]
 ) {
   // Count specific card types
   const runes = cards.filter(card => card.type?.toLowerCase() === 'rune');
@@ -153,7 +153,7 @@ function validateMTGDeck(
   format: string,
   specialSlots: Record<string, any> | undefined,
   errors: string[],
-  warnings: string[]
+  _warnings: string[]
 ) {
   if (format === 'commander') {
     if (!specialSlots?.commander) {

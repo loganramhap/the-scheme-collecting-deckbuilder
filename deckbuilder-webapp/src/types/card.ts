@@ -18,20 +18,33 @@ export interface MTGCard {
 export interface RiftboundCard {
   id: string;
   name: string;
-  type: string; // unit, spell, rune, battlefield, legend
-  subtype?: string; // warrior, mage, etc.
-  cost?: number;
-  attack?: number;
+  card_number?: string; // Card number from the set (e.g., "OGN-001/298")
+  game?: string; // "Riftbound"
+  set?: string; // Set name (e.g., "Origins")
+  energy?: number; // Energy cost
+  might?: number; // Might/Attack value
+  domain?: string; // Domain/Color (e.g., "Fury", "Cunning", "Harmony")
+  card_type?: string; // Card type (e.g., "Unit", "Spell", "Rune", "Battlefield", "Legend")
+  tags?: string; // Tags/subtypes (e.g., "Dragon, Noxus")
+  ability?: string; // Card ability text
+  rarity?: string; // Rarity (e.g., "Common", "Rare", "Epic", "Legendary")
+  artist?: string; // Artist name
+  image_url?: string; // Image URL
+  
+  // Normalized/computed fields for easier filtering
+  type: string; // Normalized type: unit, spell, rune, battlefield, legend
+  cost?: number; // Alias for energy
+  attack?: number; // Alias for might
+  color?: string; // Alias for domain
+  text?: string; // Alias for ability
+  
+  // Legacy fields
+  subtype?: string;
   health?: number;
-  rarity?: string; // common, rare, epic, legendary
-  color?: string; // red, blue, green, etc.
-  text?: string;
   flavor?: string;
-  image_url?: string;
-  set?: string;
-  faction?: string; // Legacy field
-  rank?: string; // Legacy field
-  runeColors?: string[]; // For rune cards
+  faction?: string;
+  rank?: string;
+  runeColors?: string[];
 }
 
 export type Card = MTGCard | RiftboundCard;

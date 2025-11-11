@@ -47,7 +47,7 @@ function getCardCost(card: Card): number {
   if (isMTGCard(card)) {
     return card.cmc;
   } else if (isRiftboundCard(card)) {
-    return card.cost;
+    return card.cost ?? 0;
   }
   return 0;
 }
@@ -61,7 +61,7 @@ function getCardRarity(card: Card): string | null {
     // For now, return null as it's not in the current type definition
     return null;
   } else if (isRiftboundCard(card)) {
-    return card.rank;
+    return card.rank ?? card.rarity ?? null;
   }
   return null;
 }
@@ -115,8 +115,9 @@ function matchesColorFilter(card: Card, colorFilters: string[]): boolean {
     
     return cardColors.some(color => colorFilters.includes(color));
   } else if (isRiftboundCard(card)) {
-    // Riftbound: Check faction
-    return colorFilters.includes(card.faction);
+    // Riftbound: Check faction or color
+    const cardFaction = card.faction || card.color;
+    return cardFaction ? colorFilters.includes(cardFaction) : true;
   }
   
   return true;

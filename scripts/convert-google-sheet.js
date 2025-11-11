@@ -40,24 +40,43 @@ function parseCSV(csvText) {
 
 function convertToCardFormat(rawCards) {
   return rawCards.map((raw, index) => {
-    // Map common field names (adjust based on actual sheet columns)
-    const name = raw.name || raw.card_name || raw.title || '';
-    const type = (raw.type || raw.card_type || '').toLowerCase();
+    // Map CSV columns to card format
+    // CSV columns: Game, Set, Card Number, Card Name, Energy, Might, Domain, Card Type, Tags, Ability, Rarity, Artist, Image URL
+    const name = raw.card_name || raw['card name'] || raw.name || '';
+    const cardNumber = raw.card_number || raw['card number'] || raw.number || undefined;
+    const cardType = raw.card_type || raw['card type'] || raw.type || '';
+    const normalizedType = cardType.toLowerCase().trim();
+    const energy = raw.energy ? parseInt(raw.energy) : undefined;
+    const might = raw.might ? parseInt(raw.might) : undefined;
+    const domain = raw.domain || raw.color || undefined;
+    const ability = raw.ability || raw.text || undefined;
+    const imageUrl = raw.image_url || raw['image url'] || raw.image || undefined;
     
     return {
-      id: raw.id || raw.card_id || `card-${index}-${name.toLowerCase().replace(/\s+/g, '-')}`,
+      // Unique identifier
+      id: raw.id || cardNumber || `card-${index}-${name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '')}`,
+      
+      // Original CSV fields
+      game: raw.game || 'Riftbound',
+      set: raw.set || undefined,
+      card_number: cardNumber,
       name: name,
-      type: type,
-      subtype: raw.subtype || raw.sub_type || undefined,
-      cost: raw.cost ? parseInt(raw.cost) : undefined,
-      attack: raw.attack || raw.atk ? parseInt(raw.attack || raw.atk) : undefined,
-      health: raw.health || raw.hp ? parseInt(raw.health || raw.hp) : undefined,
-      rarity: raw.rarity ? raw.rarity.toLowerCase() : undefined,
-      color: raw.color || raw.faction || undefined,
-      text: raw.text || raw.ability || raw.effect || undefined,
-      flavor: raw.flavor || raw.flavor_text || undefined,
-      image_url: raw.image_url || raw.image || undefined,
-      set: raw.set || raw.expansion || 'base',
+      energy: energy,
+      might: might,
+      domain: domain,
+      card_type: cardType,
+      tags: raw.tags || undefined,
+      ability: ability,
+      rarity: raw.rarity || undefined,
+      artist: raw.artist || undefined,
+      image_url: imageUrl,
+      
+      // Normalized fields for filtering/compatibility
+      type: normalizedType,
+      cost: energy,
+      attack: might,
+      color: domain,
+      text: ability,
     };
   }).filter(card => card.name); // Remove empty entries
 }

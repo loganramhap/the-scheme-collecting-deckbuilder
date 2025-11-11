@@ -33,7 +33,9 @@ class CardService {
     const lowerQuery = query.toLowerCase();
     return this.riftboundCards.filter(
       card => card.name.toLowerCase().includes(lowerQuery) ||
-              card.faction.toLowerCase().includes(lowerQuery)
+              card.faction?.toLowerCase().includes(lowerQuery) ||
+              card.color?.toLowerCase().includes(lowerQuery) ||
+              card.text?.toLowerCase().includes(lowerQuery)
     );
   }
 

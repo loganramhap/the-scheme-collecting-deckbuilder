@@ -96,7 +96,7 @@ class ValidationService {
     const factions = new Set<string>();
     for (const deckCard of deck.cards) {
       const card = cardService.getRiftboundCard(deckCard.id);
-      if (card) {
+      if (card && card.faction) {
         factions.add(card.faction);
       }
     }
