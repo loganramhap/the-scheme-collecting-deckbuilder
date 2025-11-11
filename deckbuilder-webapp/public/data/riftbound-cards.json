@@ -1,0 +1,3366 @@
+[
+  {
+    "id": "card-0-blazing-scorcher",
+    "name": "Blazing Scorcher",
+    "type": "unit",
+    "rarity": "[accelerate] (you may pay 1 energyfury as an additional cost to have me enter ready.)",
+    "text": "Noxus",
+    "image_url": "Envar Studio",
+    "set": "Origins"
+  },
+  {
+    "id": "card-1-brazen-buccaneer",
+    "name": "Brazen Buccaneer",
+    "type": "unit",
+    "rarity": "as you play me",
+    "text": "Bilgewater",
+    "image_url": "reduce my cost by 2 Energy.",
+    "set": "Origins"
+  },
+  {
+    "id": "card-2-chemtech-enforcer",
+    "name": "Chemtech Enforcer",
+    "type": "unit",
+    "rarity": "discard 1.",
+    "text": "[Assault 2] (+2 Might while I'm an attacker.)When you play me",
+    "image_url": "Six More Vodka",
+    "set": "Origins"
+  },
+  {
+    "id": "card-3-cleave",
+    "name": "Cleave",
+    "type": "spell",
+    "rarity": "common",
+    "text": "[Action] (Play on your turn or in showdowns.)Give a unit [Assault 3] this turn. (+3 Might while it's an attacker.)",
+    "image_url": "https://cmsassets.rgpub.io/sanity/images/dsfx7636/game_data_live/95d476a1e88ff547fb846149619177bc7e3cea9f-744x1039.png",
+    "set": "Origins"
+  },
+  {
+    "id": "card-4-disintegrate",
+    "name": "Disintegrate",
+    "type": "spell",
+    "rarity": "draw 1.",
+    "text": "[Action] (Play on your turn or in showdowns.)Deal 3 to a unit at a battlefield. If this kills it",
+    "image_url": "Kudos Productions",
+    "set": "Origins"
+  },
+  {
+    "id": "card-5-flame-chompers",
+    "name": "Flame Chompers",
+    "type": "unit",
+    "rarity": "you may pay fury to play me.",
+    "text": "When you discard me",
+    "image_url": "Six More Vodka",
+    "set": "Origins"
+  },
+  {
+    "id": "card-6-fury-rune",
+    "name": "Fury Rune",
+    "type": "basic rune",
+    "rarity": "common",
+    "image_url": "https://cmsassets.rgpub.io/sanity/images/dsfx7636/game_data_live/12bcd0cde5d9ff4640e82945001e9fef863530f1-744x1039.png",
+    "set": "Origins"
+  },
+  {
+    "id": "card-7-fury-rune",
+    "name": "Fury Rune",
+    "type": "basic rune",
+    "rarity": "showcase",
+    "image_url": "https://cmsassets.rgpub.io/sanity/images/dsfx7636/game_data_live/09da06c69d07d4e72dde703737ef167472c715af-1488x2078.png",
+    "set": "Origins"
+  },
+  {
+    "id": "card-8-get-excited!",
+    "name": "Get Excited!",
+    "type": "spell",
+    "rarity": "common",
+    "text": "[Action] (Play on your turn or in showdowns.)Discard 1. Deal its Energy cost as damage to a unit at a battlefield. (Ignore its Power cost.)",
+    "image_url": "https://cmsassets.rgpub.io/sanity/images/dsfx7636/game_data_live/2906c932c482af17fbb2979a8c42a6992f95d6a6-744x1039.png",
+    "set": "Origins"
+  },
+  {
+    "id": "card-9-hextech-ray",
+    "name": "Hextech Ray",
+    "type": "spell",
+    "rarity": "common",
+    "text": "[Action] (Play on your turn or in showdowns.)Deal 3 to a unit at a battlefield.",
+    "image_url": "https://cmsassets.rgpub.io/sanity/images/dsfx7636/game_data_live/1e7d12693822c38377ddc8f15db23e2f9b6d560a-744x1039.png",
+    "set": "Origins"
+  },
+  {
+    "id": "card-10-legion-rearguard",
+    "name": "Legion Rearguard",
+    "type": "unit",
+    "rarity": "[accelerate] (you may pay 1 energyfury as an additional cost to have me enter ready.)",
+    "text": "Noxus",
+    "image_url": "Six More Vodka",
+    "set": "Origins"
+  },
+  {
+    "id": "card-11-magma-wurm",
+    "name": "Magma Wurm",
+    "type": "unit",
+    "rarity": "common",
+    "text": "Other friendly units enter ready.",
+    "image_url": "https://cmsassets.rgpub.io/sanity/images/dsfx7636/game_data_live/f6565b15f65f538804e6a56623c8aa2eedeffc22-744x1039.png",
+    "set": "Origins"
+  },
+  {
+    "id": "card-12-noxus-hopeful",
+    "name": "Noxus Hopeful",
+    "type": "unit",
+    "rarity": "[legion] — i cost 2 energy less._ (get the effect if you've played another card this turn.)_",
+    "text": "Noxus",
+    "image_url": "Six More Vodka",
+    "set": "Origins"
+  },
+  {
+    "id": "card-13-pouty-poro",
+    "name": "Pouty Poro",
+    "type": "unit",
+    "rarity": "common",
+    "text": "[Deflect] (Opponents must pay Rune Rainbow to choose me with a spell or ability.)",
+    "image_url": "https://cmsassets.rgpub.io/sanity/images/dsfx7636/game_data_live/d541bf3bcb5aa3ad0d48d87f5753569b72ac426f-744x1039.png",
+    "set": "Origins"
+  },
+  {
+    "id": "card-14-sky-splitter",
+    "name": "Sky Splitter",
+    "type": "spell",
+    "rarity": "common",
+    "text": "[Action] (Play on your turn or in showdowns.)This spell's Energy cost is reduced by the highest Might among units you control.Deal 5 to a unit at a battlefield.",
+    "image_url": "https://cmsassets.rgpub.io/sanity/images/dsfx7636/game_data_live/01faae468720dd5bf5e3fe12ba56c01af70263be-744x1039.png",
+    "set": "Origins"
+  },
+  {
+    "id": "card-15-captain-farron",
+    "name": "Captain Farron",
+    "type": "unit",
+    "rarity": "other friendly units here have [assault]. (+1 might while they're attackers.)",
+    "text": "Noxus",
+    "image_url": "Six More Vodka",
+    "set": "Origins"
+  },
+  {
+    "id": "card-16-dangerous-duo",
+    "name": "Dangerous Duo",
+    "type": "unit",
+    "rarity": "[legion] — when you play me",
+    "text": "Bandle City",
+    "image_url": "Uncommon",
+    "set": "Origins"
+  },
+  {
+    "id": "card-17-iron-ballista",
+    "name": "Iron Ballista",
+    "type": "gear",
+    "rarity": "uncommon",
+    "text": "This enters exhausted.Exhaust: Deal 2 to a unit at a battlefield.",
+    "image_url": "https://cmsassets.rgpub.io/sanity/images/dsfx7636/game_data_live/9b5cfe757b6067994e17e284eba46433880a1461-744x1039.png",
+    "set": "Origins"
+  },
+  {
+    "id": "card-18-noxus-saboteur",
+    "name": "Noxus Saboteur",
+    "type": "unit",
+    "rarity": "your opponents' [hidden] cards can't be revealed here.",
+    "text": "Noxus",
+    "image_url": "Six More Vodka",
+    "set": "Origins"
+  },
+  {
+    "id": "card-19-raging-soul",
+    "name": "Raging Soul",
+    "type": "unit",
+    "rarity": "if you've discarded a card this turn",
+    "text": "Shadow Isles",
+    "image_url": "Uncommon",
+    "set": "Origins"
+  },
+  {
+    "id": "card-20-scrapyard-champion",
+    "name": "Scrapyard Champion",
+    "type": "unit",
+    "rarity": "[legion] — when you play me",
+    "text": "Bandle City",
+    "image_url": "then draw 2. (Get the effect if you've played another card this turn.)",
+    "set": "Origins"
+  },
+  {
+    "id": "card-21-sun-disc",
+    "name": "Sun Disc",
+    "type": "gear",
+    "rarity": "uncommon",
+    "text": "Exhaust: [Legion] — The next unit you play this turn enters ready. (Get the effect if you've played another card this turn.)",
+    "image_url": "https://cmsassets.rgpub.io/sanity/images/dsfx7636/game_data_live/146d7514f15e6674f471f3aa9c3fadf22c0b634b-744x1039.png",
+    "set": "Origins"
+  },
+  {
+    "id": "card-22-thermo-beam",
+    "name": "Thermo Beam",
+    "type": "spell",
+    "rarity": "uncommon",
+    "text": "[Action] (Play on your turn or in showdowns.)Kill all gear.",
+    "image_url": "https://cmsassets.rgpub.io/sanity/images/dsfx7636/game_data_live/88661e852b864491e6d7f5f087caf4263f61c361-744x1039.png",
+    "set": "Origins"
+  },
+  {
+    "id": "card-23-unlicensed-armory",
+    "name": "Unlicensed Armory",
+    "type": "gear",
+    "rarity": "exhaust: choose a friendly unit. the next time it dies this turn",
+    "text": "Discard 1",
+    "image_url": "Uncommon",
+    "set": "Origins"
+  },
+  {
+    "id": "card-24-void-seeker",
+    "name": "Void Seeker",
+    "type": "spell",
+    "rarity": "uncommon",
+    "text": "[Action] (Play on your turn or in showdowns.)Deal 4 to a unit at a battlefield. Draw 1.",
+    "image_url": "https://cmsassets.rgpub.io/sanity/images/dsfx7636/game_data_live/5b64b63c6be58ff3c33c7fb3c2dcb168d64e287e-744x1039.png",
+    "set": "Origins"
+  },
+  {
+    "id": "card-25-blind-fury",
+    "name": "Blind Fury",
+    "type": "spell",
+    "rarity": "ignoring its cost. then recycle the rest.",
+    "text": "[Action] (Play on your turn or in showdowns.)Each opponent reveals the top card of their Main Deck. Choose one and play it",
+    "image_url": "Six More Vodka",
+    "set": "Origins"
+  },
+  {
+    "id": "card-26-brynhir-thundersong",
+    "name": "Brynhir Thundersong",
+    "type": "unit",
+    "rarity": "opponents can't play cards this turn.",
+    "text": "When you play me",
+    "image_url": "Envar Studio",
+    "set": "Origins"
+  },
+  {
+    "id": "card-27-darius",
+    "name": "Darius",
+    "type": "fury",
+    "rarity": "darius",
+    "text": "Trifarian",
+    "image_url": "When you play your second card in a turn",
+    "set": "Origins"
+  },
+  {
+    "id": "card-28-darius",
+    "name": "Darius",
+    "type": "fury",
+    "rarity": "darius",
+    "text": "Trifarian",
+    "image_url": "When you play your second card in a turn",
+    "set": "Origins"
+  },
+  {
+    "id": "card-29-draven",
+    "name": "Draven",
+    "type": "fury",
+    "rarity": "noxus",
+    "text": "Draven",
+    "image_url": "Rare",
+    "set": "Origins"
+  },
+  {
+    "id": "card-30-falling-star",
+    "name": "Falling Star",
+    "type": "spell",
+    "rarity": "rare",
+    "text": "Do this twice:Deal 3 to a unit. (You can choose different units.)",
+    "image_url": "https://cmsassets.rgpub.io/sanity/images/dsfx7636/game_data_live/9cf2d2e59e1bf839cdf5c2a77e95f5d1e871788f-744x1039.png",
+    "set": "Origins"
+  },
+  {
+    "id": "card-31-jinx",
+    "name": "Jinx",
+    "type": "fury",
+    "rarity": "zaun",
+    "text": "Jinx",
+    "image_url": "discard 2.",
+    "set": "Origins"
+  },
+  {
+    "id": "card-32-jinx",
+    "name": "Jinx",
+    "type": "fury",
+    "rarity": "zaun",
+    "text": "Jinx",
+    "image_url": "discard 2.",
+    "set": "Origins"
+  },
+  {
+    "id": "card-33-raging-firebrand",
+    "name": "Raging Firebrand",
+    "type": "unit",
+    "rarity": "when you play me",
+    "text": "Mount Targon",
+    "image_url": "Rare",
+    "set": "Origins"
+  },
+  {
+    "id": "card-34-ravenborn-tome",
+    "name": "Ravenborn Tome",
+    "type": "gear",
+    "rarity": "rare",
+    "text": "Exhaust: The next spell you play deals 1 Bonus Damage. (Each instance of damage the spell deals is increased by 1.)",
+    "image_url": "https://cmsassets.rgpub.io/sanity/images/dsfx7636/game_data_live/81f968126026635e5b9a2fa1048fc979fcd13a1d-744x1039.png",
+    "set": "Origins"
+  },
+  {
+    "id": "card-35-shakedown",
+    "name": "Shakedown",
+    "type": "spell",
+    "rarity": "even before spells and abilities resolve.)choose an enemy unit. deal 6 to it unless its controller has you draw 2.",
+    "text": "[Reaction] (Play any time",
+    "image_url": "Kudos Productions",
+    "set": "Origins"
+  },
+  {
+    "id": "card-36-tryndamere",
+    "name": "Tryndamere",
+    "type": "fury",
+    "rarity": "freljord",
+    "text": "Tryndamere",
+    "image_url": "if you assigned 5 or more excess damage to enemy units",
+    "set": "Origins"
+  },
+  {
+    "id": "card-37-vayne",
+    "name": "Vayne",
+    "type": "fury",
+    "rarity": "demacia",
+    "text": "Vayne",
+    "image_url": "I enter ready.When I conquer",
+    "set": "Origins"
+  },
+  {
+    "id": "card-38-vi",
+    "name": "Vi",
+    "type": "fury",
+    "rarity": "piltover",
+    "text": "Vi",
+    "image_url": "Rare",
+    "set": "Origins"
+  },
+  {
+    "id": "card-39-immortal-phoenix",
+    "name": "Immortal Phoenix",
+    "type": "unit",
+    "rarity": "you may pay 1 energyfury to play me from your trash.",
+    "text": "[Assault 2] (+2 Might while I'm an attacker.)When you kill a unit with a spell",
+    "image_url": "Kudos Productions",
+    "set": "Origins"
+  },
+  {
+    "id": "card-40-kadregrin-the-infernal",
+    "name": "Kadregrin the Infernal",
+    "type": "unit",
+    "rarity": "when you play me",
+    "text": "Demacia",
+    "image_url": "Epic",
+    "set": "Origins"
+  },
+  {
+    "id": "card-41-kai'sa",
+    "name": "Kai'Sa",
+    "type": "fury",
+    "rarity": "the void",
+    "text": "Kai'Sa",
+    "image_url": "draw 1.",
+    "set": "Origins"
+  },
+  {
+    "id": "card-42-kai'sa",
+    "name": "Kai'Sa",
+    "type": "fury",
+    "rarity": "the void",
+    "text": "Kai'Sa",
+    "image_url": "draw 1.",
+    "set": "Origins"
+  },
+  {
+    "id": "card-43-seal-of-rage",
+    "name": "Seal of Rage",
+    "type": "gear",
+    "rarity": "epic",
+    "text": "Exhaust: [Reaction] — [Add] Fury. (Abilities that add resources can't be reacted to.)",
+    "image_url": "https://cmsassets.rgpub.io/sanity/images/dsfx7636/game_data_live/fbdd14adb40b0ca46b89f476a356fa21413d812e-744x1039.png",
+    "set": "Origins"
+  },
+  {
+    "id": "card-44-volibear",
+    "name": "Volibear",
+    "type": "fury",
+    "rarity": "freljord",
+    "text": "Volibear",
+    "image_url": "deal 5 damage split among any number of enemy units here.",
+    "set": "Origins"
+  },
+  {
+    "id": "card-45-volibear",
+    "name": "Volibear",
+    "type": "fury",
+    "rarity": "freljord",
+    "text": "Volibear",
+    "image_url": "deal 5 damage split among any number of enemy units here.",
+    "set": "Origins"
+  },
+  {
+    "id": "card-46-calm-rune",
+    "name": "Calm Rune",
+    "type": "basic rune",
+    "rarity": "common",
+    "image_url": "https://cmsassets.rgpub.io/sanity/images/dsfx7636/game_data_live/0a0e8c3d16c2595e2f8efcc2b1466226539b506c-744x1039.png",
+    "set": "Origins"
+  },
+  {
+    "id": "card-47-calm-rune",
+    "name": "Calm Rune",
+    "type": "basic rune",
+    "rarity": "showcase",
+    "image_url": "https://cmsassets.rgpub.io/sanity/images/dsfx7636/game_data_live/88187b586b9b3cc2f48fd20c806dd5fc5e1bfc71-1488x2078.png",
+    "set": "Origins"
+  },
+  {
+    "id": "card-48-charm",
+    "name": "Charm",
+    "type": "spell",
+    "rarity": "common",
+    "text": "Move an enemy unit.",
+    "image_url": "https://cmsassets.rgpub.io/sanity/images/dsfx7636/game_data_live/62ae564505db8fcba70605eac2083ac2d4397b5a-744x1039.png",
+    "set": "Origins"
+  },
+  {
+    "id": "card-49-clockwork-keeper",
+    "name": "Clockwork Keeper",
+    "type": "unit",
+    "rarity": "you may pay calm as an additional cost. if you do",
+    "text": "As you play me",
+    "image_url": "Common",
+    "set": "Origins"
+  },
+  {
+    "id": "card-50-defy",
+    "name": "Defy",
+    "type": "spell",
+    "rarity": "even before spells and abilities resolve.)counter a spell that costs no more than 4 energy and no more than rune rainbow.",
+    "text": "[Reaction] (Play any time",
+    "image_url": "Kudos Productions",
+    "set": "Origins"
+  },
+  {
+    "id": "card-51-en-garde",
+    "name": "En Garde",
+    "type": "spell",
+    "rarity": "even before spells and abilities resolve.)give a friendly unit +1 might this turn",
+    "text": "[Reaction] (Play any time",
+    "image_url": "Common",
+    "set": "Origins"
+  },
+  {
+    "id": "card-52-find-your-center",
+    "name": "Find Your Center",
+    "type": "spell",
+    "rarity": "this costs 2 energy less.draw 1 and channel 1 rune exhausted.",
+    "text": "[Action] (Play on your turn or in showdowns.)If an opponent's score is within 3 points of the Victory Score",
+    "image_url": "Kudos Productions",
+    "set": "Origins"
+  },
+  {
+    "id": "card-53-meditation",
+    "name": "Meditation",
+    "type": "spell",
+    "rarity": "even before spells and abilities resolve.)as an additional cost to play this",
+    "text": "[Reaction] (Play any time",
+    "image_url": "draw 2. Otherwise",
+    "set": "Origins"
+  },
+  {
+    "id": "card-54-playful-phantom",
+    "name": "Playful Phantom",
+    "type": "unit",
+    "text": "Shadow Isles",
+    "image_url": "Six More Vodka",
+    "set": "Origins"
+  },
+  {
+    "id": "card-55-rune-prison",
+    "name": "Rune Prison",
+    "type": "spell",
+    "rarity": "common",
+    "text": "[Action] (Play on your turn or in showdowns.)Stun a unit._ (It doesn't deal combat damage this turn.)_",
+    "image_url": "https://cmsassets.rgpub.io/sanity/images/dsfx7636/game_data_live/21867baeaced3c22cda5f40f6b6c9a8dad4b7042-744x1039.png",
+    "set": "Origins"
+  },
+  {
+    "id": "card-56-solari-shieldbearer",
+    "name": "Solari Shieldbearer",
+    "type": "unit",
+    "rarity": "stun a unit. (it doesn't deal combat damage this turn.)",
+    "text": "When you play me",
+    "image_url": "Kudos Productions",
+    "set": "Origins"
+  },
+  {
+    "id": "card-57-stalwart-poro",
+    "name": "Stalwart Poro",
+    "type": "unit",
+    "rarity": "common",
+    "text": "[Shield] (+1 Might while I'm a defender.)",
+    "image_url": "https://cmsassets.rgpub.io/sanity/images/dsfx7636/game_data_live/c4a5d7178e783c3975749271b6df333a82a2328a-744x1039.png",
+    "set": "Origins"
+  },
+  {
+    "id": "card-58-stand-united",
+    "name": "Stand United",
+    "type": "spell",
+    "rarity": "give it a +1 might buff if it doesn't already have one.)",
+    "text": "[Hidden] (Hide now for Rune Rainbow to react with later for 0 Energy.)[Action] (Play on your turn or in showdowns.)Buff a friendly unit. Buffs give an additional +1 Might to friendly units this turn. (To buff a unit",
+    "image_url": "Six More Vodka",
+    "set": "Origins"
+  },
+  {
+    "id": "card-59-sunlit-guardian",
+    "name": "Sunlit Guardian",
+    "type": "unit",
+    "rarity": "common",
+    "text": "[Shield] (+1 Might while I'm a defender.)[Tank] (I must be assigned combat damage first.)",
+    "image_url": "https://cmsassets.rgpub.io/sanity/images/dsfx7636/game_data_live/28bce7a662b9008f65565300f828d98790a641e1-744x1039.png",
+    "set": "Origins"
+  },
+  {
+    "id": "card-60-wielder-of-water",
+    "name": "Wielder of Water",
+    "type": "unit",
+    "rarity": "i have +2 might.",
+    "text": "While I'm attacking or defending alone",
+    "image_url": "Six More Vodka",
+    "set": "Origins"
+  },
+  {
+    "id": "card-61-adaptatron",
+    "name": "Adaptatron",
+    "type": "unit",
+    "rarity": "when i conquer",
+    "text": "Piltover",
+    "image_url": "buff me. (If I don't have a buff",
+    "set": "Origins"
+  },
+  {
+    "id": "card-62-block",
+    "name": "Block",
+    "type": "spell",
+    "rarity": "uncommon",
+    "text": "[Hidden] (Hide now for Rune Rainbow to react with later for 0 Energy.)[Action] (Play on your turn or in showdowns.)Give a unit [Shield 3] and [Tank] this turn. (+3 Might while it's a defender. It must be assigned combat damage first.)",
+    "image_url": "https://cmsassets.rgpub.io/sanity/images/dsfx7636/game_data_live/36f7352e715fe073631ed85be41408c9a38ab865-744x1039.png",
+    "set": "Origins"
+  },
+  {
+    "id": "card-63-discipline",
+    "name": "Discipline",
+    "type": "spell",
+    "rarity": "even before spells and abilities resolve.)give a unit +2 might this turn. draw 1.",
+    "text": "[Reaction] (Play any time",
+    "image_url": "Kudos Productions",
+    "set": "Origins"
+  },
+  {
+    "id": "card-64-eclipse-herald",
+    "name": "Eclipse Herald",
+    "type": "unit",
+    "rarity": "when you stun an enemy unit",
+    "text": "Mount Targon",
+    "image_url": "Uncommon",
+    "set": "Origins"
+  },
+  {
+    "id": "card-65-mask-of-foresight",
+    "name": "Mask of Foresight",
+    "type": "gear",
+    "rarity": "give it +1 might this turn.",
+    "text": "When a friendly unit attacks or defends alone",
+    "image_url": "Kudos Productions",
+    "set": "Origins"
+  },
+  {
+    "id": "card-66-poro-herder",
+    "name": "Poro Herder",
+    "type": "unit",
+    "rarity": "if you control a poro",
+    "text": "When you play me",
+    "image_url": "I get a +1 Might buff.)",
+    "set": "Origins"
+  },
+  {
+    "id": "card-67-reinforce",
+    "name": "Reinforce",
+    "type": "spell",
+    "rarity": "uncommon",
+    "text": "Look at the top 5 cards of your Main Deck. You may play a unit from among them. Its Energy cost is reduced by 5 Energy. Then recycle the remaining cards.",
+    "image_url": "https://cmsassets.rgpub.io/sanity/images/dsfx7636/game_data_live/5bb4ce960c7636dac103c560a2e2f4e32f9d5390-744x1039.png",
+    "set": "Origins"
+  },
+  {
+    "id": "card-68-spirit's-refuge",
+    "name": "Spirit's Refuge",
+    "type": "gear",
+    "rarity": "buff a friendly unit. (if it doesn't have a buff",
+    "text": "When you play this",
+    "image_url": "Uncommon",
+    "set": "Origins"
+  },
+  {
+    "id": "card-69-wind-wall",
+    "name": "Wind Wall",
+    "type": "spell",
+    "rarity": "even before spells and abilities resolve.)counter a spell.",
+    "text": "[Reaction] (Play any time",
+    "image_url": "Max Grecke",
+    "set": "Origins"
+  },
+  {
+    "id": "card-70-wizened-elder",
+    "name": "Wizened Elder",
+    "type": "unit",
+    "rarity": "i have an additional +1 might.",
+    "text": "While I'm buffed",
+    "image_url": "Six More Vodka",
+    "set": "Origins"
+  },
+  {
+    "id": "card-71-ahri",
+    "name": "Ahri",
+    "type": "calm",
+    "rarity": "ionia",
+    "text": "Ahri",
+    "image_url": "you score 1 point.",
+    "set": "Origins"
+  },
+  {
+    "id": "card-72-ahri",
+    "name": "Ahri",
+    "type": "calm",
+    "rarity": "ionia",
+    "text": "Ahri",
+    "image_url": "you score 1 point.",
+    "set": "Origins"
+  },
+  {
+    "id": "card-73-blitzcrank",
+    "name": "Blitzcrank",
+    "type": "calm",
+    "rarity": "blitzcrank",
+    "text": "Mech",
+    "image_url": "[Tank] (I must be assigned combat damage first.)When you play me to a battlefield",
+    "set": "Origins"
+  },
+  {
+    "id": "card-74-caitlyn",
+    "name": "Caitlyn",
+    "type": "calm",
+    "rarity": "piltover",
+    "text": "Caitlyn",
+    "image_url": "Rare",
+    "set": "Origins"
+  },
+  {
+    "id": "card-75-last-stand",
+    "name": "Last Stand",
+    "type": "spell",
+    "rarity": "before scoring.)",
+    "text": "[Action] (Play on your turn or in showdowns.)Double a friendly unit's Might this turn. Give it [Temporary]. (Kill it at the start of its controller's Beginning Phase",
+    "image_url": "Kudos Productions",
+    "set": "Origins"
+  },
+  {
+    "id": "card-76-mageseeker-warden",
+    "name": "Mageseeker Warden",
+    "type": "unit",
+    "rarity": "opponents can only play units to their base.while i'm at a battlefield",
+    "text": "While I'm at a battlefield",
+    "image_url": "Rare",
+    "set": "Origins"
+  },
+  {
+    "id": "card-77-party-favors",
+    "name": "Party Favors",
+    "type": "spell",
+    "rarity": "you and that player each draw 1. for each player that chooses runes",
+    "text": "Each other player chooses Cards or Runes. For each player that chooses Cards",
+    "image_url": "Rare",
+    "set": "Origins"
+  },
+  {
+    "id": "card-78-solari-shrine",
+    "name": "Solari Shrine",
+    "type": "gear",
+    "rarity": "you may exhaust this to draw 1.",
+    "text": "When you kill a stunned enemy unit",
+    "image_url": "Kudos Productions",
+    "set": "Origins"
+  },
+  {
+    "id": "card-79-sona",
+    "name": "Sona",
+    "type": "calm",
+    "rarity": "demacia",
+    "text": "Sona",
+    "image_url": "ready 4 friendly runes at the end of your turn.",
+    "set": "Origins"
+  },
+  {
+    "id": "card-80-taric",
+    "name": "Taric",
+    "type": "calm",
+    "rarity": "mount targon",
+    "text": "Taric",
+    "image_url": "Rare",
+    "set": "Origins"
+  },
+  {
+    "id": "card-81-tasty-faefolk",
+    "name": "Tasty Faefolk",
+    "type": "unit",
+    "rarity": "[accelerate] (you may pay 1 energycalm as an additional cost to have me enter ready.)[deathknell] — channel 2 runes exhausted and draw 1. (when i die",
+    "text": "Bandle City",
+    "image_url": "Rare",
+    "set": "Origins"
+  },
+  {
+    "id": "card-82-yasuo",
+    "name": "Yasuo",
+    "type": "calm",
+    "rarity": "ionia",
+    "text": "Yasuo",
+    "image_url": "deal damage equal to my Might to an enemy unit here.",
+    "set": "Origins"
+  },
+  {
+    "id": "card-83-yasuo",
+    "name": "Yasuo",
+    "type": "calm",
+    "rarity": "ionia",
+    "text": "Yasuo",
+    "image_url": "deal damage equal to my Might to an enemy unit here.",
+    "set": "Origins"
+  },
+  {
+    "id": "card-84-zhonya's-hourglass",
+    "name": "Zhonya's Hourglass",
+    "type": "gear",
+    "rarity": "kill this instead. recall that unit exhausted. (send it to base. this isn't a move.)",
+    "text": "[Hidden] (Hide now for Rune Rainbow to react with later for 0 Energy.)The next time a friendly unit would die",
+    "image_url": "Kudos Productions",
+    "set": "Origins"
+  },
+  {
+    "id": "card-85-lee-sin",
+    "name": "Lee Sin",
+    "type": "calm",
+    "rarity": "ionia",
+    "text": "Lee Sin",
+    "image_url": "Epic",
+    "set": "Origins"
+  },
+  {
+    "id": "card-86-lee-sin",
+    "name": "Lee Sin",
+    "type": "calm",
+    "rarity": "ionia",
+    "text": "Lee Sin",
+    "image_url": "Showcase",
+    "set": "Origins"
+  },
+  {
+    "id": "card-87-leona",
+    "name": "Leona",
+    "type": "calm",
+    "rarity": "mount targon",
+    "text": "Leona",
+    "image_url": "I enter ready.Stunned enemy units here have -8 Might",
+    "set": "Origins"
+  },
+  {
+    "id": "card-88-leona",
+    "name": "Leona",
+    "type": "calm",
+    "rarity": "mount targon",
+    "text": "Leona",
+    "image_url": "I enter ready.Stunned enemy units here have -8 Might",
+    "set": "Origins"
+  },
+  {
+    "id": "card-89-mystic-reversal",
+    "name": "Mystic Reversal",
+    "type": "spell",
+    "rarity": "even before spells and abilities resolve.)gain control of a spell. you may make new choices for it.",
+    "text": "[Reaction] (Play any time",
+    "image_url": "Polar Engine Studio",
+    "set": "Origins"
+  },
+  {
+    "id": "card-90-seal-of-focus",
+    "name": "Seal of Focus",
+    "type": "gear",
+    "rarity": "epic",
+    "text": "Exhaust: [Reaction] — [Add] Calm. (Abilities that add resources can't be reacted to.)",
+    "image_url": "https://cmsassets.rgpub.io/sanity/images/dsfx7636/game_data_live/288c300c4e4cb10ecfe6c3cbb543d0636b306852-744x1039.png",
+    "set": "Origins"
+  },
+  {
+    "id": "card-91-whiteflame-protector",
+    "name": "Whiteflame Protector",
+    "type": "unit",
+    "rarity": "when you play me",
+    "text": "Mount Targon",
+    "image_url": "Epic",
+    "set": "Origins"
+  },
+  {
+    "id": "card-92-consult-the-past",
+    "name": "Consult the Past",
+    "type": "spell",
+    "rarity": "even before spells and abilities resolve.)draw 2.",
+    "text": "[Hidden] (Hide now for Rune Rainbow to react with later for 0 Energy.)[Reaction] (Play any time",
+    "image_url": "Kudos Productions",
+    "set": "Origins"
+  },
+  {
+    "id": "card-93-eager-apprentice",
+    "name": "Eager Apprentice",
+    "type": "unit",
+    "rarity": "the energy costs for spells you play is reduced by 1 energy",
+    "text": "While I'm at a battlefield",
+    "image_url": "Common",
+    "set": "Origins"
+  },
+  {
+    "id": "card-94-falling-comet",
+    "name": "Falling Comet",
+    "type": "spell",
+    "rarity": "common",
+    "text": "[Action] (Play on your turn or in showdowns.)Deal 6 to a unit at a battlefield.",
+    "image_url": "https://cmsassets.rgpub.io/sanity/images/dsfx7636/game_data_live/eaaf300a07d5b2927fe9a601d70f2a01b512cc7e-744x1039.png",
+    "set": "Origins"
+  },
+  {
+    "id": "card-95-jeweled-colossus",
+    "name": "Jeweled Colossus",
+    "type": "unit",
+    "rarity": "look at the top card of your main deck. you may recycle it.)[shield]** **(+1 might while i'm a defender.)",
+    "text": "[Vision] (When you play me",
+    "image_url": "Kudos Productions",
+    "set": "Origins"
+  },
+  {
+    "id": "card-96-lecturing-yordle",
+    "name": "Lecturing Yordle",
+    "type": "unit",
+    "rarity": "[tank] (i must be assigned combat damage first.)when you play me",
+    "text": "Bandle City",
+    "image_url": "Common",
+    "set": "Origins"
+  },
+  {
+    "id": "card-97-mega-mech",
+    "name": "Mega-Mech",
+    "type": "unit",
+    "text": "Bandle City",
+    "image_url": "Valentin Gloaguen",
+    "set": "Origins"
+  },
+  {
+    "id": "card-98-mind-rune",
+    "name": "Mind Rune",
+    "type": "basic rune",
+    "rarity": "common",
+    "image_url": "https://cmsassets.rgpub.io/sanity/images/dsfx7636/game_data_live/f99aa4874baaebd2e81798c8a3aa01c5900f6d30-744x1039.png",
+    "set": "Origins"
+  },
+  {
+    "id": "card-99-mind-rune",
+    "name": "Mind Rune",
+    "type": "basic rune",
+    "rarity": "showcase",
+    "image_url": "https://cmsassets.rgpub.io/sanity/images/dsfx7636/game_data_live/ecf8c8632c728520b51cd4bc79036677e96ebdfd-1488x2078.png",
+    "set": "Origins"
+  },
+  {
+    "id": "card-100-orb-of-regret",
+    "name": "Orb of Regret",
+    "type": "gear",
+    "rarity": "to a minimum of 1 might.",
+    "text": "Exhaust: Give a unit -1 Might this turn",
+    "image_url": "Kudos Productions",
+    "set": "Origins"
+  },
+  {
+    "id": "card-101-pit-crew",
+    "name": "Pit Crew",
+    "type": "unit",
+    "rarity": "ready me.",
+    "text": "When you play a gear",
+    "image_url": "Chris Kintner",
+    "set": "Origins"
+  },
+  {
+    "id": "card-102-riptide-rex",
+    "name": "Riptide Rex",
+    "type": "unit",
+    "rarity": "when you play me",
+    "text": "Bilgewater",
+    "image_url": "Common",
+    "set": "Origins"
+  },
+  {
+    "id": "card-103-smoke-screen",
+    "name": "Smoke Screen",
+    "type": "spell",
+    "rarity": "even before spells and abilities resolve.)give a unit -4 might this turn",
+    "text": "[Reaction] (Play any time",
+    "image_url": "Common",
+    "set": "Origins"
+  },
+  {
+    "id": "card-104-sprite-call",
+    "name": "Sprite Call",
+    "type": "spell",
+    "rarity": "before scoring.)",
+    "text": "[Hidden] (Hide now for Rune Rainbow to react with later for 0 Energy.)[Action] (Play on your turn or in showdowns.)Play a ready 3 Might Sprite unit token with [Temporary]. (Kill it at the start of its controller's Beginning Phase",
+    "image_url": "Envar Studio",
+    "set": "Origins"
+  },
+  {
+    "id": "card-105-stupefy",
+    "name": "Stupefy",
+    "type": "spell",
+    "rarity": "even before spells and abilities resolve.)give a unit -1 might this turn",
+    "text": "[Reaction] (Play any time",
+    "image_url": "Common",
+    "set": "Origins"
+  },
+  {
+    "id": "card-106-watchful-sentry",
+    "name": "Watchful Sentry",
+    "type": "unit",
+    "rarity": "get the effect.)",
+    "text": "[Deathknell] — Draw 1. (When I die",
+    "image_url": "Six More Vodka",
+    "set": "Origins"
+  },
+  {
+    "id": "card-107-blastcone-fae",
+    "name": "Blastcone Fae",
+    "type": "unit",
+    "rarity": "[hidden] (hide now for rune rainbow to react with later for 0 energy.)when you play me",
+    "text": "Bandle City",
+    "image_url": "to a minimum of 1 Might.",
+    "set": "Origins"
+  },
+  {
+    "id": "card-108-energy-conduit",
+    "name": "Energy Conduit",
+    "type": "gear",
+    "rarity": "uncommon",
+    "text": "Exhaust: [Reaction] — [Add] 1 Energy. (Abilities that add resources can't be reacted to.)",
+    "image_url": "https://cmsassets.rgpub.io/sanity/images/dsfx7636/game_data_live/f0e0a67e9e9b1d45d12d248df78b4e643b70bdc1-744x1039.png",
+    "set": "Origins"
+  },
+  {
+    "id": "card-109-garbage-grabber",
+    "name": "Garbage Grabber",
+    "type": "gear",
+    "rarity": "1 energy",
+    "text": "Recycle 3 from your trash",
+    "image_url": "Uncommon",
+    "set": "Origins"
+  },
+  {
+    "id": "card-110-gemcraft-seer",
+    "name": "Gemcraft Seer",
+    "type": "unit",
+    "rarity": "look at the top card of your main deck. you may recycle it.)other friendly units have [vision].",
+    "text": "[Vision] (When you play me",
+    "image_url": "Bubble Cat Studio",
+    "set": "Origins"
+  },
+  {
+    "id": "card-111-mushroom-pouch",
+    "name": "Mushroom Pouch",
+    "type": "gear",
+    "rarity": "if you control a facedown card at a battlefield",
+    "text": "At the start of your Beginning Phase",
+    "image_url": "Uncommon",
+    "set": "Origins"
+  },
+  {
+    "id": "card-112-portal-rescue",
+    "name": "Portal Rescue",
+    "type": "spell",
+    "rarity": "then its owner plays it to their base",
+    "text": "[Action] (Play on your turn or in showdowns.)Banish a friendly unit",
+    "image_url": "Uncommon",
+    "set": "Origins"
+  },
+  {
+    "id": "card-113-ravenbloom-student",
+    "name": "Ravenbloom Student",
+    "type": "unit",
+    "rarity": "give me +1 might this turn.",
+    "text": "When you play a spell",
+    "image_url": "Polar Engine Studio",
+    "set": "Origins"
+  },
+  {
+    "id": "card-114-retreat",
+    "name": "Retreat",
+    "type": "spell",
+    "rarity": "even before spells and abilities resolve.)return a friendly unit to its owner's hand. its owner channels 1 rune exhausted.",
+    "text": "[Reaction] (Play any time",
+    "image_url": "Kudos Productions",
+    "set": "Origins"
+  },
+  {
+    "id": "card-115-singularity",
+    "name": "Singularity",
+    "type": "spell",
+    "rarity": "uncommon",
+    "text": "Deal 6 to each of up to two units.",
+    "image_url": "https://cmsassets.rgpub.io/sanity/images/dsfx7636/game_data_live/792edce1a64d4a92740aa3fa240e21e161513944-744x1039.png",
+    "set": "Origins"
+  },
+  {
+    "id": "card-116-sprite-mother",
+    "name": "Sprite Mother",
+    "type": "unit",
+    "rarity": "play a ready 3 might sprite unit token with [temporary] here. (kill it at the start of its controller's beginning phase",
+    "text": "When you play me",
+    "image_url": "Uncommon",
+    "set": "Origins"
+  },
+  {
+    "id": "card-117-ava-achiever",
+    "name": "Ava Achiever",
+    "type": "unit",
+    "rarity": "you may pay mind to play a card with [hidden] from your hand here",
+    "text": "When I attack",
+    "image_url": "Rare",
+    "set": "Origins"
+  },
+  {
+    "id": "card-118-convergent-mutation",
+    "name": "Convergent Mutation",
+    "type": "spell",
+    "rarity": "even before spells and abilities resolve.)choose a friendly unit. if its might is less than another friendly unit's",
+    "text": "[Reaction] (Play any time",
+    "image_url": "Rare",
+    "set": "Origins"
+  },
+  {
+    "id": "card-119-dr.-mundo",
+    "name": "Dr. Mundo",
+    "type": "mind",
+    "rarity": "zaun",
+    "text": "Dr. Mundo",
+    "image_url": "recycle 3 from your trash.",
+    "set": "Origins"
+  },
+  {
+    "id": "card-120-ekko",
+    "name": "Ekko",
+    "type": "mind",
+    "rarity": "zaun",
+    "text": "Ekko",
+    "image_url": "get the effect.)",
+    "set": "Origins"
+  },
+  {
+    "id": "card-121-heimerdinger",
+    "name": "Heimerdinger",
+    "type": "mind",
+    "rarity": "heimerdinger",
+    "text": "Yordle",
+    "image_url": "I have all Exhaust abilities of all friendly legends",
+    "set": "Origins"
+  },
+  {
+    "id": "card-122-kai'sa",
+    "name": "Kai'Sa",
+    "type": "mind",
+    "rarity": "the void",
+    "text": "Kai'Sa",
+    "image_url": "you may play a spell from your trash with Energy cost less than your points without paying its Energy cost. Then recycle it. (You must still pay its Power cost.)",
+    "set": "Origins"
+  },
+  {
+    "id": "card-123-kai'sa",
+    "name": "Kai'Sa",
+    "type": "mind",
+    "rarity": "the void",
+    "text": "Kai'Sa",
+    "image_url": "you may play a spell from your trash with Energy cost less than your points without paying its Energy cost. Then recycle it. (You must still pay its Power cost.)",
+    "set": "Origins"
+  },
+  {
+    "id": "card-124-malzahar",
+    "name": "Malzahar",
+    "type": "mind",
+    "rarity": "the void",
+    "text": "Malzahar",
+    "image_url": "Exhaust: [Action] — [Add] Rune RainbowRune Rainbow. (Use on your turn or in showdowns. Abilities that add resources can't be reacted to.)",
+    "set": "Origins"
+  },
+  {
+    "id": "card-125-progress-day",
+    "name": "Progress Day",
+    "type": "spell",
+    "rarity": "rare",
+    "text": "Draw 4.",
+    "image_url": "https://cmsassets.rgpub.io/sanity/images/dsfx7636/game_data_live/b15f479a8f29e31b6e4c06cf2d7c8cb8630073ef-744x1039.png",
+    "set": "Origins"
+  },
+  {
+    "id": "card-126-promising-future",
+    "name": "Promising Future",
+    "type": "spell",
+    "rarity": "chooses one",
+    "text": "Each player looks at the top 5 cards of their Main Deck",
+    "image_url": "each player plays those cards",
+    "set": "Origins"
+  },
+  {
+    "id": "card-127-thousand-tailed-watcher",
+    "name": "Thousand-Tailed Watcher",
+    "type": "unit",
+    "rarity": "give enemy units -3 might this turn",
+    "text": "[Accelerate] (You may pay 1 EnergyMind as an additional cost to have me enter ready.)When you play me",
+    "image_url": "Rare",
+    "set": "Origins"
+  },
+  {
+    "id": "card-128-viktor",
+    "name": "Viktor",
+    "type": "mind",
+    "rarity": "zaun",
+    "text": "Viktor",
+    "image_url": "play a 1 Might Recruit unit token in your base.",
+    "set": "Origins"
+  },
+  {
+    "id": "card-129-viktor",
+    "name": "Viktor",
+    "type": "mind",
+    "rarity": "zaun",
+    "text": "Viktor",
+    "image_url": "play a 1 Might Recruit unit token in your base.",
+    "set": "Origins"
+  },
+  {
+    "id": "card-130-wraith-of-echoes",
+    "name": "Wraith of Echoes",
+    "type": "unit",
+    "rarity": "the first time a friendly unit dies each turn",
+    "text": "Shadow Isles",
+    "image_url": "Rare",
+    "set": "Origins"
+  },
+  {
+    "id": "card-131-ahri",
+    "name": "Ahri",
+    "type": "mind",
+    "rarity": "ionia",
+    "text": "Ahri",
+    "image_url": "give an enemy unit here -2 Might this turn",
+    "set": "Origins"
+  },
+  {
+    "id": "card-132-ahri",
+    "name": "Ahri",
+    "type": "mind",
+    "rarity": "ionia",
+    "text": "Ahri",
+    "image_url": "give an enemy unit here -2 Might this turn",
+    "set": "Origins"
+  },
+  {
+    "id": "card-133-seal-of-insight",
+    "name": "Seal of Insight",
+    "type": "gear",
+    "rarity": "epic",
+    "text": "Exhaust: [Reaction] — [Add] Mind. (Abilities that add resources can't be reacted to.)",
+    "image_url": "https://cmsassets.rgpub.io/sanity/images/dsfx7636/game_data_live/9ee0dc0221f83d569e0f458374e40f7238f306c2-744x1039.png",
+    "set": "Origins"
+  },
+  {
+    "id": "card-134-teemo",
+    "name": "Teemo",
+    "type": "mind",
+    "rarity": "teemo",
+    "text": "Yordle",
+    "image_url": "[Hidden] (Hide now for Rune Rainbow to react with later for 0 Energy.)When I defend or I'm played from [Hidden]",
+    "set": "Origins"
+  },
+  {
+    "id": "card-135-teemo",
+    "name": "Teemo",
+    "type": "mind",
+    "rarity": "teemo",
+    "text": "Yordle",
+    "image_url": "[Hidden] (Hide now for Rune Rainbow to react with later for 0 Energy.)When I defend or I'm played from [Hidden]",
+    "set": "Origins"
+  },
+  {
+    "id": "card-136-time-warp",
+    "name": "Time Warp",
+    "type": "spell",
+    "rarity": "epic",
+    "text": "Take a turn after this one. Banish this.",
+    "image_url": "https://cmsassets.rgpub.io/sanity/images/dsfx7636/game_data_live/b97bbcf3cf6cb6e5f4baaa1bfbb85dc860eb950b-744x1039.png",
+    "set": "Origins"
+  },
+  {
+    "id": "card-137-unchecked-power",
+    "name": "Unchecked Power",
+    "type": "spell",
+    "rarity": "then deal 12 to all units at battlefields.",
+    "text": "Exhaust all friendly units",
+    "image_url": "Kudos Productions",
+    "set": "Origins"
+  },
+  {
+    "id": "card-138-arena-bar",
+    "name": "Arena Bar",
+    "type": "gear",
+    "rarity": "it gets a +1 might buff.)",
+    "text": "Exhaust: Buff an exhausted friendly unit. (If it doesn't have a buff",
+    "image_url": "Kudos Productions",
+    "set": "Origins"
+  },
+  {
+    "id": "card-139-bilgewater-bully",
+    "name": "Bilgewater Bully",
+    "type": "unit",
+    "rarity": "i have [ganking]. (i can move from battlefield to battlefield.)",
+    "text": "While I'm buffed",
+    "image_url": "Envar Studio",
+    "set": "Origins"
+  },
+  {
+    "id": "card-140-body-rune",
+    "name": "Body Rune",
+    "type": "basic rune",
+    "rarity": "common",
+    "image_url": "https://cmsassets.rgpub.io/sanity/images/dsfx7636/game_data_live/3b3c3c07626d6180457c849047e0228dc0d19539-744x1039.png",
+    "set": "Origins"
+  },
+  {
+    "id": "card-141-body-rune",
+    "name": "Body Rune",
+    "type": "basic rune",
+    "rarity": "showcase",
+    "image_url": "https://cmsassets.rgpub.io/sanity/images/dsfx7636/game_data_live/011081f82cab36f8ec0d6874492512fd7859f59e-1488x2078.png",
+    "set": "Origins"
+  },
+  {
+    "id": "card-142-cannon-barrage",
+    "name": "Cannon Barrage",
+    "type": "spell",
+    "rarity": "even before spells and abilities resolve.)deal 2 to all enemy units in combat.",
+    "text": "[Reaction] (Play any time",
+    "image_url": "Kudos Productions",
+    "set": "Origins"
+  },
+  {
+    "id": "card-143-challenge",
+    "name": "Challenge",
+    "type": "spell",
+    "rarity": "common",
+    "text": "[Action] (Play on your turn or in showdowns.)Choose a friendly unit and an enemy unit. They deal damage equal to their Mights to each other.",
+    "image_url": "https://cmsassets.rgpub.io/sanity/images/dsfx7636/game_data_live/f5c1aeaee373c481b7ea2a638cd6f9e815ac105d-744x1039.png",
+    "set": "Origins"
+  },
+  {
+    "id": "card-144-confront",
+    "name": "Confront",
+    "type": "spell",
+    "rarity": "common",
+    "text": "[Action] (Play on your turn or in showdowns.)Units you play this turn enter ready. Draw 1.",
+    "image_url": "https://cmsassets.rgpub.io/sanity/images/dsfx7636/game_data_live/691a38a7c344fdb5ee86e34d41321d99754286a7-744x1039.png",
+    "set": "Origins"
+  },
+  {
+    "id": "card-145-crackshot-corsair",
+    "name": "Crackshot Corsair",
+    "type": "unit",
+    "rarity": "when i attack",
+    "text": "Bilgewater",
+    "image_url": "Common",
+    "set": "Origins"
+  },
+  {
+    "id": "card-146-dune-drake",
+    "name": "Dune Drake",
+    "type": "unit",
+    "rarity": "when i attack",
+    "text": "Shurima",
+    "image_url": "Common",
+    "set": "Origins"
+  },
+  {
+    "id": "card-147-first-mate",
+    "name": "First Mate",
+    "type": "unit",
+    "rarity": "when you play me",
+    "text": "Bilgewater",
+    "image_url": "Common",
+    "set": "Origins"
+  },
+  {
+    "id": "card-148-flurry-of-blades",
+    "name": "Flurry of Blades",
+    "type": "spell",
+    "rarity": "even before spells and abilities resolve.)deal 1 to all units at battlefields.",
+    "text": "[Reaction] (Play any time",
+    "image_url": "Rafael Zanchetin",
+    "set": "Origins"
+  },
+  {
+    "id": "card-149-mobilize",
+    "name": "Mobilize",
+    "type": "spell",
+    "rarity": "draw 1.",
+    "text": "Channel 1 rune exhausted. If you can't",
+    "image_url": "Kudos Productions",
+    "set": "Origins"
+  },
+  {
+    "id": "card-150-pakaa-cub",
+    "name": "Pakaa Cub",
+    "type": "unit",
+    "rarity": "[hidden] (hide now for rune rainbow to react with later for 0 energy.)",
+    "text": "Ixtal",
+    "image_url": "Bubble Cat Studio",
+    "set": "Origins"
+  },
+  {
+    "id": "card-151-pit-rookie",
+    "name": "Pit Rookie",
+    "type": "unit",
+    "rarity": "buff another friendly unit. (if it doesn't have a buff",
+    "text": "When you play me",
+    "image_url": "Common",
+    "set": "Origins"
+  },
+  {
+    "id": "card-152-stormclaw-ursine",
+    "name": "Stormclaw Ursine",
+    "type": "unit",
+    "rarity": "channel 1 rune exhausted.",
+    "text": "[Tank] (I must be assigned combat damage first.)When you play me",
+    "image_url": "Kudos Productions",
+    "set": "Origins"
+  },
+  {
+    "id": "card-153-catalyst-of-aeons",
+    "name": "Catalyst of Aeons",
+    "type": "spell",
+    "rarity": "draw 1.",
+    "text": "Channel 2 runes exhausted. If you couldn't channel 2 runes this way",
+    "image_url": "Kudos Productions",
+    "set": "Origins"
+  },
+  {
+    "id": "card-154-cithria-of-cloudfield",
+    "name": "Cithria of Cloudfield",
+    "type": "unit",
+    "rarity": "when you play another unit",
+    "text": "Demacia",
+    "image_url": "I get a +1 Might buff.)",
+    "set": "Origins"
+  },
+  {
+    "id": "card-155-herald-of-scales",
+    "name": "Herald of Scales",
+    "type": "unit",
+    "rarity": "to a minimum of 1 energy.",
+    "text": "Your Dragons' Energy costs are reduced by 2 Energy",
+    "image_url": "Polar Engine Studio",
+    "set": "Origins"
+  },
+  {
+    "id": "card-156-kinkou-monk",
+    "name": "Kinkou Monk",
+    "type": "unit",
+    "rarity": "buff two other friendly units. (each one that doesn't have a buff gets a +1 might buff.)",
+    "text": "When you play me",
+    "image_url": "Kudos Productions",
+    "set": "Origins"
+  },
+  {
+    "id": "card-157-mountain-drake",
+    "name": "Mountain Drake",
+    "type": "unit",
+    "rarity": "uncommon",
+    "image_url": "https://cmsassets.rgpub.io/sanity/images/dsfx7636/game_data_live/8a9c1d334b217e9bd0b23dfca2054de4d0b90ff1-744x1039.png",
+    "set": "Origins"
+  },
+  {
+    "id": "card-158-pirate's-haven",
+    "name": "Pirate's Haven",
+    "type": "gear",
+    "rarity": "give it +1 might this turn.",
+    "text": "When you ready a friendly unit",
+    "image_url": "Envar Studio",
+    "set": "Origins"
+  },
+  {
+    "id": "card-159-spoils-of-war",
+    "name": "Spoils of War",
+    "type": "spell",
+    "rarity": "even before spells and abilities resolve.)if an enemy unit has died this turn",
+    "text": "[Reaction] (Play any time",
+    "image_url": "Uncommon",
+    "set": "Origins"
+  },
+  {
+    "id": "card-160-unyielding-spirit",
+    "name": "Unyielding Spirit",
+    "type": "spell",
+    "rarity": "even before spells and abilities resolve.)_prevent all spell and ability damage this turn.",
+    "text": "[Reaction]_ (Play any time",
+    "image_url": "Max Grecke",
+    "set": "Origins"
+  },
+  {
+    "id": "card-161-wallop",
+    "name": "Wallop",
+    "type": "spell",
+    "rarity": "you may spend a buff as an additional cost. if you do",
+    "text": "[Action] (Play on your turn or in showdowns.)As you play this",
+    "image_url": "Uncommon",
+    "set": "Origins"
+  },
+  {
+    "id": "card-162-wildclaw-shaman",
+    "name": "Wildclaw Shaman",
+    "type": "unit",
+    "rarity": "you may spend a buff to buff me and ready me. (if i don't have a buff",
+    "text": "When you play me",
+    "image_url": "Uncommon",
+    "set": "Origins"
+  },
+  {
+    "id": "card-163-anivia",
+    "name": "Anivia",
+    "type": "body",
+    "rarity": "anivia",
+    "text": "Bird",
+    "image_url": "When I attack",
+    "set": "Origins"
+  },
+  {
+    "id": "card-164-carnivorous-snapvine",
+    "name": "Carnivorous Snapvine",
+    "type": "unit",
+    "rarity": "choose an enemy unit at a battlefield. we deal damage equal to our mights to each other.",
+    "text": "When you play me",
+    "image_url": "Six More Vodka",
+    "set": "Origins"
+  },
+  {
+    "id": "card-165-kraken-hunter",
+    "name": "Kraken Hunter",
+    "type": "unit",
+    "rarity": "[accelerate] (you may pay 1 energybody as an additional cost to have me enter ready.)[assault] (+1 might while i'm an attacker.)as you play me",
+    "text": "Bilgewater",
+    "image_url": "Rare",
+    "set": "Origins"
+  },
+  {
+    "id": "card-166-lee-sin",
+    "name": "Lee Sin",
+    "type": "body",
+    "rarity": "ionia",
+    "text": "Lee Sin",
+    "image_url": "Rare",
+    "set": "Origins"
+  },
+  {
+    "id": "card-167-lee-sin",
+    "name": "Lee Sin",
+    "type": "body",
+    "rarity": "ionia",
+    "text": "Lee Sin",
+    "image_url": "Showcase",
+    "set": "Origins"
+  },
+  {
+    "id": "card-168-mistfall",
+    "name": "Mistfall",
+    "type": "gear",
+    "rarity": "you may pay body and exhaust this to ready it.",
+    "text": "When you buff a friendly unit",
+    "image_url": "Polar Engine Studio",
+    "set": "Origins"
+  },
+  {
+    "id": "card-169-overt-operation",
+    "name": "Overt Operation",
+    "type": "spell",
+    "rarity": "you may spend its buff to ready it. then buff all friendly units. (each one that doesn't have a buff gets a +1 might buff.)",
+    "text": "[Action] (Play on your turn or in showdowns.)For each friendly unit",
+    "image_url": "Kudos Productions",
+    "set": "Origins"
+  },
+  {
+    "id": "card-170-primal-strength",
+    "name": "Primal Strength",
+    "type": "spell",
+    "rarity": "rare",
+    "text": "[Action] (Play on your turn or in showdowns.)Give a unit +7 Might this turn.",
+    "image_url": "https://cmsassets.rgpub.io/sanity/images/dsfx7636/game_data_live/dfd910a9836cd36340d0ffdb5fe8cb92a1069963-744x1039.png",
+    "set": "Origins"
+  },
+  {
+    "id": "card-171-qiyana",
+    "name": "Qiyana",
+    "type": "body",
+    "rarity": "ixtal",
+    "text": "Qiyana",
+    "image_url": "draw 1 or channel 1 rune exhausted.",
+    "set": "Origins"
+  },
+  {
+    "id": "card-172-sabotage",
+    "name": "Sabotage",
+    "type": "spell",
+    "rarity": "and recycle that card.",
+    "text": "Choose an opponent. They reveal their hand. Choose a non-unit card from it",
+    "image_url": "Kudos Productions",
+    "set": "Origins"
+  },
+  {
+    "id": "card-173-udyr",
+    "name": "Udyr",
+    "type": "body",
+    "rarity": "freljord",
+    "text": "Udyr",
+    "image_url": "Rare",
+    "set": "Origins"
+  },
+  {
+    "id": "card-174-volibear",
+    "name": "Volibear",
+    "type": "body",
+    "rarity": "freljord",
+    "text": "Volibear",
+    "image_url": "draw 1. (Bases are not battlefield.)",
+    "set": "Origins"
+  },
+  {
+    "id": "card-175-volibear",
+    "name": "Volibear",
+    "type": "body",
+    "rarity": "freljord",
+    "text": "Volibear",
+    "image_url": "draw 1. (Bases are not battlefield.)",
+    "set": "Origins"
+  },
+  {
+    "id": "card-176-warwick",
+    "name": "Warwick",
+    "type": "body",
+    "rarity": "warwick",
+    "text": "Dog",
+    "image_url": "I enter ready.When I attack",
+    "set": "Origins"
+  },
+  {
+    "id": "card-177-dazzling-aurora",
+    "name": "Dazzling Aurora",
+    "type": "gear",
+    "rarity": "reveal cards from the top of your main deck until you reveal a unit. play it",
+    "text": "At the end of your turn",
+    "image_url": "and recycle the rest.",
+    "set": "Origins"
+  },
+  {
+    "id": "card-178-deadbloom-predator",
+    "name": "Deadbloom Predator",
+    "type": "unit",
+    "rarity": "epic",
+    "text": "[Deflect] (Opponents must pay Rune Rainbow to choose me with a spell or ability.)You may play me to an occupied enemy battlefield.",
+    "image_url": "https://cmsassets.rgpub.io/sanity/images/dsfx7636/game_data_live/112b4b3847b26ea2d245ac0976717d109be7b032-744x1039.png",
+    "set": "Origins"
+  },
+  {
+    "id": "card-179-miss-fortune",
+    "name": "Miss Fortune",
+    "type": "body",
+    "rarity": "miss fortune",
+    "text": "Pirate",
+    "image_url": "[Accelerate] (You may pay 1 EnergyBody as an additional cost to have me enter ready.)[Ganking] (I can move from battlefield to battlefield.)The first time I move each turn",
+    "set": "Origins"
+  },
+  {
+    "id": "card-180-miss-fortune",
+    "name": "Miss Fortune",
+    "type": "body",
+    "rarity": "miss fortune",
+    "text": "Pirate",
+    "image_url": "[Accelerate] (You may pay 1 EnergyBody as an additional cost to have me enter ready.)[Ganking] (I can move from battlefield to battlefield.)The first time I move each turn",
+    "set": "Origins"
+  },
+  {
+    "id": "card-181-seal-of-strength",
+    "name": "Seal of Strength",
+    "type": "gear",
+    "rarity": "epic",
+    "text": "Exhaust: [Reaction] — [Add] Body. (Abilities that add resources can't be reacted to.)",
+    "image_url": "https://cmsassets.rgpub.io/sanity/images/dsfx7636/game_data_live/415644b2798348e3d7198ec900cc40aaa4eb8bdf-744x1039.png",
+    "set": "Origins"
+  },
+  {
+    "id": "card-182-sett",
+    "name": "Sett",
+    "type": "body",
+    "rarity": "ionia",
+    "text": "Sett",
+    "image_url": "buff me. (If I don't have a buff",
+    "set": "Origins"
+  },
+  {
+    "id": "card-183-sett",
+    "name": "Sett",
+    "type": "body",
+    "rarity": "ionia",
+    "text": "Sett",
+    "image_url": "buff me. (If I don't have a buff",
+    "set": "Origins"
+  },
+  {
+    "id": "card-184-cemetery-attendant",
+    "name": "Cemetery Attendant",
+    "type": "unit",
+    "rarity": "when you play me",
+    "text": "Shadow Isles",
+    "image_url": "Common",
+    "set": "Origins"
+  },
+  {
+    "id": "card-185-chaos-rune",
+    "name": "Chaos Rune",
+    "type": "basic rune",
+    "rarity": "common",
+    "image_url": "https://cmsassets.rgpub.io/sanity/images/dsfx7636/game_data_live/daf23b0deaa5e1a5a5d310b59e9ad25d1bd70363-744x1039.png",
+    "set": "Origins"
+  },
+  {
+    "id": "card-186-chaos-rune",
+    "name": "Chaos Rune",
+    "type": "basic rune",
+    "rarity": "showcase",
+    "image_url": "https://cmsassets.rgpub.io/sanity/images/dsfx7636/game_data_live/fbcde2f71fcc06fb8afc83855e24447a393f8943-1488x2078.png",
+    "set": "Origins"
+  },
+  {
+    "id": "card-187-ember-monk",
+    "name": "Ember Monk",
+    "type": "unit",
+    "rarity": "give me +2 might this turn.",
+    "text": "When you play a card from [Hidden]",
+    "image_url": "Kudos Productions",
+    "set": "Origins"
+  },
+  {
+    "id": "card-188-fight-or-flight",
+    "name": "Fight or Flight",
+    "type": "spell",
+    "rarity": "common",
+    "text": "[Hidden] (Hide now for Rune Rainbow to react with later for 0 Energy.)[Action] (Play on your turn or in showdowns.)Move a unit from a battlefield to its base.",
+    "image_url": "https://cmsassets.rgpub.io/sanity/images/dsfx7636/game_data_live/2c3d543ab6c3809f45f3e410d59d376b4bee6de7-744x1039.png",
+    "set": "Origins"
+  },
+  {
+    "id": "card-189-gust",
+    "name": "Gust",
+    "type": "spell",
+    "rarity": "even before spells and abilities resolve.)return a unit at a battlefield with 3 might or less to its owner's hand.",
+    "text": "[Reaction] (Play any time",
+    "image_url": "Kudos Productions",
+    "set": "Origins"
+  },
+  {
+    "id": "card-190-morbid-return",
+    "name": "Morbid Return",
+    "type": "spell",
+    "rarity": "common",
+    "text": "[Action] (Play on your turn or in showdowns.)Return a unit from your trash to your hand.",
+    "image_url": "https://cmsassets.rgpub.io/sanity/images/dsfx7636/game_data_live/33b5ca4e580b94f2056bd884a4a35e8c630920a2-744x1039.png",
+    "set": "Origins"
+  },
+  {
+    "id": "card-191-mystic-poro",
+    "name": "Mystic Poro",
+    "type": "unit",
+    "rarity": "look at the top card of your main deck. you may recycle it.)",
+    "text": "[Vision] (When you play me",
+    "image_url": "Kudos Productions",
+    "set": "Origins"
+  },
+  {
+    "id": "card-192-rebuke",
+    "name": "Rebuke",
+    "type": "spell",
+    "rarity": "common",
+    "text": "[Action] (Play on your turn or in showdowns.)Return a unit at a battlefield to its owner's hand.",
+    "image_url": "https://cmsassets.rgpub.io/sanity/images/dsfx7636/game_data_live/c8e1ad72e9d562f9267c1512f29e9c04dc5cc15f-744x1039.png",
+    "set": "Origins"
+  },
+  {
+    "id": "card-193-ride-the-wind",
+    "name": "Ride the Wind",
+    "type": "spell",
+    "rarity": "common",
+    "text": "[Action] (Play on your turn or in showdowns.)Move a friendly unit and ready it.",
+    "image_url": "https://cmsassets.rgpub.io/sanity/images/dsfx7636/game_data_live/864d9f8992db7f9a9e795d9438d941ca564ddde7-744x1039.png",
+    "set": "Origins"
+  },
+  {
+    "id": "card-194-sai-scout",
+    "name": "Sai Scout",
+    "type": "unit",
+    "rarity": "look at the top card of your main deck. you may recycle it.)you may play me to an open battlefield.",
+    "text": "[Vision] (When you play me",
+    "image_url": "Dao Trong Le",
+    "set": "Origins"
+  },
+  {
+    "id": "card-195-shipyard-skulker",
+    "name": "Shipyard Skulker",
+    "type": "unit",
+    "text": "Bilgewater",
+    "image_url": "Six More Vodka",
+    "set": "Origins"
+  },
+  {
+    "id": "card-196-sneaky-deckhand",
+    "name": "Sneaky Deckhand",
+    "type": "unit",
+    "rarity": "you may play me to an open battlefield.",
+    "text": "Bilgewater",
+    "image_url": "Dao Trong Le",
+    "set": "Origins"
+  },
+  {
+    "id": "card-197-stealthy-pursuer",
+    "name": "Stealthy Pursuer",
+    "type": "unit",
+    "rarity": "i may be moved with it.",
+    "text": "When a friendly unit moves from my location",
+    "image_url": "Kudos Productions",
+    "set": "Origins"
+  },
+  {
+    "id": "card-198-undercover-agent",
+    "name": "Undercover Agent",
+    "type": "unit",
+    "rarity": "then draw 2. (when i die",
+    "text": "[Deathknell] — Discard 2",
+    "image_url": "Common",
+    "set": "Origins"
+  },
+  {
+    "id": "card-199-acceptable-losses",
+    "name": "Acceptable Losses",
+    "type": "spell",
+    "rarity": "uncommon",
+    "text": "[Action] (Play on your turn or in showdowns.)Each player kills one of their gear.",
+    "image_url": "https://cmsassets.rgpub.io/sanity/images/dsfx7636/game_data_live/b2b470bab1ae511ab9de0b1ce576e2050532a081-744x1039.png",
+    "set": "Origins"
+  },
+  {
+    "id": "card-200-fading-memories",
+    "name": "Fading Memories",
+    "type": "spell",
+    "rarity": "before scoring.)",
+    "text": "Give a unit at a battlefield or a gear [Temporary]. (Kill it at the start of its controller's Beginning Phase",
+    "image_url": "Kudos Productions",
+    "set": "Origins"
+  },
+  {
+    "id": "card-201-pack-of-wonders",
+    "name": "Pack of Wonders",
+    "type": "gear",
+    "rarity": "unit",
+    "text": "Exhaust: Return another friendly gear",
+    "image_url": "Uncommon",
+    "set": "Origins"
+  },
+  {
+    "id": "card-202-scrapheap",
+    "name": "Scrapheap",
+    "type": "gear",
+    "rarity": "discarded",
+    "text": "When this is played",
+    "image_url": "draw 1.",
+    "set": "Origins"
+  },
+  {
+    "id": "card-203-stacked-deck",
+    "name": "Stacked Deck",
+    "type": "spell",
+    "rarity": "uncommon",
+    "text": "[Action] (Play on your turn or in showdowns.)Look at the top 3 cards of your Main Deck. Put 1 into your hand and recycle the rest.",
+    "image_url": "https://cmsassets.rgpub.io/sanity/images/dsfx7636/game_data_live/fdcb22cb620a4c1c37920d6b744edb615647cbd4-744x1039.png",
+    "set": "Origins"
+  },
+  {
+    "id": "card-204-the-syren",
+    "name": "The Syren",
+    "type": "gear",
+    "rarity": "exhaust: move a friendly unit at a battlefield to its base.",
+    "text": "1 Energy",
+    "image_url": "Six More Vodka",
+    "set": "Origins"
+  },
+  {
+    "id": "card-205-traveling-merchant",
+    "name": "Traveling Merchant",
+    "type": "unit",
+    "rarity": "discard 1",
+    "text": "When I move",
+    "image_url": "Uncommon",
+    "set": "Origins"
+  },
+  {
+    "id": "card-206-treasure-trove",
+    "name": "Treasure Trove",
+    "type": "gear",
+    "rarity": "draw 1 and channel 1 rune exhausted.chaos",
+    "text": "When this leaves the board",
+    "image_url": "Uncommon",
+    "set": "Origins"
+  },
+  {
+    "id": "card-207-whirlwind",
+    "name": "Whirlwind",
+    "type": "spell",
+    "rarity": "each player may return a unit to its owner's hand.",
+    "text": "Starting with the next player",
+    "image_url": "Polar Engine Studio",
+    "set": "Origins"
+  },
+  {
+    "id": "card-208-zaunite-bouncer",
+    "name": "Zaunite Bouncer",
+    "type": "unit",
+    "rarity": "return another unit at a battlefield to its owner's hand.",
+    "text": "When you play me",
+    "image_url": "Envar Studio",
+    "set": "Origins"
+  },
+  {
+    "id": "card-209-kayn",
+    "name": "Kayn",
+    "type": "chaos",
+    "rarity": "ionia",
+    "text": "Kayn",
+    "image_url": "I don't take damage.",
+    "set": "Origins"
+  },
+  {
+    "id": "card-210-kog'maw",
+    "name": "Kog'Maw",
+    "type": "chaos",
+    "rarity": "the void",
+    "text": "Kog'Maw",
+    "image_url": "get the effect.)",
+    "set": "Origins"
+  },
+  {
+    "id": "card-211-maddened-marauder",
+    "name": "Maddened Marauder",
+    "type": "unit",
+    "rarity": "[tank] (i must be assigned combat damage first.)when you play me",
+    "text": "Bilgewater",
+    "image_url": "Rare",
+    "set": "Origins"
+  },
+  {
+    "id": "card-212-mindsplitter",
+    "name": "Mindsplitter",
+    "type": "unit",
+    "rarity": "when you play me",
+    "text": "Mount Targon",
+    "image_url": "and they discard that card.",
+    "set": "Origins"
+  },
+  {
+    "id": "card-213-miss-fortune",
+    "name": "Miss Fortune",
+    "type": "chaos",
+    "rarity": "miss fortune",
+    "text": "Pirate",
+    "image_url": "You may play me to an open battlefield.Friendly units may be played to open battlefields.",
+    "set": "Origins"
+  },
+  {
+    "id": "card-214-miss-fortune",
+    "name": "Miss Fortune",
+    "type": "chaos",
+    "rarity": "miss fortune",
+    "text": "Pirate",
+    "image_url": "You may play me to an open battlefield.Friendly units may be played to open battlefields.",
+    "set": "Origins"
+  },
+  {
+    "id": "card-215-nocturne",
+    "name": "Nocturne",
+    "type": "chaos",
+    "rarity": "[ganking] (i can move from battlefield to battlefield.)when you look at cards from the top of your deck (and don't draw them) and see me",
+    "text": "Nocturne",
+    "image_url": "Rare",
+    "set": "Origins"
+  },
+  {
+    "id": "card-216-rhasa-the-sunderer",
+    "name": "Rhasa the Sunderer",
+    "type": "unit",
+    "rarity": "i cost 1 energy less for each card in your trash.",
+    "text": "Shadow Isles",
+    "image_url": "Six More Vodka",
+    "set": "Origins"
+  },
+  {
+    "id": "card-217-soulgorger",
+    "name": "Soulgorger",
+    "type": "unit",
+    "rarity": "when you play me",
+    "text": "Shadow Isles",
+    "image_url": "ignoring its Energy cost. (You must still pay its Power cost.)",
+    "set": "Origins"
+  },
+  {
+    "id": "card-218-teemo",
+    "name": "Teemo",
+    "type": "chaos",
+    "rarity": "teemo",
+    "text": "Yordle",
+    "image_url": "[Hidden] (Hide now for Rune Rainbow to react with later for 0 Energy.)When you play me",
+    "set": "Origins"
+  },
+  {
+    "id": "card-219-teemo",
+    "name": "Teemo",
+    "type": "chaos",
+    "rarity": "teemo",
+    "text": "Yordle",
+    "image_url": "[Hidden] (Hide now for Rune Rainbow to react with later for 0 Energy.)When you play me",
+    "set": "Origins"
+  },
+  {
+    "id": "card-220-the-harrowing",
+    "name": "The Harrowing",
+    "type": "spell",
+    "rarity": "ignoring its energy cost. (you must still pay its power cost.)",
+    "text": "Play a unit from your trash",
+    "image_url": "Rafael Zanchetin",
+    "set": "Origins"
+  },
+  {
+    "id": "card-221-tideturner",
+    "name": "Tideturner",
+    "type": "unit",
+    "rarity": "you may choose a unit you control. move me to its location and it to my original location.",
+    "text": "[Hidden] (Hide now for Rune Rainbow to react with later for 0 Energy.)When you play me",
+    "image_url": "Kudos Productions",
+    "set": "Origins"
+  },
+  {
+    "id": "card-222-twisted-fate",
+    "name": "Twisted Fate",
+    "type": "chaos",
+    "rarity": "bilgewater",
+    "text": "Twisted Fate",
+    "image_url": "reveal the top rune of your rune deck",
+    "set": "Origins"
+  },
+  {
+    "id": "card-223-invert-timelines",
+    "name": "Invert Timelines",
+    "type": "spell",
+    "rarity": "then draws 4.",
+    "text": "Each player discards their hand",
+    "image_url": "Kudos Productions",
+    "set": "Origins"
+  },
+  {
+    "id": "card-224-jinx",
+    "name": "Jinx",
+    "type": "chaos",
+    "rarity": "zaun",
+    "text": "Jinx",
+    "image_url": "ready me and give me +1 Might this turn.",
+    "set": "Origins"
+  },
+  {
+    "id": "card-225-jinx",
+    "name": "Jinx",
+    "type": "chaos",
+    "rarity": "zaun",
+    "text": "Jinx",
+    "image_url": "ready me and give me +1 Might this turn.",
+    "set": "Origins"
+  },
+  {
+    "id": "card-226-possession",
+    "name": "Possession",
+    "type": "spell",
+    "rarity": "epic",
+    "text": "[Action] (Play on your turn or in showdowns.)Choose an enemy unit at a battlefield. Take control of it and recall it. (Send it to your base. This isn't a move.)",
+    "image_url": "https://cmsassets.rgpub.io/sanity/images/dsfx7636/game_data_live/f26462174fd01407f25f7d49a70862d2b9af35cc-744x1039.png",
+    "set": "Origins"
+  },
+  {
+    "id": "card-227-seal-of-discord",
+    "name": "Seal of Discord",
+    "type": "gear",
+    "rarity": "epic",
+    "text": "Exhaust: [Reaction] — [Add] Chaos. (Abilities that add resources can't be reacted to.)",
+    "image_url": "https://cmsassets.rgpub.io/sanity/images/dsfx7636/game_data_live/dd8433e77e46ca77aaf0be35d1774218d9a2f037-744x1039.png",
+    "set": "Origins"
+  },
+  {
+    "id": "card-228-yasuo",
+    "name": "Yasuo",
+    "type": "chaos",
+    "rarity": "ionia",
+    "text": "Yasuo",
+    "image_url": "you score 1 point.",
+    "set": "Origins"
+  },
+  {
+    "id": "card-229-yasuo",
+    "name": "Yasuo",
+    "type": "chaos",
+    "rarity": "ionia",
+    "text": "Yasuo",
+    "image_url": "you score 1 point.",
+    "set": "Origins"
+  },
+  {
+    "id": "card-230-back-to-back",
+    "name": "Back to Back",
+    "type": "spell",
+    "rarity": "even before spells and abilities resolve.)give two friendly units each +2 might this turn.",
+    "text": "[Reaction] (Play any time",
+    "image_url": "Kudos Productions",
+    "set": "Origins"
+  },
+  {
+    "id": "card-231-call-to-glory",
+    "name": "Call to Glory",
+    "type": "spell",
+    "rarity": "even before spells and abilities resolve.)as you play this",
+    "text": "[Reaction] (Play any time",
+    "image_url": "ignore this spell's cost.Give a unit +3 Might this turn.",
+    "set": "Origins"
+  },
+  {
+    "id": "card-232-cruel-patron",
+    "name": "Cruel Patron",
+    "type": "unit",
+    "rarity": "kill a friendly unit.",
+    "text": "As an additional cost to play me",
+    "image_url": "Kudos Productions",
+    "set": "Origins"
+  },
+  {
+    "id": "card-233-cull-the-weak",
+    "name": "Cull the Weak",
+    "type": "spell",
+    "rarity": "common",
+    "text": "Each player kills one of their units.",
+    "image_url": "https://cmsassets.rgpub.io/sanity/images/dsfx7636/game_data_live/49338a4b31727c6ef50e7dbc54e7004dcd2b6f4c-744x1039.png",
+    "set": "Origins"
+  },
+  {
+    "id": "card-234-daring-poro",
+    "name": "Daring Poro",
+    "type": "unit",
+    "rarity": "common",
+    "text": "[Assault] (+1 Might while I'm an attacker.)",
+    "image_url": "https://cmsassets.rgpub.io/sanity/images/dsfx7636/game_data_live/41dee7ec46124c261352595cfbd8a6d38d32b947-744x1039.png",
+    "set": "Origins"
+  },
+  {
+    "id": "card-235-faithful-manufactor",
+    "name": "Faithful Manufactor",
+    "type": "unit",
+    "rarity": "play a 1 might recruit unit token here.",
+    "text": "When you play me",
+    "image_url": "Kudos Productions",
+    "set": "Origins"
+  },
+  {
+    "id": "card-236-forge-of-the-future",
+    "name": "Forge of the Future",
+    "type": "gear",
+    "rarity": "play a 1 might recruit unit token at your base.kill this: recycle up to 4 cards from trashes.",
+    "text": "When you play this",
+    "image_url": "Envar Studio",
+    "set": "Origins"
+  },
+  {
+    "id": "card-237-hidden-blade",
+    "name": "Hidden Blade",
+    "type": "spell",
+    "rarity": "common",
+    "text": "[Hidden] (Hide now for Rune Rainbow to react with later for 0 Energy.)[Action] (Play on your turn or in showdowns.)Kill a unit at a battlefield. Its controller draws 2.",
+    "image_url": "https://cmsassets.rgpub.io/sanity/images/dsfx7636/game_data_live/0437ab8a0b67f43ef5483a103bbae9e57fd05822-744x1039.png",
+    "set": "Origins"
+  },
+  {
+    "id": "card-238-order-rune",
+    "name": "Order Rune",
+    "type": "basic rune",
+    "rarity": "common",
+    "image_url": "https://cmsassets.rgpub.io/sanity/images/dsfx7636/game_data_live/35ec6fdd2124324bb7052cba31c8c44f2e98f3ae-744x1039.png",
+    "set": "Origins"
+  },
+  {
+    "id": "card-239-order-rune",
+    "name": "Order Rune",
+    "type": "basic rune",
+    "rarity": "showcase",
+    "image_url": "https://cmsassets.rgpub.io/sanity/images/dsfx7636/game_data_live/0e4904221c3bbbfcfde1734bc414dbe97c67e295-1488x2078.png",
+    "set": "Origins"
+  },
+  {
+    "id": "card-240-petty-officer",
+    "name": "Petty Officer",
+    "type": "unit",
+    "rarity": "[assault] (+1 might while i'm an attacker.)",
+    "text": "Bilgewater",
+    "image_url": "Six More Vodka",
+    "set": "Origins"
+  },
+  {
+    "id": "card-241-soaring-scout",
+    "name": "Soaring Scout",
+    "type": "unit",
+    "rarity": "[deathknell] — channel 1 rune exhausted. (when i die",
+    "text": "Freljord",
+    "image_url": "Common",
+    "set": "Origins"
+  },
+  {
+    "id": "card-242-trifarian-gloryseeker",
+    "name": "Trifarian Gloryseeker",
+    "type": "unit",
+    "rarity": "[legion] — when you play me",
+    "text": "Noxus",
+    "image_url": "I get a +1 Might buff. Get the effect if you've played another card this turn.)",
+    "set": "Origins"
+  },
+  {
+    "id": "card-243-vanguard-captain",
+    "name": "Vanguard Captain",
+    "type": "unit",
+    "rarity": "[legion] — when you play me",
+    "text": "Demacia",
+    "image_url": "Common",
+    "set": "Origins"
+  },
+  {
+    "id": "card-244-vanguard-sergeant",
+    "name": "Vanguard Sergeant",
+    "type": "unit",
+    "text": "Demacia",
+    "image_url": "Six More Vodka",
+    "set": "Origins"
+  },
+  {
+    "id": "card-245-facebreaker",
+    "name": "Facebreaker",
+    "type": "spell",
+    "rarity": "uncommon",
+    "text": "[Hidden] (Hide now for Rune Rainbow to react with later for 0 Energy.)[Action] (Play on your turn or in showdowns.)Stun a friendly unit and an enemy unit at the same battlefield. (They don't deal combat damage this turn.)",
+    "image_url": "https://cmsassets.rgpub.io/sanity/images/dsfx7636/game_data_live/b7cddc717b886bb955b900ffaae4db9154a19280-744x1039.png",
+    "set": "Origins"
+  },
+  {
+    "id": "card-246-imperial-decree",
+    "name": "Imperial Decree",
+    "type": "spell",
+    "rarity": "kill it.",
+    "text": "[Action] (Play on your turn or in showdowns.)When any unit takes damage this turn",
+    "image_url": "Kudos Productions",
+    "set": "Origins"
+  },
+  {
+    "id": "card-247-noxian-drummer",
+    "name": "Noxian Drummer",
+    "type": "unit",
+    "rarity": "when i move to a battlefield",
+    "text": "Noxus",
+    "image_url": "Uncommon",
+    "set": "Origins"
+  },
+  {
+    "id": "card-248-peak-guardian",
+    "name": "Peak Guardian",
+    "type": "unit",
+    "rarity": "buff me. then",
+    "text": "When you play me",
+    "image_url": "buff all other friendly units there. (To buff a unit",
+    "set": "Origins"
+  },
+  {
+    "id": "card-249-salvage",
+    "name": "Salvage",
+    "type": "spell",
+    "rarity": "uncommon",
+    "text": "[Action] (Play on your turn or in showdowns.)You may kill a gear. Draw 1.",
+    "image_url": "https://cmsassets.rgpub.io/sanity/images/dsfx7636/game_data_live/9bdbac358e7c9415c1354b6d1f6888dcf9c5519b-744x1039.png",
+    "set": "Origins"
+  },
+  {
+    "id": "card-250-solari-chief",
+    "name": "Solari Chief",
+    "type": "unit",
+    "rarity": "choose an enemy unit. if it is stunned",
+    "text": "When you play me",
+    "image_url": "stun it. (It doesn't deal combat damage this turn.)",
+    "set": "Origins"
+  },
+  {
+    "id": "card-251-spectral-matron",
+    "name": "Spectral Matron",
+    "type": "unit",
+    "rarity": "when you play me",
+    "text": "Shadow Isles",
+    "image_url": "ignoring its cost.",
+    "set": "Origins"
+  },
+  {
+    "id": "card-252-symbol-of-the-solari",
+    "name": "Symbol of the Solari",
+    "type": "gear",
+    "rarity": "recall all units instead. (send them to base. this isn't a move. ties are calculated after combat damage is dealt.)",
+    "text": "If a combat where you are the attacker ends in a tie",
+    "image_url": "Kudos Productions",
+    "set": "Origins"
+  },
+  {
+    "id": "card-253-vanguard-helm",
+    "name": "Vanguard Helm",
+    "type": "gear",
+    "rarity": "buff another friendly unit. (if it doesn't have a buff",
+    "text": "When a buffed friendly unit dies",
+    "image_url": "Uncommon",
+    "set": "Origins"
+  },
+  {
+    "id": "card-254-vengeance",
+    "name": "Vengeance",
+    "type": "spell",
+    "rarity": "uncommon",
+    "text": "Kill a unit.",
+    "image_url": "https://cmsassets.rgpub.io/sanity/images/dsfx7636/game_data_live/a21e2ffee47ecdd1575bf48edb8c2a84722cc6b9-744x1039.png",
+    "set": "Origins"
+  },
+  {
+    "id": "card-255-albus-ferros",
+    "name": "Albus Ferros",
+    "type": "unit",
+    "rarity": "spend any number of buffs. for each buff spent",
+    "text": "When you play me",
+    "image_url": "Rare",
+    "set": "Origins"
+  },
+  {
+    "id": "card-256-commander-ledros",
+    "name": "Commander Ledros",
+    "type": "unit",
+    "rarity": "as you play me",
+    "text": "Shadow Isles",
+    "image_url": "Rare",
+    "set": "Origins"
+  },
+  {
+    "id": "card-257-fiora",
+    "name": "Fiora",
+    "type": "order",
+    "rarity": "demacia",
+    "text": "Fiora",
+    "image_url": "I have [Deflect]",
+    "set": "Origins"
+  },
+  {
+    "id": "card-258-grand-strategem",
+    "name": "Grand Strategem",
+    "type": "spell",
+    "rarity": "rare",
+    "text": "[Action] (Play on your turn or in showdowns.)Give friendly units +5 Might this turn.",
+    "image_url": "https://cmsassets.rgpub.io/sanity/images/dsfx7636/game_data_live/bda7514aefa94ac3f368690cdd2d0f955d44c089-744x1039.png",
+    "set": "Origins"
+  },
+  {
+    "id": "card-259-harnessed-dragon",
+    "name": "Harnessed Dragon",
+    "type": "unit",
+    "rarity": "when you play me",
+    "text": "Demacia",
+    "image_url": "Rare",
+    "set": "Origins"
+  },
+  {
+    "id": "card-260-karma",
+    "name": "Karma",
+    "type": "order",
+    "rarity": "ionia",
+    "text": "Vi",
+    "image_url": "look at the top card of your Main Deck. You may recycle it.)When you recycle one or more cards",
+    "set": "Origins"
+  },
+  {
+    "id": "card-261-karthus",
+    "name": "Karthus",
+    "type": "order",
+    "rarity": "karthus",
+    "text": "Spirit",
+    "image_url": "Your [Deathknell] effects trigger an additional time.",
+    "set": "Origins"
+  },
+  {
+    "id": "card-262-king's-edict",
+    "name": "King's Edict",
+    "type": "spell",
+    "rarity": "each other player chooses a unit you don't control that hasn't been chosen for this spell. kill those units.",
+    "text": "Starting with the next player",
+    "image_url": "Kudos Productions",
+    "set": "Origins"
+  },
+  {
+    "id": "card-263-leona",
+    "name": "Leona",
+    "type": "order",
+    "rarity": "mount targon",
+    "text": "Leona",
+    "image_url": "stun an enemy unit here. (It doesn't deal combat damage this turn.)",
+    "set": "Origins"
+  },
+  {
+    "id": "card-264-leona",
+    "name": "Leona",
+    "type": "order",
+    "rarity": "mount targon",
+    "text": "Leona",
+    "image_url": "stun an enemy unit here. (It doesn't deal combat damage this turn.)",
+    "set": "Origins"
+  },
+  {
+    "id": "card-265-machine-evangel",
+    "name": "Machine Evangel",
+    "type": "unit",
+    "rarity": "get the effect.)",
+    "text": "[Deathknell] — Play three 1 Might Recruit unit tokens into your base. (When I die",
+    "image_url": "Kudos Productions",
+    "set": "Origins"
+  },
+  {
+    "id": "card-266-sett",
+    "name": "Sett",
+    "type": "order",
+    "rarity": "ionia",
+    "text": "Sett",
+    "image_url": "Rare",
+    "set": "Origins"
+  },
+  {
+    "id": "card-267-sett",
+    "name": "Sett",
+    "type": "order",
+    "rarity": "ionia",
+    "text": "Sett",
+    "image_url": "Showcase",
+    "set": "Origins"
+  },
+  {
+    "id": "card-268-shen",
+    "name": "Shen",
+    "type": "order",
+    "rarity": "ionia",
+    "text": "Shen",
+    "image_url": "even before spells and abilities resolve",
+    "set": "Origins"
+  },
+  {
+    "id": "card-269-baited-hook",
+    "name": "Baited Hook",
+    "type": "gear",
+    "rarity": "exhaust: kill a friendly unit. look at the top 5 cards of your main deck. you may play a unit from among them that has might up to 1 more than the killed unit",
+    "text": "1 EnergyRune Order",
+    "image_url": "Epic",
+    "set": "Origins"
+  },
+  {
+    "id": "card-270-darius",
+    "name": "Darius",
+    "type": "order",
+    "rarity": "darius",
+    "text": "Trifarian",
+    "image_url": "[Legion] — When you play me",
+    "set": "Origins"
+  },
+  {
+    "id": "card-271-darius",
+    "name": "Darius",
+    "type": "order",
+    "rarity": "darius",
+    "text": "Trifarian",
+    "image_url": "[Legion] — When you play me",
+    "set": "Origins"
+  },
+  {
+    "id": "card-272-divine-judgment",
+    "name": "Divine Judgment",
+    "type": "spell",
+    "rarity": "2 gear",
+    "text": "Each player chooses 2 units",
+    "image_url": "and 2 cards in their hands. Recycle the rest.",
+    "set": "Origins"
+  },
+  {
+    "id": "card-273-seal-of-unity",
+    "name": "Seal of Unity",
+    "type": "gear",
+    "rarity": "epic",
+    "text": "Exhaust: [Reaction] — [Add] Rune Order. (Abilities that add resources can't be reacted to.)",
+    "image_url": "https://cmsassets.rgpub.io/sanity/images/dsfx7636/game_data_live/e6fbd41d69bc0d235ea7993d2e9fa74e75e17dff-744x1039.png",
+    "set": "Origins"
+  },
+  {
+    "id": "card-274-viktor",
+    "name": "Viktor",
+    "type": "order",
+    "rarity": "zaun",
+    "text": "Viktor",
+    "image_url": "play a 1 Might Recruit unit token into your base.",
+    "set": "Origins"
+  },
+  {
+    "id": "card-275-viktor",
+    "name": "Viktor",
+    "type": "order",
+    "rarity": "zaun",
+    "text": "Viktor",
+    "image_url": "play a 1 Might Recruit unit token into your base.",
+    "set": "Origins"
+  },
+  {
+    "id": "card-276-daughter-of-the-void",
+    "name": "Daughter of the Void",
+    "type": "legend",
+    "rarity": "rare",
+    "text": "Exhaust: [Reaction] — [Add] Rune Rainbow. Use only to play spells. (Abilities that add resources can't be reacted to.)",
+    "image_url": "https://cmsassets.rgpub.io/sanity/images/dsfx7636/game_data_live/3ea826277086945a2cdfda4e41b771075aa8b15b-744x1039.png",
+    "set": "Origins"
+  },
+  {
+    "id": "card-277-icathian-rain",
+    "name": "Icathian Rain",
+    "type": "signature spell",
+    "rarity": "epic",
+    "text": "Do this 6 times:Deal 2 to a unit. (You can choose different units.)",
+    "image_url": "https://cmsassets.rgpub.io/sanity/images/dsfx7636/game_data_live/8df37f633d3da734f3f2d85808a7cb9eadec1b04-744x1039.png",
+    "set": "Origins"
+  },
+  {
+    "id": "card-278-relentless-storm",
+    "name": "Relentless Storm",
+    "type": "legend",
+    "rarity": "you may exhaust me to channel 1 rune exhausted. (a unit is mighty while it has 5+ might.)",
+    "text": "When you play a [Mighty] unit",
+    "image_url": "Grafit Studio",
+    "set": "Origins"
+  },
+  {
+    "id": "card-279-stormbringer",
+    "name": "Stormbringer",
+    "type": "signature spell",
+    "rarity": "then move your unit there.",
+    "text": "Choose a friendly unit in your base. Deal damage equal to its Might to all enemy units at a battlefield",
+    "image_url": "Kudos Productions",
+    "set": "Origins"
+  },
+  {
+    "id": "card-280-loose-cannon",
+    "name": "Loose Cannon",
+    "type": "legend",
+    "rarity": "draw 1 if you have one or fewer cards in your hand.",
+    "text": "At start of your Beginning Phase",
+    "image_url": "Sugar Free",
+    "set": "Origins"
+  },
+  {
+    "id": "card-281-super-mega-death-rocket!",
+    "name": "Super Mega Death Rocket!",
+    "type": "signature spell",
+    "rarity": "you may discard 1 to return this from your trash to your hand.",
+    "text": "Deal 5 to a unit.When you conquer",
+    "image_url": "Kudos Productions",
+    "set": "Origins"
+  },
+  {
+    "id": "card-282-hand-of-noxus",
+    "name": "Hand of Noxus",
+    "type": "legend",
+    "rarity": "[legion] — [add] 1 energy. (abilities that add resources can't be reacted to. get the effect if you've played a card this turn.)",
+    "text": "Exhaust: [Reaction]",
+    "image_url": "Six More Vodka",
+    "set": "Origins"
+  },
+  {
+    "id": "card-283-noxian-guillotine",
+    "name": "Noxian Guillotine",
+    "type": "signature spell",
+    "rarity": "epic",
+    "text": "[Action]_ (Play on your turn or in showdowns.)_Choose a unit. Kill it the next time it takes damage this turn.[Legion] — Kill it now instead. (Get the effect if you've played another card this turn.)",
+    "image_url": "https://cmsassets.rgpub.io/sanity/images/dsfx7636/game_data_live/57f646b0393b58b657cfabf66357d9fc4a34e046-744x1039.png",
+    "set": "Origins"
+  },
+  {
+    "id": "card-284-nine-tailed-fox",
+    "name": "Nine-Tailed Fox",
+    "type": "legend",
+    "rarity": "give it -1 might this turn",
+    "text": "When an enemy unit attacks a battlefield you control",
+    "image_url": "Rare",
+    "set": "Origins"
+  },
+  {
+    "id": "card-285-fox-fire",
+    "name": "Fox-Fire",
+    "type": "signature spell",
+    "rarity": "epic",
+    "text": "[Hidden] (Hide now for Rune Rainbow to react with later for 0 Energy.)[Action] (Play on your turn or in showdowns.)Kill any number of units at a battlefield with total Might 4 or less.",
+    "image_url": "https://cmsassets.rgpub.io/sanity/images/dsfx7636/game_data_live/7ad9d6a46a1c54080d54950a0044da3a82e32b45-744x1039.png",
+    "set": "Origins"
+  },
+  {
+    "id": "card-286-blind-monk",
+    "name": "Blind Monk",
+    "type": "legend",
+    "rarity": "exhaust: buff a friendly unit. (if it doesn't have a buff",
+    "text": "1 Energy",
+    "image_url": "Rare",
+    "set": "Origins"
+  },
+  {
+    "id": "card-287-dragon's-rage",
+    "name": "Dragon's Rage",
+    "type": "signature spell",
+    "rarity": "epic",
+    "text": "Move an enemy unit. Then choose another enemy unit at its destination. They deal damage equal to their Mights to each other.",
+    "image_url": "https://cmsassets.rgpub.io/sanity/images/dsfx7636/game_data_live/7f4cbd4fb340cc13b3fbe0ec0db706464d9b29f4-744x1039.png",
+    "set": "Origins"
+  },
+  {
+    "id": "card-288-unforgiven",
+    "name": "Unforgiven",
+    "type": "legend",
+    "rarity": "exhaust: move a friendly unit to or from its base.",
+    "text": "2 Energy",
+    "image_url": "TSWCK逍",
+    "set": "Origins"
+  },
+  {
+    "id": "card-289-last-breath",
+    "name": "Last Breath",
+    "type": "signature spell",
+    "rarity": "epic",
+    "text": "[Action] (Play on your turn or in showdowns.)Ready a friendly unit. It deals damage equal to its Might to an enemy unit at a battlefield.",
+    "image_url": "https://cmsassets.rgpub.io/sanity/images/dsfx7636/game_data_live/e7e6dc840210124825f787095541a66ae5cea178-744x1039.png",
+    "set": "Origins"
+  },
+  {
+    "id": "card-290-radiant-dawn",
+    "name": "Radiant Dawn",
+    "type": "legend",
+    "rarity": "buff a friendly unit. (if it doesn't have a buff",
+    "text": "When you stun one or more enemy units",
+    "image_url": "Rare",
+    "set": "Origins"
+  },
+  {
+    "id": "card-291-zenith-blade",
+    "name": "Zenith Blade",
+    "type": "signature spell",
+    "rarity": "epic",
+    "text": "[Action] (Play on your turn or in showdowns.)Stun an enemy unit at a battlefield. You may move a friendly unit to that enemy unit's battlefield._ (A stunned unit doesn't deal combat damage this turn.)_",
+    "image_url": "https://cmsassets.rgpub.io/sanity/images/dsfx7636/game_data_live/a572f0bc3ed1bd47c5759d36f5b951b15338e57e-744x1039.png",
+    "set": "Origins"
+  },
+  {
+    "id": "card-292-swift-scout",
+    "name": "Swift Scout",
+    "type": "legend",
+    "rarity": "exhaust: put a teemo unit you own into your hand from your champion zone or the board.",
+    "text": "You may pay 1 Energy to hide a card with [Hidden] instead of Rune Rainbow.1 Energy",
+    "image_url": "Shawn Lee",
+    "set": "Origins"
+  },
+  {
+    "id": "card-293-guerilla-warfare",
+    "name": "Guerilla Warfare",
+    "type": "signature spell",
+    "rarity": "epic",
+    "text": "Return up to two cards with [Hidden] from your trash to your hand. You can hide cards ignoring costs this turn.",
+    "image_url": "https://cmsassets.rgpub.io/sanity/images/dsfx7636/game_data_live/3a1f70e49f1fdbac907a3395f517e96717e8afea-744x1039.png",
+    "set": "Origins"
+  },
+  {
+    "id": "card-294-herald-of-the-arcane",
+    "name": "Herald of the Arcane",
+    "type": "legend",
+    "rarity": "exhaust: play a 1 might recruit unit token.",
+    "text": "1 Energy",
+    "image_url": "Fortiche Production",
+    "set": "Origins"
+  },
+  {
+    "id": "card-295-siphon-power",
+    "name": "Siphon Power",
+    "type": "signature spell",
+    "rarity": "even before spells and abilities resolve.)choose a battlefield. give friendly units there +1 might this turn and enemy units there -1 might this turn",
+    "text": "[Reaction] (Play any time",
+    "image_url": "Epic",
+    "set": "Origins"
+  },
+  {
+    "id": "card-296-bounty-hunter",
+    "name": "Bounty Hunter",
+    "type": "legend",
+    "rarity": "rare",
+    "text": "Exhaust: Give a unit [Ganking] this turn. (It can move from battlefield to battlefield.)",
+    "image_url": "https://cmsassets.rgpub.io/sanity/images/dsfx7636/game_data_live/e0635cebc3dd8ee5355dbbc090ca27ebeacebad7-744x1039.png",
+    "set": "Origins"
+  },
+  {
+    "id": "card-297-bullet-time",
+    "name": "Bullet Time",
+    "type": "signature spell",
+    "rarity": "epic",
+    "text": "[Action] (Play on your turn or in showdowns.)Pay any amount of Rune Rainbow to deal that much damage to all enemy units at a battlefield.",
+    "image_url": "https://cmsassets.rgpub.io/sanity/images/dsfx7636/game_data_live/96ed7f6b121a7f46003534393350838efe2776f0-744x1039.png",
+    "set": "Origins"
+  },
+  {
+    "id": "card-298-the-boss",
+    "name": "The Boss",
+    "type": "legend",
+    "rarity": "you may pay rune rainbow and exhaust me to spend its buff and recall it exhausted instead. (send it to base. this isn't a move.)when you conquer",
+    "text": "When a buffed unit you control would die",
+    "image_url": "Rare",
+    "set": "Origins"
+  },
+  {
+    "id": "card-299-showstopper",
+    "name": "Showstopper",
+    "type": "signature spell",
+    "rarity": "then move it to a battlefield. (if it doesn't have a buff",
+    "text": "Buff a friendly unit in your base",
+    "image_url": "Epic",
+    "set": "Origins"
+  },
+  {
+    "id": "card-300-recruit-(de)",
+    "name": "Recruit (DE)",
+    "type": "token unit",
+    "rarity": "common",
+    "image_url": "https://cmsassets.rgpub.io/sanity/images/dsfx7636/game_data_live/7c3362dc6e6e6fb724ef31b061a44d2976f5b01f-744x1039.png",
+    "set": "Origins"
+  },
+  {
+    "id": "card-301-recruit-(nx)",
+    "name": "Recruit (NX)",
+    "type": "token unit",
+    "rarity": "common",
+    "image_url": "https://cmsassets.rgpub.io/sanity/images/dsfx7636/game_data_live/c168ca334739090a060710dfc440982c3462ac8c-744x1039.png",
+    "set": "Origins"
+  },
+  {
+    "id": "card-302-recruit-(zn)",
+    "name": "Recruit (ZN)",
+    "type": "token unit",
+    "rarity": "common",
+    "image_url": "https://cmsassets.rgpub.io/sanity/images/dsfx7636/game_data_live/d93ec9a524a2989b9d7ef23c6fc02e8ce39959c2-744x1039.png",
+    "set": "Origins"
+  },
+  {
+    "id": "card-303-sprite",
+    "name": "Sprite",
+    "type": "token unit",
+    "rarity": "before scoring.)",
+    "text": "[Temporary] (Kill me at the start of your Beginning Phase",
+    "image_url": "Envar Studio",
+    "set": "Origins"
+  },
+  {
+    "id": "card-304-altar-to-unity",
+    "name": "Altar to Unity",
+    "type": "battlefield",
+    "rarity": "play a 1 might recruit unit token in your base.",
+    "text": "When you hold here",
+    "image_url": "Kudos Productions",
+    "set": "Origins"
+  },
+  {
+    "id": "card-305-aspirant's-climb",
+    "name": "Aspirant's Climb",
+    "type": "battlefield",
+    "rarity": "uncommon",
+    "text": "Increase the points needed to win the game by 1.",
+    "image_url": "https://cmsassets.rgpub.io/sanity/images/dsfx7636/game_data_live/9301593f3800e68427469d38181b578a672473c3-1038x744.png",
+    "set": "Origins"
+  },
+  {
+    "id": "card-306-back-alley-bar",
+    "name": "Back-Alley Bar",
+    "type": "battlefield",
+    "rarity": "give it +1 might this turn.",
+    "text": "When a unit moves from here",
+    "image_url": "Kudos Productions",
+    "set": "Origins"
+  },
+  {
+    "id": "card-307-bandle-tree",
+    "name": "Bandle Tree",
+    "type": "battlefield",
+    "rarity": "uncommon",
+    "text": "You may hide an additional card here.",
+    "image_url": "https://cmsassets.rgpub.io/sanity/images/dsfx7636/game_data_live/538f93a34006c4afaddb890cbc75b4db222f1783-1038x744.png",
+    "set": "Origins"
+  },
+  {
+    "id": "card-308-fortified-position",
+    "name": "Fortified Position",
+    "type": "battlefield",
+    "rarity": "choose a unit. it gains [shield 2] this combat. (+2 might while it's a defender.)",
+    "text": "When you defend here",
+    "image_url": "Six More Vodka",
+    "set": "Origins"
+  },
+  {
+    "id": "card-309-grove-of-the-god-willow",
+    "name": "Grove of the God-Willow",
+    "type": "battlefield",
+    "rarity": "draw 1.",
+    "text": "When you hold here",
+    "image_url": "Kudos Productions",
+    "set": "Origins"
+  },
+  {
+    "id": "card-310-hallowed-tomb",
+    "name": "Hallowed Tomb",
+    "type": "battlefield",
+    "rarity": "you may return your chosen champion from your trash to your champion zone if it is empty.",
+    "text": "When you hold here",
+    "image_url": "Kudos Productions",
+    "set": "Origins"
+  },
+  {
+    "id": "card-311-monastery-of-hirana",
+    "name": "Monastery of Hirana",
+    "type": "battlefield",
+    "rarity": "you may spend a buff to draw 1.",
+    "text": "When you conquer here",
+    "image_url": "Six More Vodka",
+    "set": "Origins"
+  },
+  {
+    "id": "card-312-navori-fighting-pit",
+    "name": "Navori Fighting Pit",
+    "type": "battlefield",
+    "rarity": "buff a unit here. (if it doesn't have a buff",
+    "text": "When you hold here",
+    "image_url": "Uncommon",
+    "set": "Origins"
+  },
+  {
+    "id": "card-313-obelisk-of-power",
+    "name": "Obelisk of Power",
+    "type": "battlefield",
+    "rarity": "that player channels 1 rune.",
+    "text": "At the start of each player's first Beginning Phase",
+    "image_url": "Chris Kintner",
+    "set": "Origins"
+  },
+  {
+    "id": "card-314-reaver's-row",
+    "name": "Reaver's Row",
+    "type": "battlefield",
+    "rarity": "you may move a friendly unit here to base.",
+    "text": "When you defend here",
+    "image_url": "Kudos Productions",
+    "set": "Origins"
+  },
+  {
+    "id": "card-315-reckoner's-arena",
+    "name": "Reckoner's Arena",
+    "type": "battlefield",
+    "rarity": "activate the conquer effects of units here.",
+    "text": "When you hold here",
+    "image_url": "Six More Vodka",
+    "set": "Origins"
+  },
+  {
+    "id": "card-316-sigil-of-the-storm",
+    "name": "Sigil of the Storm",
+    "type": "battlefield",
+    "rarity": "recycle one of your runes.",
+    "text": "When you conquer here",
+    "image_url": "Envar Studio",
+    "set": "Origins"
+  },
+  {
+    "id": "card-317-startipped-peak",
+    "name": "Startipped Peak",
+    "type": "battlefield",
+    "rarity": "you may channel 1 rune exhausted.",
+    "text": "When you hold here",
+    "image_url": "Polar Engine Studio",
+    "set": "Origins"
+  },
+  {
+    "id": "card-318-targon's-peak",
+    "name": "Targon's Peak",
+    "type": "battlefield",
+    "rarity": "ready 2 runes at the end of this turn.",
+    "text": "When you conquer here",
+    "image_url": "Six More Vodka",
+    "set": "Origins"
+  },
+  {
+    "id": "card-319-the-arena's-greatest",
+    "name": "The Arena's Greatest",
+    "type": "battlefield",
+    "rarity": "that player gains 1 point.",
+    "text": "At the start of each player's first Beginning Phase",
+    "image_url": "Envar Studio",
+    "set": "Origins"
+  },
+  {
+    "id": "card-320-the-candlelit-sanctum",
+    "name": "The Candlelit Sanctum",
+    "type": "battlefield",
+    "rarity": "look at the top two cards of your main deck. you may recycle one or both of them. put those you don't back in any order.",
+    "text": "When you conquer here",
+    "image_url": "Envar Studio",
+    "set": "Origins"
+  },
+  {
+    "id": "card-321-the-dreaming-tree",
+    "name": "The Dreaming Tree",
+    "type": "battlefield",
+    "rarity": "draw 1.",
+    "text": "The first time you choose a friendly unit with a spell here each turn",
+    "image_url": "Envar Studio",
+    "set": "Origins"
+  },
+  {
+    "id": "card-322-the-grand-plaza",
+    "name": "The Grand Plaza",
+    "type": "battlefield",
+    "rarity": "if you have 7+ units here",
+    "text": "When you hold here",
+    "image_url": "Uncommon",
+    "set": "Origins"
+  },
+  {
+    "id": "card-323-trifarian-war-camp",
+    "name": "Trifarian War Camp",
+    "type": "battlefield",
+    "rarity": "uncommon",
+    "text": "Units here have +1 Might. (This includes attackers.)",
+    "image_url": "https://cmsassets.rgpub.io/sanity/images/dsfx7636/game_data_live/3788cf718e716e35a7fa20ec1dc56991644e6484-1038x744.png",
+    "set": "Origins"
+  },
+  {
+    "id": "card-324-vilemaw's-lair",
+    "name": "Vilemaw's Lair",
+    "type": "battlefield",
+    "rarity": "uncommon",
+    "text": "Units can't move from here to base.",
+    "image_url": "https://cmsassets.rgpub.io/sanity/images/dsfx7636/game_data_live/f374b90a0bec11a5f423e7d4ebd869ab1a146471-1038x744.png",
+    "set": "Origins"
+  },
+  {
+    "id": "card-325-void-gate",
+    "name": "Void Gate",
+    "type": "battlefield",
+    "rarity": "uncommon",
+    "text": "Spells and abilities affecting units here each deal 1 Bonus Damage. (Each instance of damage the spell deals is increased by 1.)",
+    "image_url": "https://cmsassets.rgpub.io/sanity/images/dsfx7636/game_data_live/14a52a367fd41fd84745e050e62d1f281f733467-1038x744.png",
+    "set": "Origins"
+  },
+  {
+    "id": "card-326-windswept-hillock",
+    "name": "Windswept Hillock",
+    "type": "battlefield",
+    "rarity": "uncommon",
+    "text": "Units here have [Ganking]. (They can move from battlefield to battlefield.)",
+    "image_url": "https://cmsassets.rgpub.io/sanity/images/dsfx7636/game_data_live/aba557a4053fd76c6aa95b2b907ec682bad70d9f-1038x744.png",
+    "set": "Origins"
+  },
+  {
+    "id": "card-327-zaun-warrens",
+    "name": "Zaun Warrens",
+    "type": "battlefield",
+    "rarity": "discard 1",
+    "text": "When you conquer here",
+    "image_url": "Uncommon",
+    "set": "Origins"
+  },
+  {
+    "id": "card-328-daughter-of-the-void",
+    "name": "Daughter of the Void",
+    "type": "legend",
+    "rarity": "showcase",
+    "text": "Exhaust: [Reaction] — [Add] Rune Rainbow. Use only to play spells. (Abilities that add resources can't be reacted to.)",
+    "image_url": "https://cmsassets.rgpub.io/sanity/images/dsfx7636/game_data_live/ae8e68af43400f61f7391c0a6ee339fd718a7540-1488x2078.png",
+    "set": "Origins"
+  },
+  {
+    "id": "card-329-daughter-of-the-void",
+    "name": "Daughter of the Void",
+    "type": "legend",
+    "rarity": "showcase",
+    "text": "Exhaust: [Reaction] — [Add] Rune Rainbow. Use only to play spells. (Abilities that add resources can't be reacted to.)",
+    "image_url": "https://cmsassets.rgpub.io/sanity/images/dsfx7636/game_data_live/57e13462b8fea9a5cfa1b424d3ad3005f37b00ad-1488x2078.png",
+    "set": "Origins"
+  },
+  {
+    "id": "card-330-relentless-storm",
+    "name": "Relentless Storm",
+    "type": "legend",
+    "rarity": "you may exhaust me to channel 1 rune exhausted. (a unit is mighty while it has 5+ might.)",
+    "text": "When you play a [Mighty] unit",
+    "image_url": "Alex Flores",
+    "set": "Origins"
+  },
+  {
+    "id": "card-331-relentless-storm",
+    "name": "Relentless Storm",
+    "type": "legend",
+    "rarity": "you may exhaust me to channel 1 rune exhausted. (a unit is mighty while it has 5+ might.)",
+    "text": "When you play a [Mighty] unit",
+    "image_url": "Alex Flores",
+    "set": "Origins"
+  },
+  {
+    "id": "card-332-loose-cannon",
+    "name": "Loose Cannon",
+    "type": "legend",
+    "rarity": "draw 1 if you have one or fewer cards in your hand.",
+    "text": "At start of your Beginning Phase",
+    "image_url": "Sean Yang",
+    "set": "Origins"
+  },
+  {
+    "id": "card-333-loose-cannon",
+    "name": "Loose Cannon",
+    "type": "legend",
+    "rarity": "draw 1 if you have one or fewer cards in your hand.",
+    "text": "At start of your Beginning Phase",
+    "image_url": "Sean Yang",
+    "set": "Origins"
+  },
+  {
+    "id": "card-334-hand-of-noxus",
+    "name": "Hand of Noxus",
+    "type": "legend",
+    "rarity": "[legion] — [add] 1 energy. (abilities that add resources can't be reacted to. get the effect if you've played a card this turn.)",
+    "text": "Exhaust: [Reaction]",
+    "image_url": "Peter Kim",
+    "set": "Origins"
+  },
+  {
+    "id": "card-335-hand-of-noxus",
+    "name": "Hand of Noxus",
+    "type": "legend",
+    "rarity": "[legion] — [add] 1 energy. (abilities that add resources can't be reacted to. get the effect if you've played a card this turn.)",
+    "text": "Exhaust: [Reaction]",
+    "image_url": "Peter Kim",
+    "set": "Origins"
+  },
+  {
+    "id": "card-336-nine-tailed-fox",
+    "name": "Nine-Tailed Fox",
+    "type": "legend",
+    "rarity": "give it -1 might this turn",
+    "text": "When an enemy unit attacks a battlefield you control",
+    "image_url": "Showcase",
+    "set": "Origins"
+  },
+  {
+    "id": "card-337-nine-tailed-fox",
+    "name": "Nine-Tailed Fox",
+    "type": "legend",
+    "rarity": "give it -1 might this turn",
+    "text": "When an enemy unit attacks a battlefield you control",
+    "image_url": "Showcase",
+    "set": "Origins"
+  },
+  {
+    "id": "card-338-blind-monk",
+    "name": "Blind Monk",
+    "type": "legend",
+    "rarity": "exhaust: buff a friendly unit. (if it doesn't have a buff",
+    "text": "1 Energy",
+    "image_url": "Showcase",
+    "set": "Origins"
+  },
+  {
+    "id": "card-339-blind-monk",
+    "name": "Blind Monk",
+    "type": "legend",
+    "rarity": "exhaust: buff a friendly unit. (if it doesn't have a buff",
+    "text": "1 Energy",
+    "image_url": "Showcase",
+    "set": "Origins"
+  },
+  {
+    "id": "card-340-unforgiven",
+    "name": "Unforgiven",
+    "type": "legend",
+    "rarity": "exhaust: move a friendly unit to or from its base.",
+    "text": "2 Energy",
+    "image_url": "Quy Ho",
+    "set": "Origins"
+  },
+  {
+    "id": "card-341-unforgiven",
+    "name": "Unforgiven",
+    "type": "legend",
+    "rarity": "exhaust: move a friendly unit to or from its base.",
+    "text": "2 Energy",
+    "image_url": "Quy Ho",
+    "set": "Origins"
+  },
+  {
+    "id": "card-342-radiant-dawn",
+    "name": "Radiant Dawn",
+    "type": "legend",
+    "rarity": "buff a friendly unit. (if it doesn't have a buff",
+    "text": "When you stun one or more enemy units",
+    "image_url": "Showcase",
+    "set": "Origins"
+  },
+  {
+    "id": "card-343-radiant-dawn",
+    "name": "Radiant Dawn",
+    "type": "legend",
+    "rarity": "buff a friendly unit. (if it doesn't have a buff",
+    "text": "When you stun one or more enemy units",
+    "image_url": "Showcase",
+    "set": "Origins"
+  },
+  {
+    "id": "card-344-swift-scout",
+    "name": "Swift Scout",
+    "type": "legend",
+    "rarity": "exhaust: put a teemo unit you own into your hand from your champion zone or the board.",
+    "text": "You may pay 1 Energy to hide a card with [Hidden] instead of Rune Rainbow.1 Energy",
+    "image_url": "Jordan Yoon",
+    "set": "Origins"
+  },
+  {
+    "id": "card-345-swift-scout",
+    "name": "Swift Scout",
+    "type": "legend",
+    "rarity": "exhaust: put a teemo unit you own into your hand from your champion zone or the board.",
+    "text": "You may pay 1 Energy to hide a card with [Hidden] instead of Rune Rainbow.1 Energy",
+    "image_url": "Jordan Yoon",
+    "set": "Origins"
+  },
+  {
+    "id": "card-346-herald-of-the-arcane",
+    "name": "Herald of the Arcane",
+    "type": "legend",
+    "rarity": "exhaust: play a 1 might recruit unit token.",
+    "text": "1 Energy",
+    "image_url": "Rudy Siswanto",
+    "set": "Origins"
+  },
+  {
+    "id": "card-347-herald-of-the-arcane",
+    "name": "Herald of the Arcane",
+    "type": "legend",
+    "rarity": "exhaust: play a 1 might recruit unit token.",
+    "text": "1 Energy",
+    "image_url": "Rudy Siswanto",
+    "set": "Origins"
+  },
+  {
+    "id": "card-348-bounty-hunter",
+    "name": "Bounty Hunter",
+    "type": "legend",
+    "rarity": "showcase",
+    "text": "Exhaust: Give a unit [Ganking] this turn. (It can move from battlefield to battlefield.)",
+    "image_url": "https://cmsassets.rgpub.io/sanity/images/dsfx7636/game_data_live/37153cce7f58b2fceb28ea9ff91deb0411f849e2-1488x2078.png",
+    "set": "Origins"
+  },
+  {
+    "id": "card-349-bounty-hunter",
+    "name": "Bounty Hunter",
+    "type": "legend",
+    "rarity": "showcase",
+    "text": "Exhaust: Give a unit [Ganking] this turn. (It can move from battlefield to battlefield.)",
+    "image_url": "https://cmsassets.rgpub.io/sanity/images/dsfx7636/game_data_live/f4b7f334f442d30ccea4743c641760c5533804b4-1488x2078.png",
+    "set": "Origins"
+  },
+  {
+    "id": "card-350-the-boss",
+    "name": "The Boss",
+    "type": "legend",
+    "rarity": "you may pay rune rainbow and exhaust me to spend its buff and recall it exhausted instead. (send it to base. this isn't a move.)when you conquer",
+    "text": "When a buffed unit you control would die",
+    "image_url": "Showcase",
+    "set": "Origins"
+  },
+  {
+    "id": "card-351-the-boss",
+    "name": "The Boss",
+    "type": "legend",
+    "rarity": "you may pay rune rainbow and exhaust me to spend its buff and recall it exhausted instead. (send it to base. this isn't a move.)when you conquer",
+    "text": "When a buffed unit you control would die",
+    "image_url": "Showcase",
+    "set": "Origins"
+  },
+  {
+    "id": "card-352-annie",
+    "name": "Annie",
+    "type": "fury",
+    "rarity": "noxus",
+    "text": "Annie",
+    "image_url": "Epic",
+    "set": "Proving Grounds"
+  },
+  {
+    "id": "card-353-firestorm",
+    "name": "Firestorm",
+    "type": "spell",
+    "rarity": "uncommon",
+    "text": "Deal 3 to all enemy units at a battlefield.",
+    "image_url": "https://cmsassets.rgpub.io/sanity/images/dsfx7636/game_data_live/a7a34129e64f0296bf2da166c2b06ed156d568db-744x1039.png",
+    "set": "Proving Grounds"
+  },
+  {
+    "id": "card-354-incinerate",
+    "name": "Incinerate",
+    "type": "spell",
+    "rarity": "common",
+    "text": "[Action]_ (Play on your turn or in showdowns.)_Deal 2 to a unit at a battlefield.",
+    "image_url": "https://cmsassets.rgpub.io/sanity/images/dsfx7636/game_data_live/46e4eaada1412f9b6c24751bdb3932c6a51e905f-744x1039.png",
+    "set": "Proving Grounds"
+  },
+  {
+    "id": "card-355-yi",
+    "name": "Yi",
+    "type": "calm",
+    "rarity": "ionia",
+    "text": "Master Yi",
+    "image_url": "I have +4 Might.",
+    "set": "Proving Grounds"
+  },
+  {
+    "id": "card-356-zephyr-sage",
+    "name": "Zephyr Sage",
+    "type": "unit",
+    "rarity": "[shield] (+1 might while i'm a defender.)",
+    "text": "Bird",
+    "image_url": "Six More Vodka",
+    "set": "Proving Grounds"
+  },
+  {
+    "id": "card-357-lux",
+    "name": "Lux",
+    "type": "mind",
+    "rarity": "demacia",
+    "text": "Lux",
+    "image_url": "give me +3 Might this turn.",
+    "set": "Proving Grounds"
+  },
+  {
+    "id": "card-358-garen",
+    "name": "Garen",
+    "type": "body",
+    "rarity": "garen",
+    "text": "Elite",
+    "image_url": "[Assault 2]",
+    "set": "Proving Grounds"
+  },
+  {
+    "id": "card-359-gentlemen's-duel",
+    "name": "Gentlemen's Duel",
+    "type": "spell",
+    "rarity": "common",
+    "text": "[Action] (Play on your turn or in showdowns.)Give a friendly unit +3 Might this turn. Then choose an enemy unit. They deal damage equal to their Mights to each other.",
+    "image_url": "https://cmsassets.rgpub.io/sanity/images/dsfx7636/game_data_live/4568ab827fdcd42d6bb86b1c2de6182e286c9ee9-744x1039.png",
+    "set": "Proving Grounds"
+  },
+  {
+    "id": "card-360-yi",
+    "name": "Yi",
+    "type": "body",
+    "rarity": "ionia",
+    "text": "Master Yi",
+    "image_url": "Epic",
+    "set": "Proving Grounds"
+  },
+  {
+    "id": "card-361-annie",
+    "name": "Annie",
+    "type": "chaos",
+    "rarity": "noxus",
+    "text": "Annie",
+    "image_url": "return a spell from your trash to your hand.",
+    "set": "Proving Grounds"
+  },
+  {
+    "id": "card-362-flash",
+    "name": "Flash",
+    "type": "spell",
+    "rarity": "even before spells and abilities resolve.)move up to 2 friendly units to base.",
+    "text": "[Reaction] (Play any time",
+    "image_url": "Sugar Free",
+    "set": "Proving Grounds"
+  },
+  {
+    "id": "card-363-blast-of-power",
+    "name": "Blast of Power",
+    "type": "spell",
+    "rarity": "common",
+    "text": "[Action] (Play on your turn or in showdowns.)Kill a unit at a battlefield.",
+    "image_url": "https://cmsassets.rgpub.io/sanity/images/dsfx7636/game_data_live/026f851a703601fce4142c0791e913377c170b47-744x1039.png",
+    "set": "Proving Grounds"
+  },
+  {
+    "id": "card-364-garen",
+    "name": "Garen",
+    "type": "order",
+    "rarity": "garen",
+    "text": "Elite",
+    "image_url": "Other friendly units have +1 Might here.",
+    "set": "Proving Grounds"
+  },
+  {
+    "id": "card-365-lux",
+    "name": "Lux",
+    "type": "order",
+    "rarity": "demacia",
+    "text": "Lux",
+    "image_url": "Epic",
+    "set": "Proving Grounds"
+  },
+  {
+    "id": "card-366-recruit-the-vanguard",
+    "name": "Recruit the Vanguard",
+    "type": "spell",
+    "rarity": "uncommon",
+    "text": "[Action] (Play on your turn or in showdowns.)Play four 1 Might Recruit unit tokens. (They can be played to your base or to battlefields you control.)",
+    "image_url": "https://cmsassets.rgpub.io/sanity/images/dsfx7636/game_data_live/81d1c47459606f7b627778cce9b5f0e44d80f7fa-744x1039.png",
+    "set": "Proving Grounds"
+  },
+  {
+    "id": "card-367-vanguard-attendant",
+    "name": "Vanguard Attendant",
+    "type": "unit",
+    "rarity": "i enter ready.",
+    "text": "Demacia",
+    "image_url": "Six More Vodka",
+    "set": "Proving Grounds"
+  },
+  {
+    "id": "card-368-dark-child---starter",
+    "name": "Dark Child - Starter",
+    "type": "champion legend",
+    "rarity": "ready 2 runes.",
+    "text": "At the end of your turn",
+    "image_url": "Six More Vodka",
+    "set": "Proving Grounds"
+  },
+  {
+    "id": "card-369-tibbers",
+    "name": "Tibbers",
+    "type": "signature unit",
+    "rarity": "deal 3 to all units at battlefields.",
+    "text": "When you play me",
+    "image_url": "Polar Engine Studio",
+    "set": "Proving Grounds"
+  },
+  {
+    "id": "card-370-wuju-bladesman---starter",
+    "name": "Wuju Bladesman - Starter",
+    "type": "champion legend",
+    "rarity": "it gets +2 might.",
+    "text": "While a friendly unit defends alone",
+    "image_url": "Grafit Studio/Quy Ho",
+    "set": "Proving Grounds"
+  },
+  {
+    "id": "card-371-highlander",
+    "name": "Highlander",
+    "type": "signature spell",
+    "rarity": "even before spells and abilities resolve.)choose a friendly unit. the next time it dies this turn",
+    "text": "[Reaction] (Play any time",
+    "image_url": "Epic",
+    "set": "Proving Grounds"
+  },
+  {
+    "id": "card-372-lady-of-luminosity---starter",
+    "name": "Lady of Luminosity - Starter",
+    "type": "champion legend",
+    "rarity": "draw 1.",
+    "text": "When you play a spell that costs 5 Energy or more",
+    "image_url": "Grafit Studio/Maki Planas Mata",
+    "set": "Proving Grounds"
+  },
+  {
+    "id": "card-373-final-spark",
+    "name": "Final Spark",
+    "type": "signature spell",
+    "rarity": "epic",
+    "text": "[Action] (Play on your turn or in showdowns.)Deal 8 to a unit.",
+    "image_url": "https://cmsassets.rgpub.io/sanity/images/dsfx7636/game_data_live/4558a2dc1bb1f1b8a73ec0d82244654e84b12687-744x1039.png",
+    "set": "Proving Grounds"
+  },
+  {
+    "id": "card-374-might-of-demacia---starter",
+    "name": "Might of Demacia - Starter",
+    "type": "champion legend",
+    "rarity": "if you have 4+ units at that battlefield",
+    "text": "When you conquer",
+    "image_url": "Rare",
+    "set": "Proving Grounds"
+  },
+  {
+    "id": "card-375-decisive-strike",
+    "name": "Decisive Strike",
+    "type": "signature spell",
+    "rarity": "epic",
+    "text": "[Action] (Play on your turn or in showdowns.)Give friendly units +2 Might this turn.",
+    "image_url": "https://cmsassets.rgpub.io/sanity/images/dsfx7636/game_data_live/986782271be078c184a8d1c196e375106459c6c5-744x1039.png",
+    "set": "Proving Grounds"
+  }
+]

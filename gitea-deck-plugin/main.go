@@ -121,10 +121,17 @@ func validateDeck(deck *Deck) ValidationResult {
 	}
 
 	// Riftbound validation
+	// Riftbound decks are exactly 40 cards (not including legend, 12 rune cards, and 3 battlefields)
 	if deck.Game == "riftbound" {
-		if totalCards < 30 || totalCards > 40 {
+		if totalCards != 40 {
 			result.Valid = false
-			result.Errors = append(result.Errors, fmt.Sprintf("Riftbound decks must have 30-40 cards. Current: %d", totalCards))
+			result.Errors = append(result.Errors, fmt.Sprintf("Riftbound decks must have exactly 40 cards. Current: %d", totalCards))
+		}
+		if deck.Legend == nil {
+			result.Warnings = append(result.Warnings, "No Legend selected")
+		}
+		if deck.Battlefield == nil {
+			result.Warnings = append(result.Warnings, "No Battlefield selected")
 		}
 	}
 

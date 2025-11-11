@@ -55,8 +55,17 @@ router.post('/riftbound', async (req, res) => {
 
   const totalCards = deck.cards.reduce((sum, card) => sum + card.count, 0);
 
-  if (totalCards < 30 || totalCards > 40) {
-    errors.push(`Riftbound decks must have 30-40 cards. Current: ${totalCards}`);
+  // Riftbound decks are exactly 40 cards (not including legend, 12 rune cards, and 3 battlefields)
+  if (totalCards !== 40) {
+    errors.push(`Riftbound decks must have exactly 40 cards. Current: ${totalCards}`);
+  }
+
+  if (!deck.legend) {
+    warnings.push('No Legend selected');
+  }
+
+  if (!deck.battlefield) {
+    warnings.push('No Battlefield selected');
   }
 
   res.json({

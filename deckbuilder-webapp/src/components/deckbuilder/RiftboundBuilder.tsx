@@ -85,11 +85,12 @@ export const RiftboundBuilder: React.FC<RiftboundBuilderProps> = ({
   const totalCards = deck.cards.reduce((sum, card) => sum + card.count, 0);
 
   // Validation warnings
+  // Riftbound decks are 40 cards, not including the legend, 12 rune cards, and 3 battlefields
   const validationWarnings: string[] = [];
-  if (totalCards < 30) {
-    validationWarnings.push(`Need ${30 - totalCards} more cards (minimum 30)`);
+  if (totalCards < 40) {
+    validationWarnings.push(`Need ${40 - totalCards} more cards (exactly 40 required)`);
   } else if (totalCards > 40) {
-    validationWarnings.push(`Remove ${totalCards - 40} cards (maximum 40)`);
+    validationWarnings.push(`Remove ${totalCards - 40} cards (exactly 40 required)`);
   }
   
   if (!deck.legend) {
@@ -169,9 +170,9 @@ export const RiftboundBuilder: React.FC<RiftboundBuilderProps> = ({
           <div style={{ 
             fontSize: '18px', 
             fontWeight: 'bold',
-            color: totalCards >= 30 && totalCards <= 40 ? '#4caf50' : '#f44336'
+            color: totalCards === 40 ? '#4caf50' : '#f44336'
           }}>
-            {totalCards} / 30-40 cards
+            {totalCards} / 40 cards
           </div>
         </div>
 

@@ -16,7 +16,7 @@
   "cards": [
     {
       "id": "shadowfen-assassin",
-      "count": 3,
+      "count": 4,
       "name": "Shadowfen Assassin"
     },
     {
@@ -26,18 +26,43 @@
     },
     {
       "id": "void-walker",
-      "count": 3,
+      "count": 4,
       "name": "Void Walker"
     },
     {
       "id": "dark-ritual",
-      "count": 2,
+      "count": 4,
       "name": "Dark Ritual"
     },
     {
       "id": "shadow-strike",
       "count": 4,
       "name": "Shadow Strike"
+    },
+    {
+      "id": "blood-reaver",
+      "count": 4,
+      "name": "Blood Reaver"
+    },
+    {
+      "id": "crimson-bolt",
+      "count": 4,
+      "name": "Crimson Bolt"
+    },
+    {
+      "id": "death-touch",
+      "count": 4,
+      "name": "Death Touch"
+    },
+    {
+      "id": "flame-burst",
+      "count": 4,
+      "name": "Flame Burst"
+    },
+    {
+      "id": "shadow-fiend",
+      "count": 4,
+      "name": "Shadow Fiend"
     }
   ],
   "sideboard": [

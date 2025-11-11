@@ -18,15 +18,20 @@ export interface MTGCard {
 export interface RiftboundCard {
   id: string;
   name: string;
-  cost: number;
-  faction: string;
-  rank: string;
-  type: string;
-  runeColors?: string[]; // Rune colors for Riftbound cards
-  text?: string;
+  type: string; // unit, spell, rune, battlefield, legend
+  subtype?: string; // warrior, mage, etc.
+  cost?: number;
   attack?: number;
   health?: number;
+  rarity?: string; // common, rare, epic, legendary
+  color?: string; // red, blue, green, etc.
+  text?: string;
+  flavor?: string;
   image_url?: string;
+  set?: string;
+  faction?: string; // Legacy field
+  rank?: string; // Legacy field
+  runeColors?: string[]; // For rune cards
 }
 
 export type Card = MTGCard | RiftboundCard;

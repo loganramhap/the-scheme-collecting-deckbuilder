@@ -165,7 +165,9 @@ export default function DeckEditor() {
             </Link>
             <h1 style={{ marginTop: '10px' }}>{currentDeck.name}</h1>
             <p style={{ color: '#999' }}>
-              {currentDeck.game.toUpperCase()} • {currentDeck.format} • {totalCards} cards
+              {currentDeck.game.toUpperCase()}
+              {currentDeck.game !== 'riftbound' && ` • ${currentDeck.format}`}
+              {' • '}{totalCards} cards
             </p>
           </div>
           <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>

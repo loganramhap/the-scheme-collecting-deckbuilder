@@ -56,11 +56,9 @@ class ValidationService {
 
     const totalCards = deck.cards.reduce((sum, card) => sum + card.count, 0);
 
-    // Riftbound deck size rules: 30-40 cards
-    if (totalCards < 30) {
-      errors.push(`Riftbound decks must have at least 30 cards. Current: ${totalCards}`);
-    } else if (totalCards > 40) {
-      errors.push(`Riftbound decks cannot have more than 40 cards. Current: ${totalCards}`);
+    // Riftbound deck size rules: exactly 40 cards (not including legend, 12 rune cards, and 3 battlefields)
+    if (totalCards !== 40) {
+      errors.push(`Riftbound decks must have exactly 40 cards. Current: ${totalCards}`);
     }
 
     // Check if legend is set

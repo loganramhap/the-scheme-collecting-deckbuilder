@@ -37,6 +37,8 @@ export default function Dashboard() {
               const content = atob(fileContent.content);
               const deck = JSON.parse(content);
               
+              console.log(`Loaded deck ${repo.name}:`, { game: deck.game, format: deck.format });
+              
               // Get commander/featured card image
               let commanderImage = undefined;
               if (deck.commander?.image_url) {
@@ -55,8 +57,9 @@ export default function Dashboard() {
                 commanderImage,
               };
             } catch (error) {
-              // If can't read deck file, assume MTG
-              metadata[repo.name] = { game: 'mtg', format: 'unknown', tags: [] };
+              console.error(`Failed to load deck ${repo.name}:`, error);
+              // If can't read deck file, mark as unknown
+              metadata[repo.name] = { game: 'unknown', format: 'unknown', tags: [] };
             }
           }
           setDeckMetadata(metadata);
@@ -84,7 +87,7 @@ export default function Dashboard() {
       // Create the deck file
       const newDeck = {
         game: newDeckGame,
-        format: newDeckFormat,
+        format: newDeckGame === 'riftbound' ? 'standard' : newDeckFormat,
         name: newDeckName,
         cards: [],
         sideboard: [],
@@ -388,9 +391,11 @@ export default function Dashboard() {
                             {deck.name}
                           </h3>
                           <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
-                            <span style={{ fontSize: '12px', color: '#ddd', textTransform: 'uppercase', textShadow: '0 1px 2px rgba(0,0,0,0.8)' }}>
-                              {meta?.format || 'Unknown'}
-                            </span>
+                            {meta?.game !== 'riftbound' && (
+                              <span style={{ fontSize: '12px', color: '#ddd', textTransform: 'uppercase', textShadow: '0 1px 2px rgba(0,0,0,0.8)' }}>
+                                {meta?.format || 'Unknown'}
+                              </span>
+                            )}
                             <span style={{ fontSize: '20px' }}>{gameIcon}</span>
                           </div>
                         </div>
@@ -402,9 +407,11 @@ export default function Dashboard() {
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start', marginBottom: '10px', paddingRight: '40px' }}>
                           <div>
                             <h3 style={{ margin: 0, marginBottom: '5px' }}>{deck.name}</h3>
-                            <span style={{ fontSize: '12px', color: '#666', textTransform: 'uppercase' }}>
-                              {meta?.format || 'Unknown'}
-                            </span>
+                            {meta?.game !== 'riftbound' && (
+                              <span style={{ fontSize: '12px', color: '#666', textTransform: 'uppercase' }}>
+                                {meta?.format || 'Unknown'}
+                              </span>
+                            )}
                           </div>
                           <span style={{ fontSize: '24px' }}>{gameIcon}</span>
                         </div>
@@ -519,11 +526,11 @@ export default function Dashboard() {
           </select>
         </div>
 
-        <div style={{ marginBottom: '25px' }}>
-          <label style={{ display: 'block', marginBottom: '8px', fontSize: '14px', fontWeight: '500' }}>
-            Format
-          </label>
-          {newDeckGame === 'mtg' ? (
+        {newDeckGame === 'mtg' && (
+          <div style={{ marginBottom: '25px' }}>
+            <label style={{ display: 'block', marginBottom: '8px', fontSize: '14px', fontWeight: '500' }}>
+              Format
+            </label>
             <select
               value={newDeckFormat}
               onChange={(e) => setNewDeckFormat(e.target.value)}
@@ -536,18 +543,8 @@ export default function Dashboard() {
               <option value="vintage">Vintage</option>
               <option value="pauper">Pauper</option>
             </select>
-          ) : (
-            <select
-              value={newDeckFormat}
-              onChange={(e) => setNewDeckFormat(e.target.value)}
-              style={{ width: '100%', padding: '12px', fontSize: '14px' }}
-            >
-              <option value="ranked">Ranked</option>
-              <option value="casual">Casual</option>
-              <option value="draft">Draft</option>
-            </select>
-          )}
-        </div>
+          </div>
+        )}
 
         <div style={{ display: 'flex', gap: '10px' }}>
           <button

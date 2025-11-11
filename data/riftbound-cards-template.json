@@ -1,0 +1,43 @@
+[
+  {
+    "id": "card-id-1",
+    "name": "Card Name",
+    "type": "unit",
+    "subtype": "warrior",
+    "cost": 3,
+    "attack": 2,
+    "health": 3,
+    "rarity": "common",
+    "color": "red",
+    "text": "Card ability text",
+    "flavor": "Flavor text",
+    "image_url": "https://example.com/card-image.jpg",
+    "set": "base"
+  },
+  {
+    "id": "rune-example",
+    "name": "Example Rune",
+    "type": "rune",
+    "color": "blue",
+    "text": "Rune effect",
+    "image_url": "https://example.com/rune.jpg",
+    "set": "base"
+  },
+  {
+    "id": "battlefield-example",
+    "name": "Example Battlefield",
+    "type": "battlefield",
+    "text": "Battlefield effect",
+    "image_url": "https://example.com/battlefield.jpg",
+    "set": "base"
+  },
+  {
+    "id": "legend-example",
+    "name": "Example Legend",
+    "type": "legend",
+    "color": "red",
+    "text": "Legend ability",
+    "image_url": "https://example.com/legend.jpg",
+    "set": "base"
+  }
+]
