@@ -1,220 +1,151 @@
-import React, { useMemo } from 'react';
-import { Deck } from '../../types/deck';
-import { MTGCard, RiftboundCard } from '../../types/card';
-import { ColorDistributionChart } from './ColorDistributionChart';
-import { validateDeck, getDeckSizeInfo } from '../../utils/deckValidation';
-import './DeckStatistics.css';
+import React from 'react';
+import { DeckCard } from '../../types/deck';
+import { RiftboundCard } from '../../types/card';
+import { isBasicRune, isBattlefield, isLegend } from '../../utils/riftboundCardTypes';
 
 interface DeckStatisticsProps {
-  deck: Deck;
-  validationWarnings?: string[];
-  availableCards?: (MTGCard | RiftboundCard)[];
+  mainDeckCards: DeckCard[];
+  runeDeck: DeckCard[];
+  battlefields: DeckCard[];
+  availableCards: RiftboundCard[];
 }
 
-export const DeckStatistics: React.FC<DeckStatisticsProps> = ({ deck, validationWarnings = [], availableCards = [] }) => {
-  // Calculate total card count
-  const totalCards = useMemo(() => {
-    return deck.cards.reduce((sum, card) => sum + card.count, 0);
-  }, [deck.cards]);
+interface ZoneStats {
+  current: number;
+  target: number;
+  label: string;
+  color: string;
+  icon: string;
+}
 
-  // Convert deck cards to validation format
-  const cardsForValidation = useMemo(() => {
-    return deck.cards.flatMap(cardEntry => {
-      const card = availableCards.find(c => c.id === cardEntry.id);
-      return Array(cardEntry.count).fill(card || { id: cardEntry.id, name: cardEntry.name });
-    });
-  }, [deck.cards, availableCards]);
-
-  // Run validation
-  const validation = useMemo(() => {
-    const specialSlots: Record<string, any> = {};
-    if (deck.commander) specialSlots.commander = deck.commander;
-    if (deck.legend) specialSlots.legend = deck.legend;
+export const DeckStatistics: React.FC<DeckStatisticsProps> = ({
+  mainDeckCards,
+  runeDeck,
+  battlefields,
+  availableCards,
+}) => {
+  // Calculate main deck count (excluding Basic Runes, Battlefields, and Legends)
+  const mainDeckCount = mainDeckCards.reduce((sum, card) => {
+    const fullCard = availableCards.find(c => c.id === card.id);
+    if (!fullCard) {
+      return sum + card.count;
+    }
     
-    return validateDeck(cardsForValidation, deck.game, deck.format, specialSlots);
-  }, [cardsForValidation, deck.game, deck.format, deck.commander, deck.legend]);
-
-  // Get deck size info
-  const deckSizeInfo = useMemo(() => {
-    return getDeckSizeInfo(deck.game, deck.format);
-  }, [deck.game, deck.format]);
-
-  // Determine format requirements based on game type and format
-  const formatRequirements = useMemo(() => {
-    if (deck.game === 'riftbound') {
-      return {
-        min: 40,
-        max: 40,
-        label: '40 cards',
-      };
-    } else if (deck.game === 'mtg' && deck.format.toLowerCase().includes('commander')) {
-      return {
-        min: 100,
-        max: 100,
-        label: '100 cards',
-      };
-    } else if (deck.game === 'mtg') {
-      return {
-        min: 60,
-        max: null,
-        label: '60+ cards',
-      };
+    if (isBasicRune(fullCard) || isBattlefield(fullCard) || isLegend(fullCard)) {
+      return sum;
     }
-    return {
-      min: 0,
-      max: null,
-      label: 'No limit',
-    };
-  }, [deck.game, deck.format]);
+    
+    return sum + card.count;
+  }, 0);
 
-  // Calculate progress percentage
-  const progress = useMemo(() => {
-    if (formatRequirements.max) {
-      return Math.min((totalCards / formatRequirements.max) * 100, 100);
-    } else if (formatRequirements.min) {
-      return Math.min((totalCards / formatRequirements.min) * 100, 100);
-    }
-    return 0;
-  }, [totalCards, formatRequirements]);
+  // Calculate rune deck count
+  const runeDeckCount = runeDeck.reduce((sum, card) => sum + card.count, 0);
 
-  // Determine status color
-  const statusColor = useMemo(() => {
-    if (formatRequirements.max && totalCards > formatRequirements.max) {
-      return '#f44336'; // Red - over limit
-    } else if (totalCards < formatRequirements.min) {
-      return '#ff9800'; // Orange - under minimum
-    } else if (formatRequirements.max && totalCards === formatRequirements.max) {
-      return '#4caf50'; // Green - exact match
-    } else if (totalCards >= formatRequirements.min) {
-      return '#4caf50'; // Green - within range
-    }
-    return '#9e9e9e'; // Gray - default
-  }, [totalCards, formatRequirements]);
+  // Battlefield count
+  const battlefieldCount = battlefields.length;
+
+  // Define zone statistics
+  const zones: ZoneStats[] = [
+    {
+      current: mainDeckCount,
+      target: 40,
+      label: 'Main Deck',
+      color: '#4caf50',
+      icon: '🃏',
+    },
+    {
+      current: runeDeckCount,
+      target: 12,
+      label: 'Rune Deck',
+      color: '#ff9800',
+      icon: '✨',
+    },
+    {
+      current: battlefieldCount,
+      target: 3,
+      label: 'Battlefields',
+      color: '#2196f3',
+      icon: '🏔️',
+    },
+  ];
+
+  const getStatusColor = (current: number, target: number, baseColor: string): string => {
+    if (current === target) return '#4caf50'; // Green when complete
+    if (current > target) return '#f44336'; // Red when over
+    return baseColor; // Base color when under
+  };
 
   return (
-    <div className="deck-statistics">
-      <div className="deck-statistics-header">
-        <h3>Deck Statistics</h3>
-      </div>
+    <div style={{
+      padding: '16px',
+      background: '#1a1a1a',
+      borderRadius: '8px',
+      border: '1px solid #2a2a2a',
+    }}>
+      <h3 style={{ 
+        margin: '0 0 12px 0', 
+        fontSize: '14px',
+        color: '#fff',
+        fontWeight: '600',
+        textTransform: 'uppercase',
+        letterSpacing: '0.5px',
+      }}>
+        Deck Progress
+      </h3>
 
-      {/* Card Count Display */}
-      <div className="card-count-section">
-        <div className="card-count-display">
-          <span className="card-count-label">Total Cards:</span>
-          <span className="card-count-value" style={{ color: statusColor }}>
-            {totalCards}
-          </span>
-          <span className="card-count-requirement">
-            / {deckSizeInfo}
-          </span>
-        </div>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+        {zones.map((zone) => {
+          const statusColor = getStatusColor(zone.current, zone.target, zone.color);
+          const percentage = Math.min((zone.current / zone.target) * 100, 100);
 
-        {/* Progress Bar */}
-        <div className="progress-bar-container">
-          <div 
-            className="progress-bar-fill" 
-            style={{ 
-              width: `${progress}%`,
-              backgroundColor: statusColor,
-            }}
-          />
-        </div>
+          return (
+            <div key={zone.label}>
+              <div style={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                marginBottom: '5px',
+              }}>
+                <div style={{ 
+                  fontSize: '12px',
+                  color: '#aaa',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '5px',
+                  fontWeight: '500',
+                }}>
+                  <span style={{ fontSize: '14px' }}>{zone.icon}</span>
+                  <span>{zone.label}</span>
+                </div>
+                <div style={{
+                  fontSize: '13px',
+                  fontWeight: 'bold',
+                  color: statusColor,
+                  fontFamily: 'monospace',
+                }}>
+                  {zone.current} / {zone.target}
+                </div>
+              </div>
 
-        {/* Progress percentage text */}
-        <div className="progress-text">
-          {formatRequirements.max ? (
-            <span>{Math.round(progress)}% complete</span>
-          ) : (
-            <span>
-              {totalCards >= formatRequirements.min ? '✓ Minimum met' : `Need ${formatRequirements.min - totalCards} more`}
-            </span>
-          )}
-        </div>
-      </div>
-
-      {/* Validation Results */}
-      {validation.errors.length > 0 && (
-        <div className="validation-warnings" style={{ backgroundColor: '#fee', borderColor: '#fcc' }}>
-          <div className="validation-warnings-header">
-            <span className="warning-icon">❌</span>
-            <span>Validation Errors</span>
-          </div>
-          <ul className="validation-warnings-list">
-            {validation.errors.map((error, index) => (
-              <li key={index} style={{ color: '#c33' }}>{error}</li>
-            ))}
-          </ul>
-        </div>
-      )}
-
-      {validation.warnings.length > 0 && (
-        <div className="validation-warnings" style={{ backgroundColor: '#fff3cd', borderColor: '#ffeaa7' }}>
-          <div className="validation-warnings-header">
-            <span className="warning-icon">⚠️</span>
-            <span>Warnings</span>
-          </div>
-          <ul className="validation-warnings-list">
-            {validation.warnings.map((warning, index) => (
-              <li key={index} style={{ color: '#856404' }}>{warning}</li>
-            ))}
-          </ul>
-        </div>
-      )}
-
-      {validationWarnings.length > 0 && (
-        <div className="validation-warnings">
-          <div className="validation-warnings-header">
-            <span className="warning-icon">⚠️</span>
-            <span>Additional Issues</span>
-          </div>
-          <ul className="validation-warnings-list">
-            {validationWarnings.map((warning, index) => (
-              <li key={index}>{warning}</li>
-            ))}
-          </ul>
-        </div>
-      )}
-
-      {validation.isValid && validation.errors.length === 0 && validationWarnings.length === 0 && (
-        <div className="validation-success" style={{ 
-          padding: '10px', 
-          backgroundColor: '#d4edda', 
-          border: '1px solid #c3e6cb', 
-          borderRadius: '4px',
-          marginTop: '15px',
-          color: '#155724'
-        }}>
-          ✓ Deck is valid
-        </div>
-      )}
-
-      {/* Color Distribution Chart */}
-      {availableCards.length > 0 && deck.cards.length > 0 && (
-        <div className="color-distribution-section">
-          <ColorDistributionChart deck={deck} availableCards={availableCards} />
-        </div>
-      )}
-
-      {/* Additional deck info */}
-      <div className="deck-info-section">
-        {deck.commander && (
-          <div className="deck-info-item">
-            <span className="info-label">Commander:</span>
-            <span className="info-value">{deck.commander.name || 'Selected'}</span>
-          </div>
-        )}
-        {deck.legend && (
-          <div className="deck-info-item">
-            <span className="info-label">Legend:</span>
-            <span className="info-value">{deck.legend.name || 'Selected'}</span>
-          </div>
-        )}
-        {deck.battlefield && (
-          <div className="deck-info-item">
-            <span className="info-label">Battlefield:</span>
-            <span className="info-value">{deck.battlefield.name || 'Selected'}</span>
-          </div>
-        )}
+              {/* Progress bar */}
+              <div style={{
+                width: '100%',
+                height: '6px',
+                background: '#2a2a2a',
+                borderRadius: '3px',
+                overflow: 'hidden',
+              }}>
+                <div style={{
+                  width: `${percentage}%`,
+                  height: '100%',
+                  background: statusColor,
+                  transition: 'width 0.3s ease, background-color 0.3s ease',
+                  borderRadius: '3px',
+                }} />
+              </div>
+            </div>
+          );
+        })}
       </div>
     </div>
   );

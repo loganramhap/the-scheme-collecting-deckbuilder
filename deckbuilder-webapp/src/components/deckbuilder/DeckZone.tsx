@@ -2,13 +2,14 @@ import React from 'react';
 import { useDrop } from 'react-dnd';
 import { Card, RiftboundCard, MTGCard } from '../../types/card';
 import { DND_ITEM_TYPES, DragItem } from '../../types/dnd';
+import { isCardLegalForDomain } from '../../utils/domainFiltering';
 import './DeckZone.css';
 
 interface DeckZoneProps {
   onCardDrop: (card: Card) => void;
   children: React.ReactNode;
   gameType: 'mtg' | 'riftbound';
-  activeRuneColors?: string[];
+  legendDomain?: string | null;
   activeColorIdentity?: string[];
 }
 
@@ -16,7 +17,7 @@ export const DeckZone: React.FC<DeckZoneProps> = ({
   onCardDrop,
   children,
   gameType,
-  activeRuneColors = [],
+  legendDomain = null,
   activeColorIdentity = [],
 }) => {
   const [{ isOver, canDrop }, drop] = useDrop<DragItem, void, { isOver: boolean; canDrop: boolean }>(() => ({
@@ -33,13 +34,8 @@ export const DeckZone: React.FC<DeckZoneProps> = ({
           return false;
         }
         
-        // Check rune color restrictions
-        if (activeRuneColors.length > 0 && riftboundCard.runeColors) {
-          const hasMatchingColor = riftboundCard.runeColors.some(color => 
-            activeRuneColors.includes(color)
-          );
-          return hasMatchingColor;
-        }
+        // Check domain restrictions
+        return isCardLegalForDomain(riftboundCard, legendDomain);
       } else if (gameType === 'mtg') {
         const mtgCard = card as MTGCard;
         const typeLine = mtgCard.type_line?.toLowerCase() || '';
@@ -68,7 +64,7 @@ export const DeckZone: React.FC<DeckZoneProps> = ({
       isOver: monitor.isOver(),
       canDrop: monitor.canDrop(),
     }),
-  }), [gameType, activeRuneColors, activeColorIdentity, onCardDrop]);
+  }), [gameType, legendDomain, activeColorIdentity, onCardDrop]);
 
   const isActive = isOver && canDrop;
   const isInvalid = isOver && !canDrop;

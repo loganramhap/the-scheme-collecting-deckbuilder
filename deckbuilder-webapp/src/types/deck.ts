@@ -29,7 +29,10 @@ export interface Deck {
   
   // Riftbound-specific
   legend?: DeckCard;
-  battlefield?: DeckCard;
+  battlefield?: DeckCard; // Legacy field - use battlefields instead
+  battlefields?: DeckCard[];
+  runeDeck?: DeckCard[];
+  legendDomain?: string;
   runeColors?: string[];
   
   // Legacy field

@@ -14,7 +14,9 @@ export { QuickAddControls } from './QuickAddControls';
 // Riftbound-specific components
 export { LegendSlot } from './LegendSlot';
 export { BattlefieldSlot } from './BattlefieldSlot';
+export { BattlefieldSelector } from './BattlefieldSelector';
 export { RuneIndicator } from './RuneIndicator';
+export { RuneDeckZone } from './RuneDeckZone';
 
 // MTG-specific components
 export { CommanderSlot } from './CommanderSlot';

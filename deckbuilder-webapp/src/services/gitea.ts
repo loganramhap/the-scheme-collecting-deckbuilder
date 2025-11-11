@@ -391,6 +391,99 @@ class GiteaService {
       isAutoSave: false,
     };
   }
+
+  /**
+   * Update a deck file with an optional commit message
+   * @param owner Repository owner
+   * @param repo Repository name
+   * @param deck Deck object to save
+   * @param commitMessage Optional commit message (defaults to 'Update deck')
+   * @param deckPath Path to deck file (defaults to 'deck.json')
+   * @param branch Branch to commit to (defaults to 'main')
+   * @throws Error if the update fails
+   */
+  async updateDeck(
+    owner: string,
+    repo: string,
+    deck: Deck,
+    commitMessage?: string,
+    deckPath: string = 'deck.json',
+    branch: string = 'main'
+  ): Promise<void> {
+    try {
+      // Get current file to retrieve SHA
+      const currentFile = await this.getFileContent(owner, repo, deckPath, branch);
+      
+      // Use provided commit message or default
+      const message = commitMessage || 'Update deck';
+      
+      // Serialize deck to JSON
+      const content = JSON.stringify(deck, null, 2);
+      
+      // Update file with commit
+      await this.createOrUpdateFile(
+        owner,
+        repo,
+        deckPath,
+        content,
+        message,
+        branch,
+        currentFile.sha
+      );
+    } catch (error) {
+      // Handle errors gracefully with context
+      if (axios.isAxiosError(error)) {
+        const status = error.response?.status;
+        const message = error.response?.data?.message || error.message;
+        
+        if (status === 404) {
+          throw new Error(`Deck file not found: ${deckPath}`);
+        } else if (status === 409) {
+          throw new Error('Conflict: The deck file was modified by another process. Please refresh and try again.');
+        } else if (status === 401 || status === 403) {
+          throw new Error('Authentication failed. Please sign in again.');
+        } else {
+          throw new Error(`Failed to update deck: ${message}`);
+        }
+      }
+      
+      // Re-throw non-Axios errors
+      throw error;
+    }
+  }
+
+  /**
+   * Get a deck from a repository
+   * @param owner Repository owner
+   * @param repo Repository name
+   * @param deckPath Path to deck file (defaults to 'deck.json')
+   * @param ref Git reference (branch, tag, or commit SHA)
+   * @returns Deck object
+   */
+  async getDeck(
+    owner: string,
+    repo: string,
+    deckPath: string = 'deck.json',
+    ref: string = 'main'
+  ): Promise<Deck> {
+    try {
+      const fileContent = await this.getFileContent(owner, repo, deckPath, ref);
+      const content = atob(fileContent.content);
+      return JSON.parse(content) as Deck;
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        const status = error.response?.status;
+        
+        if (status === 404) {
+          throw new Error(`Deck file not found: ${deckPath}`);
+        } else if (status === 401 || status === 403) {
+          throw new Error('Authentication failed. Please sign in again.');
+        }
+      }
+      
+      throw error;
+    }
+  }
 }
 
 export const giteaService = new GiteaService();

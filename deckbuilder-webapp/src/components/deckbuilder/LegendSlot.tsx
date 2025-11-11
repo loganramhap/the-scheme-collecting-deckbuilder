@@ -56,7 +56,27 @@ export const LegendSlot: React.FC<LegendSlotProps> = ({
 
   return (
     <div className="legend-slot">
-      <h3 style={{ marginTop: 0, marginBottom: '10px', fontSize: '16px' }}>Legend</h3>
+      {/* Zone Header with Icon and Label */}
+      <div style={{
+        display: 'flex',
+        alignItems: 'center',
+        gap: '8px',
+        marginBottom: '10px',
+        paddingBottom: '8px',
+        borderBottom: '2px solid #9c27b0',
+      }}>
+        <span style={{ fontSize: '20px' }}>👑</span>
+        <h3 style={{ 
+          margin: 0, 
+          fontSize: '16px',
+          fontWeight: '700',
+          textTransform: 'uppercase',
+          letterSpacing: '0.5px',
+          color: '#9c27b0',
+        }}>
+          Legend
+        </h3>
+      </div>
       
       <div
         ref={drop}
@@ -64,8 +84,8 @@ export const LegendSlot: React.FC<LegendSlotProps> = ({
         style={{
           width: '100%',
           aspectRatio: '5/7',
-          background: legend ? 'transparent' : '#2a2a2a',
-          border: `2px dashed ${isActive ? '#4caf50' : isInvalid ? '#f44336' : '#555'}`,
+          background: legend ? 'transparent' : 'rgba(156, 39, 176, 0.05)',
+          border: `2px ${legend ? 'solid' : 'dashed'} ${isActive ? '#4caf50' : isInvalid ? '#f44336' : legend ? '#9c27b0' : 'rgba(156, 39, 176, 0.3)'}`,
           borderRadius: '8px',
           display: 'flex',
           alignItems: 'center',
@@ -76,10 +96,10 @@ export const LegendSlot: React.FC<LegendSlotProps> = ({
           backgroundColor: isActive ? 'rgba(76, 175, 80, 0.1)' : isInvalid ? 'rgba(244, 67, 54, 0.1)' : undefined,
         }}
         onMouseEnter={(e) => {
-          if (!legend && !isOver) e.currentTarget.style.borderColor = '#888';
+          if (!legend && !isOver) e.currentTarget.style.borderColor = 'rgba(156, 39, 176, 0.6)';
         }}
         onMouseLeave={(e) => {
-          if (!legend && !isOver) e.currentTarget.style.borderColor = '#555';
+          if (!legend && !isOver) e.currentTarget.style.borderColor = 'rgba(156, 39, 176, 0.3)';
         }}
       >
         {legend ? (
@@ -91,9 +111,9 @@ export const LegendSlot: React.FC<LegendSlotProps> = ({
             } as RiftboundCard}
           />
         ) : (
-          <div style={{ textAlign: 'center', color: '#888', padding: '10px' }}>
+          <div style={{ textAlign: 'center', color: '#9c27b0', padding: '10px' }}>
             <div style={{ fontSize: '32px', marginBottom: '5px' }}>👑</div>
-            <div style={{ fontSize: '12px' }}>Click to select Legend</div>
+            <div style={{ fontSize: '12px', fontWeight: '500' }}>Click to select</div>
           </div>
         )}
       </div>

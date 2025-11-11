@@ -1,16 +1,17 @@
 import { RiftboundCard } from '../types/card';
+import { shouldUseRiotAPI, RIOT_API_KEY } from '../config/riot';
+import { RiftboundCardService } from './RiotCardService';
 
 // Cache for loaded cards
 let cardsCache: RiftboundCard[] | null = null;
 
-/**
- * Load Riftbound cards from the data file
- */
-export async function loadRiftboundCards(): Promise<RiftboundCard[]> {
-  if (cardsCache) {
-    return cardsCache;
-  }
+// Riot API service instance (lazy initialized)
+let riotCardService: RiftboundCardService | null = null;
 
+/**
+ * Load Riftbound cards from JSON file (fallback method)
+ */
+async function loadCardsFromJSON(): Promise<RiftboundCard[]> {
   try {
     // Try to load from local data file
     const response = await fetch('/data/riftbound-cards.json');
@@ -21,12 +22,63 @@ export async function loadRiftboundCards(): Promise<RiftboundCard[]> {
     }
     
     const data = await response.json();
-    cardsCache = data;
     return data;
   } catch (error) {
-    console.error('Failed to load Riftbound cards:', error);
+    console.error('Failed to load Riftbound cards from JSON:', error);
     return [];
   }
+}
+
+/**
+ * Load Riftbound cards from Riot API or JSON file
+ * Implements automatic fallback from API to JSON on error
+ * @param forceRefresh - If true, bypass cache and fetch fresh data
+ * @param onProgress - Optional callback for loading progress updates
+ */
+export async function loadRiftboundCards(
+  forceRefresh = false,
+  onProgress?: (message: string) => void
+): Promise<RiftboundCard[]> {
+  // Return cached cards if available and not forcing refresh
+  if (cardsCache && !forceRefresh) {
+    onProgress?.('Using cached card data');
+    return cardsCache;
+  }
+
+  // Try Riot API first if feature flag is enabled
+  if (shouldUseRiotAPI()) {
+    try {
+      onProgress?.('Connecting to Riot API...');
+      console.log('[Card Loading] Attempting to load from Riot API...');
+      
+      // Initialize Riot API service if needed
+      if (!riotCardService && RIOT_API_KEY) {
+        riotCardService = new RiftboundCardService(RIOT_API_KEY);
+      }
+      
+      if (riotCardService) {
+        onProgress?.('Fetching card data from Riot API...');
+        const cards = await riotCardService.getCards(forceRefresh);
+        console.log(`[Card Loading] Successfully loaded ${cards.length} cards from Riot API`);
+        onProgress?.(`Loaded ${cards.length} cards from Riot API`);
+        cardsCache = cards;
+        return cards;
+      }
+    } catch (error) {
+      console.error('[Card Loading] Failed to load from Riot API, falling back to JSON:', error);
+      onProgress?.('API failed, loading from local database...');
+      // Continue to fallback
+    }
+  }
+
+  // Fallback to JSON file
+  onProgress?.('Loading from local card database...');
+  console.log('[Card Loading] Loading from JSON file...');
+  const cards = await loadCardsFromJSON();
+  console.log(`[Card Loading] Loaded ${cards.length} cards from JSON file`);
+  onProgress?.(`Loaded ${cards.length} cards from local database`);
+  cardsCache = cards;
+  return cards;
 }
 
 /**
@@ -147,4 +199,26 @@ export function getFilterOptions(cards: RiftboundCard[]) {
  */
 export function clearCache(): void {
   cardsCache = null;
+}
+
+/**
+ * Get the Riot API service instance
+ * @returns RiotCardService instance or null if not initialized
+ */
+export function getRiotCardService(): RiftboundCardService | null {
+  return riotCardService;
+}
+
+/**
+ * Check if cards are currently loaded from API or JSON
+ * @returns 'api' if using Riot API, 'json' if using JSON file, 'none' if no cards loaded
+ */
+export function getCardSource(): 'api' | 'json' | 'none' {
+  if (!cardsCache) return 'none';
+  
+  if (shouldUseRiotAPI() && riotCardService?.hasCachedData()) {
+    return 'api';
+  }
+  
+  return 'json';
 }

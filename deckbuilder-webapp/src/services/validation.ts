@@ -71,22 +71,26 @@ class ValidationService {
       warnings.push('No Battlefield selected. A Battlefield is recommended for Riftbound decks.');
     }
 
-    // Validate rune color legality
-    const activeRuneColors = deck.runeColors || [];
-    
-    if (activeRuneColors.length > 0) {
-      for (const deckCard of deck.cards) {
-        const card = cardService.getRiftboundCard(deckCard.id);
-        if (card && card.runeColors && card.runeColors.length > 0) {
-          // Check if card has at least one matching rune color
-          const hasMatchingColor = card.runeColors.some(color => 
-            activeRuneColors.includes(color)
-          );
-          
-          if (!hasMatchingColor) {
-            errors.push(
-              `${card.name} has rune colors [${card.runeColors.join(', ')}] which don't match your Legend's colors [${activeRuneColors.join(', ')}]`
-            );
+    // Validate domain legality
+    if (deck.legend) {
+      const legendCard = cardService.getRiftboundCard(deck.legend.id);
+      const legendDomain = legendCard?.domain;
+      
+      if (legendDomain) {
+        for (const deckCard of deck.cards) {
+          const card = cardService.getRiftboundCard(deckCard.id);
+          if (card && card.domain) {
+            // Colorless cards are always legal
+            if (card.domain === 'Colorless') {
+              continue;
+            }
+            
+            // Card must match legend's domain
+            if (card.domain !== legendDomain) {
+              errors.push(
+                `${card.name} has domain [${card.domain}] which doesn't match your Legend's domain [${legendDomain}]`
+              );
+            }
           }
         }
       }

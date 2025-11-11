@@ -1,27 +1,25 @@
 import React from 'react';
 
 interface RuneIndicatorProps {
-  activeRuneColors: string[];
+  legendDomain: string | null;
 }
 
-// Map rune color names to visual colors
-const RUNE_COLOR_MAP: Record<string, string> = {
-  'red': '#e74c3c',
-  'blue': '#3498db',
-  'green': '#2ecc71',
-  'black': '#34495e',
-  'white': '#ecf0f1',
-  'purple': '#9b59b6',
-  'yellow': '#f1c40f',
-  'orange': '#e67e22',
+// Map domain names to visual colors
+const DOMAIN_COLOR_MAP: Record<string, string> = {
+  'Fury': '#e74c3c',
+  'Calm': '#3498db',
+  'Mind': '#9b59b6',
+  'Body': '#2ecc71',
+  'Order': '#f1c40f',
+  'Colorless': '#95a5a6',
 };
 
 export const RuneIndicator: React.FC<RuneIndicatorProps> = ({
-  activeRuneColors,
+  legendDomain,
 }) => {
   return (
     <div className="rune-indicator">
-      <h3 style={{ marginTop: 0, marginBottom: '10px', fontSize: '16px' }}>Rune Colors</h3>
+      <h3 style={{ marginTop: 0, marginBottom: '10px', fontSize: '16px' }}>Legend Domain</h3>
       
       <div style={{
         padding: '20px',
@@ -33,7 +31,7 @@ export const RuneIndicator: React.FC<RuneIndicatorProps> = ({
         justifyContent: 'center',
         alignItems: 'center',
       }}>
-        {activeRuneColors.length > 0 ? (
+        {legendDomain ? (
           <>
             <div style={{ 
               display: 'flex', 
@@ -42,36 +40,35 @@ export const RuneIndicator: React.FC<RuneIndicatorProps> = ({
               justifyContent: 'center',
               marginBottom: '15px'
             }}>
-              {activeRuneColors.map(color => (
-                <div
-                  key={color}
-                  style={{
-                    width: '50px',
-                    height: '50px',
-                    borderRadius: '50%',
-                    background: RUNE_COLOR_MAP[color.toLowerCase()] || '#888',
-                    border: '3px solid #fff',
-                    boxShadow: '0 2px 8px rgba(0,0,0,0.3)',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    fontWeight: 'bold',
-                    fontSize: '20px',
-                    color: color.toLowerCase() === 'white' ? '#000' : '#fff',
-                  }}
-                  title={color}
-                >
-                  {color.charAt(0).toUpperCase()}
-                </div>
-              ))}
+              <div
+                style={{
+                  width: '60px',
+                  height: '60px',
+                  borderRadius: '50%',
+                  background: DOMAIN_COLOR_MAP[legendDomain] || '#888',
+                  border: '3px solid #fff',
+                  boxShadow: '0 2px 8px rgba(0,0,0,0.3)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  fontWeight: 'bold',
+                  fontSize: '24px',
+                  color: '#fff',
+                }}
+                title={legendDomain}
+              >
+                {legendDomain.charAt(0).toUpperCase()}
+              </div>
             </div>
             
             <div style={{ 
-              fontSize: '14px', 
-              color: '#aaa',
-              textAlign: 'center'
+              fontSize: '16px', 
+              color: '#fff',
+              textAlign: 'center',
+              fontWeight: 'bold',
+              marginBottom: '5px'
             }}>
-              {activeRuneColors.length} {activeRuneColors.length === 1 ? 'color' : 'colors'} active
+              {legendDomain}
             </div>
             
             <div style={{ 
@@ -80,15 +77,15 @@ export const RuneIndicator: React.FC<RuneIndicatorProps> = ({
               marginTop: '10px',
               textAlign: 'center'
             }}>
-              Only cards matching these rune colors can be added to your deck
+              Only {legendDomain} and Colorless cards can be added to your deck
             </div>
           </>
         ) : (
           <div style={{ textAlign: 'center', color: '#888' }}>
             <div style={{ fontSize: '32px', marginBottom: '10px' }}>✨</div>
-            <div style={{ fontSize: '14px' }}>No rune colors active</div>
+            <div style={{ fontSize: '14px' }}>No domain active</div>
             <div style={{ fontSize: '12px', marginTop: '5px' }}>
-              Select a Legend to activate rune colors
+              Select a Legend to activate a domain
             </div>
           </div>
         )}

@@ -16,6 +16,7 @@ import { KeyboardShortcutsHelp } from '../components/deckbuilder/KeyboardShortcu
 import { HistoryPanel } from '../components/versioning/HistoryPanel';
 import { BranchSelector } from '../components/versioning/BranchSelector';
 import { loadRiftboundCards } from '../services/riftboundCards';
+import { migrateRiftboundDeck, needsMigration } from '../utils/deckMigration';
 import type { Deck } from '../types/deck';
 import type { MTGCard, RiftboundCard } from '../types/card';
 
@@ -24,6 +25,7 @@ export default function DeckEditor() {
   const navigate = useNavigate();
   const { currentDeck, setDeck, setRestoredDeck, isDirty, markClean } = useDeckStore();
   const [loading, setLoading] = useState(true);
+  const [loadingMessage, setLoadingMessage] = useState('Loading deck...');
   const [error, setError] = useState<string | null>(null);
   const [availableCards, setAvailableCards] = useState<(MTGCard | RiftboundCard)[]>([]);
   const [isHistoryPanelOpen, setIsHistoryPanelOpen] = useState(false);
@@ -60,10 +62,11 @@ export default function DeckEditor() {
     }
   );
 
-  const loadDeck = async () => {
+  const loadDeck = async (forceRefreshCards = false) => {
     if (!owner || !repo || !path) return;
 
     setLoading(true);
+    setLoadingMessage('Loading deck...');
     setError(null);
 
     try {
@@ -74,20 +77,57 @@ export default function DeckEditor() {
 
       const fileContent = await giteaService.getFileContent(owner, repo, path, branch);
       const content = atob(fileContent.content);
-      const deck: Deck = JSON.parse(content);
-      setDeck(deck);
-      markClean(); // Mark as clean since we just loaded from the branch
+      let deck: Deck = JSON.parse(content);
       
       // Load available cards based on game type
       if (deck.game === 'mtg') {
         // For MTG, we'll load cards on-demand through search
         // For now, set empty array - cards will be loaded via search
         setAvailableCards([]);
+        setDeck(deck);
+        markClean(); // Mark as clean since we just loaded from the branch
       } else if (deck.game === 'riftbound') {
-        // Load Riftbound cards from JSON file
-        const riftboundCards = await loadRiftboundCards();
+        // Load Riftbound cards (from API or JSON file with automatic fallback)
+        setLoadingMessage(forceRefreshCards ? 'Refreshing card data...' : 'Loading card database...');
+        const riftboundCards = await loadRiftboundCards(
+          forceRefreshCards,
+          (message) => setLoadingMessage(message)
+        );
         console.log(`Loaded ${riftboundCards.length} Riftbound cards`);
         setAvailableCards(riftboundCards);
+        
+        // Detect old deck format and apply migration if needed
+        if (needsMigration(deck)) {
+          console.log('Old deck format detected, applying migration...');
+          const migrationResult = migrateRiftboundDeck(deck, riftboundCards);
+          
+          if (migrationResult.migrated) {
+            console.log('Deck migration completed:', migrationResult.changes);
+            deck = migrationResult.deck;
+            
+            // Save migrated deck in new format
+            try {
+              const deckJson = JSON.stringify(deck, null, 2);
+              await giteaService.createOrUpdateFile(
+                owner,
+                repo,
+                path,
+                deckJson,
+                'Auto-migration: Updated deck to new format with separate rune deck and battlefields',
+                branch,
+                fileContent.sha
+              );
+              console.log('Migrated deck saved successfully');
+              showToast('Deck migrated to new format', 'success');
+            } catch (saveError) {
+              console.error('Failed to save migrated deck:', saveError);
+              showToast('Deck migrated but failed to save. Changes will be saved on next manual save.', 'info');
+            }
+          }
+        }
+        
+        setDeck(deck);
+        markClean(); // Mark as clean since we just loaded from the branch
       }
     } catch (err) {
       console.error('Failed to load deck:', err);
@@ -192,7 +232,7 @@ export default function DeckEditor() {
             animation: 'spin 1s linear infinite',
             margin: '0 auto 20px'
           }}></div>
-          <p>Loading deck...</p>
+          <p>{loadingMessage}</p>
         </div>
       </div>
     );

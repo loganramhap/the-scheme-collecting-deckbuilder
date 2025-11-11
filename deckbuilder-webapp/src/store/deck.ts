@@ -12,10 +12,15 @@ interface DeckState {
   removeCard: (cardId: string) => void;
   updateCardCount: (cardId: string, count: number) => void;
   setLegend: (card: DeckCard | null) => void;
-  setBattlefield: (card: DeckCard | null) => void;
+  setBattlefield: (card: DeckCard | null) => void; // Legacy - use addBattlefield/removeBattlefield
+  addBattlefield: (card: DeckCard) => void;
+  removeBattlefield: (index: number) => void;
   setCommander: (card: DeckCard | null) => void;
   updateRuneColors: (colors: string[]) => void;
   updateColorIdentity: (colors: string[]) => void;
+  addRune: (card: DeckCard) => void;
+  removeRune: (cardId: string) => void;
+  updateRuneCount: (cardId: string, count: number) => void;
   clearDeck: () => void;
   markClean: () => void;
 }
@@ -118,6 +123,47 @@ export const useDeckStore = create<DeckState>((set) => ({
       };
     }),
 
+  addBattlefield: (card) =>
+    set((state) => {
+      if (!state.currentDeck) return state;
+      
+      const battlefields = state.currentDeck.battlefields || [];
+      
+      // Enforce 3-battlefield limit
+      if (battlefields.length >= 3) {
+        console.warn('Cannot add more than 3 battlefields');
+        return state;
+      }
+      
+      return {
+        currentDeck: {
+          ...state.currentDeck,
+          battlefields: [...battlefields, card],
+        },
+        isDirty: true,
+      };
+    }),
+
+  removeBattlefield: (index) =>
+    set((state) => {
+      if (!state.currentDeck) return state;
+      
+      const battlefields = state.currentDeck.battlefields || [];
+      
+      if (index < 0 || index >= battlefields.length) {
+        console.warn('Invalid battlefield index');
+        return state;
+      }
+      
+      return {
+        currentDeck: {
+          ...state.currentDeck,
+          battlefields: battlefields.filter((_, i) => i !== index),
+        },
+        isDirty: true,
+      };
+    }),
+
   setCommander: (card) =>
     set((state) => {
       if (!state.currentDeck) return state;
@@ -149,6 +195,76 @@ export const useDeckStore = create<DeckState>((set) => ({
         currentDeck: {
           ...state.currentDeck,
           colorIdentity: colors,
+        },
+        isDirty: true,
+      };
+    }),
+
+  addRune: (card) =>
+    set((state) => {
+      if (!state.currentDeck) return state;
+      
+      const runeDeck = state.currentDeck.runeDeck || [];
+      const existingRune = runeDeck.find(c => c.id === card.id);
+      
+      if (existingRune) {
+        return {
+          currentDeck: {
+            ...state.currentDeck,
+            runeDeck: runeDeck.map(c =>
+              c.id === card.id ? { ...c, count: c.count + card.count } : c
+            ),
+          },
+          isDirty: true,
+        };
+      }
+      
+      return {
+        currentDeck: {
+          ...state.currentDeck,
+          runeDeck: [...runeDeck, card],
+        },
+        isDirty: true,
+      };
+    }),
+
+  removeRune: (cardId) =>
+    set((state) => {
+      if (!state.currentDeck) return state;
+      
+      const runeDeck = state.currentDeck.runeDeck || [];
+      
+      return {
+        currentDeck: {
+          ...state.currentDeck,
+          runeDeck: runeDeck.filter(c => c.id !== cardId),
+        },
+        isDirty: true,
+      };
+    }),
+
+  updateRuneCount: (cardId, count) =>
+    set((state) => {
+      if (!state.currentDeck) return state;
+      
+      const runeDeck = state.currentDeck.runeDeck || [];
+      
+      if (count <= 0) {
+        return {
+          currentDeck: {
+            ...state.currentDeck,
+            runeDeck: runeDeck.filter(c => c.id !== cardId),
+          },
+          isDirty: true,
+        };
+      }
+      
+      return {
+        currentDeck: {
+          ...state.currentDeck,
+          runeDeck: runeDeck.map(c =>
+            c.id === cardId ? { ...c, count } : c
+          ),
         },
         isDirty: true,
       };

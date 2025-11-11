@@ -1,4 +1,7 @@
 // Deck validation rules for different games and formats
+import { Deck, DeckCard } from '../types/deck';
+import { RiftboundCard } from '../types/card';
+import { isBasicRune, isBattlefield, isLegend } from './riftboundCardTypes';
 
 export interface ValidationResult {
   isValid: boolean;
@@ -191,4 +194,101 @@ export function getDeckSizeInfo(game: string, format: string): string {
   }
   
   return `At least ${rules.minSize} cards`;
+}
+
+/**
+ * Comprehensive validation for Riftbound decks
+ * Validates all deck requirements according to Riftbound rules
+ */
+export function validateRiftboundDeckComprehensive(
+  deck: Deck,
+  availableCards: RiftboundCard[]
+): ValidationResult {
+  const errors: string[] = [];
+  const warnings: string[] = [];
+
+  // 13.1: Validate exactly 1 Legend selected
+  if (!deck.legend) {
+    errors.push('No Legend selected (exactly 1 required)');
+  }
+
+  // 13.2: Validate exactly 3 Battlefields selected
+  const battlefieldCount = (deck.battlefields || []).length;
+  if (battlefieldCount === 0) {
+    errors.push('No Battlefields selected (exactly 3 required)');
+  } else if (battlefieldCount < 3) {
+    errors.push(`Need ${3 - battlefieldCount} more Battlefield${3 - battlefieldCount > 1 ? 's' : ''} (exactly 3 required)`);
+  } else if (battlefieldCount > 3) {
+    errors.push(`Remove ${battlefieldCount - 3} Battlefield${battlefieldCount - 3 > 1 ? 's' : ''} (exactly 3 required)`);
+  }
+
+  // 13.3: Validate exactly 12 Runes selected
+  const runeCount = (deck.runeDeck || []).reduce((sum, card) => sum + card.count, 0);
+  if (runeCount === 0) {
+    errors.push('No Runes selected (exactly 12 required)');
+  } else if (runeCount < 12) {
+    errors.push(`Need ${12 - runeCount} more Rune${12 - runeCount > 1 ? 's' : ''} (exactly 12 required)`);
+  } else if (runeCount > 12) {
+    errors.push(`Remove ${runeCount - 12} Rune${runeCount - 12 > 1 ? 's' : ''} (exactly 12 required)`);
+  }
+
+  // 13.4: Validate exactly 40 main deck cards
+  // Calculate main deck count (excluding Basic Runes, Battlefields, and Legends)
+  const mainDeckCount = deck.cards.reduce((sum, card) => {
+    const fullCard = availableCards.find(c => c.id === card.id);
+    if (!fullCard) {
+      // If card not found, include it in count
+      return sum + card.count;
+    }
+    
+    // Exclude Basic Runes, Battlefields, and Legends from main deck count
+    if (isBasicRune(fullCard) || isBattlefield(fullCard) || isLegend(fullCard)) {
+      return sum;
+    }
+    
+    return sum + card.count;
+  }, 0);
+
+  if (mainDeckCount === 0) {
+    errors.push('No main deck cards selected (exactly 40 required)');
+  } else if (mainDeckCount < 40) {
+    errors.push(`Need ${40 - mainDeckCount} more main deck card${40 - mainDeckCount > 1 ? 's' : ''} (exactly 40 required)`);
+  } else if (mainDeckCount > 40) {
+    errors.push(`Remove ${mainDeckCount - 40} main deck card${mainDeckCount - 40 > 1 ? 's' : ''} (exactly 40 required)`);
+  }
+
+  // Additional validation: Check for card count limits (max 4 of any card in main deck)
+  const cardCounts = new Map<string, number>();
+  deck.cards.forEach(card => {
+    const fullCard = availableCards.find(c => c.id === card.id);
+    if (fullCard && !isBasicRune(fullCard) && !isBattlefield(fullCard) && !isLegend(fullCard)) {
+      const currentCount = cardCounts.get(card.name || card.id) || 0;
+      cardCounts.set(card.name || card.id, currentCount + card.count);
+    }
+  });
+
+  for (const [cardName, count] of cardCounts) {
+    if (count > 4) {
+      warnings.push(`${cardName} appears ${count} times (maximum 4 copies recommended)`);
+    }
+  }
+
+  // Check rune deck for duplicates (each rune should appear max 4 times)
+  const runeCounts = new Map<string, number>();
+  (deck.runeDeck || []).forEach(card => {
+    const currentCount = runeCounts.get(card.name || card.id) || 0;
+    runeCounts.set(card.name || card.id, currentCount + card.count);
+  });
+
+  for (const [cardName, count] of runeCounts) {
+    if (count > 4) {
+      warnings.push(`${cardName} appears ${count} times in Rune Deck (maximum 4 copies recommended)`);
+    }
+  }
+
+  return {
+    isValid: errors.length === 0,
+    errors,
+    warnings,
+  };
 }

@@ -19,6 +19,7 @@ export default function Dashboard() {
   const [deletingDeck, setDeletingDeck] = useState<string | null>(null);
   const [editingTags, setEditingTags] = useState<string | null>(null);
   const [newTag, setNewTag] = useState('');
+  const [tagFeedback, setTagFeedback] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
 
   useEffect(() => {
     const loadDecks = async () => {
@@ -157,28 +158,28 @@ export default function Dashboard() {
 
     try {
       // Load current deck
-      const fileContent = await giteaService.getFileContent(user!.username, deckName, 'deck.json');
-      const content = atob(fileContent.content);
-      const deck = JSON.parse(content);
+      const deck = await giteaService.getDeck(user!.username, deckName);
 
-      // Add tag
+      // Add tag (prevent duplicates)
       if (!deck.metadata.tags) {
         deck.metadata.tags = [];
       }
-      if (!deck.metadata.tags.includes(tag.trim())) {
-        deck.metadata.tags.push(tag.trim());
+      
+      const trimmedTag = tag.trim();
+      if (deck.metadata.tags.includes(trimmedTag)) {
+        setTagFeedback({ message: `Tag "${trimmedTag}" already exists`, type: 'error' });
+        setTimeout(() => setTagFeedback(null), 3000);
+        return;
       }
+      
+      deck.metadata.tags.push(trimmedTag);
 
-      // Save back
-      const newContent = JSON.stringify(deck, null, 2);
-      await giteaService.createOrUpdateFile(
+      // Save with commit message
+      await giteaService.updateDeck(
         user!.username,
         deckName,
-        'deck.json',
-        newContent,
-        `Add tag: ${tag}`,
-        'main',
-        fileContent.sha
+        deck,
+        `Add tag: ${trimmedTag}`
       );
 
       // Update local state
@@ -191,37 +192,37 @@ export default function Dashboard() {
       });
 
       setNewTag('');
+      
+      // Show success feedback
+      setTagFeedback({ message: `Tag "${trimmedTag}" added!`, type: 'success' });
+      setTimeout(() => setTagFeedback(null), 3000);
     } catch (error) {
       console.error('Failed to add tag:', error);
-      alert('Failed to add tag');
+      const errorMessage = error instanceof Error ? error.message : 'Failed to add tag';
+      setTagFeedback({ message: errorMessage, type: 'error' });
+      setTimeout(() => setTagFeedback(null), 3000);
     }
   };
 
   const handleRemoveTag = async (deckName: string, tagToRemove: string) => {
     try {
       // Load current deck
-      const fileContent = await giteaService.getFileContent(user!.username, deckName, 'deck.json');
-      const content = atob(fileContent.content);
-      const deck = JSON.parse(content);
+      const deck = await giteaService.getDeck(user!.username, deckName);
 
       // Remove tag
       if (deck.metadata.tags) {
         deck.metadata.tags = deck.metadata.tags.filter((t: string) => t !== tagToRemove);
       }
 
-      // Save back
-      const newContent = JSON.stringify(deck, null, 2);
-      await giteaService.createOrUpdateFile(
+      // Save with commit message
+      await giteaService.updateDeck(
         user!.username,
         deckName,
-        'deck.json',
-        newContent,
-        `Remove tag: ${tagToRemove}`,
-        'main',
-        fileContent.sha
+        deck,
+        `Remove tag: ${tagToRemove}`
       );
 
-      // Update local state
+      // Update local state after removal
       setDeckMetadata({
         ...deckMetadata,
         [deckName]: {
@@ -229,9 +230,15 @@ export default function Dashboard() {
           tags: deck.metadata.tags,
         },
       });
+
+      // Show success feedback when tag is removed
+      setTagFeedback({ message: `Tag "${tagToRemove}" removed!`, type: 'success' });
+      setTimeout(() => setTagFeedback(null), 3000);
     } catch (error) {
       console.error('Failed to remove tag:', error);
-      alert('Failed to remove tag');
+      const errorMessage = error instanceof Error ? error.message : 'Failed to remove tag';
+      setTagFeedback({ message: errorMessage, type: 'error' });
+      setTimeout(() => setTagFeedback(null), 3000);
     }
   };
 
@@ -417,37 +424,54 @@ export default function Dashboard() {
                         </div>
                       )}
 
-                    <div style={{ marginBottom: '10px', minHeight: '24px' }}>
-                      <div style={{ display: 'flex', gap: '5px', flexWrap: 'wrap', alignItems: 'center' }}>
-                        {meta?.tags && meta.tags.map((tag, i) => (
+                    <div style={{ marginBottom: '12px', minHeight: '28px' }}>
+                      <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap', alignItems: 'center' }}>
+                        {meta?.tags && meta.tags.length > 0 && meta.tags.map((tag, i) => (
                           <span
                             key={i}
                             style={{
-                              fontSize: '11px',
-                              padding: '3px 8px',
-                              background: '#333',
-                              borderRadius: '12px',
-                              color: '#0066cc',
-                              display: 'flex',
+                              fontSize: '12px',
+                              padding: '4px 10px',
+                              background: 'linear-gradient(135deg, #2a2a2a 0%, #1f1f1f 100%)',
+                              border: '1px solid #444',
+                              borderRadius: '14px',
+                              color: '#4a9eff',
+                              display: 'inline-flex',
                               alignItems: 'center',
-                              gap: '5px',
+                              gap: '6px',
+                              fontWeight: '500',
+                              transition: 'all 0.2s ease',
+                            }}
+                            onMouseEnter={(e) => {
+                              e.currentTarget.style.background = 'linear-gradient(135deg, #333 0%, #2a2a2a 100%)';
+                              e.currentTarget.style.borderColor = '#555';
+                            }}
+                            onMouseLeave={(e) => {
+                              e.currentTarget.style.background = 'linear-gradient(135deg, #2a2a2a 0%, #1f1f1f 100%)';
+                              e.currentTarget.style.borderColor = '#444';
                             }}
                           >
                             {tag}
                             <button
                               onClick={(e) => {
                                 e.preventDefault();
+                                e.stopPropagation();
                                 handleRemoveTag(deck.name, tag);
                               }}
                               style={{
                                 background: 'none',
                                 border: 'none',
-                                color: '#999',
+                                color: '#888',
                                 cursor: 'pointer',
                                 padding: '0',
-                                fontSize: '14px',
+                                fontSize: '16px',
                                 lineHeight: '1',
+                                display: 'flex',
+                                alignItems: 'center',
+                                transition: 'color 0.2s ease',
                               }}
+                              onMouseEnter={(e) => e.currentTarget.style.color = '#ff4444'}
+                              onMouseLeave={(e) => e.currentTarget.style.color = '#888'}
                               title="Remove tag"
                             >
                               ×
@@ -457,16 +481,27 @@ export default function Dashboard() {
                         <button
                           onClick={(e) => {
                             e.preventDefault();
+                            e.stopPropagation();
                             setEditingTags(deck.name);
                           }}
                           style={{
                             background: 'none',
-                            border: '1px dashed #666',
-                            color: '#666',
-                            borderRadius: '12px',
-                            padding: '3px 8px',
+                            border: '1px dashed #555',
+                            color: '#888',
+                            borderRadius: '14px',
+                            padding: '4px 10px',
                             cursor: 'pointer',
-                            fontSize: '11px',
+                            fontSize: '12px',
+                            transition: 'all 0.2s ease',
+                            fontWeight: '500',
+                          }}
+                          onMouseEnter={(e) => {
+                            e.currentTarget.style.borderColor = '#0066cc';
+                            e.currentTarget.style.color = '#0066cc';
+                          }}
+                          onMouseLeave={(e) => {
+                            e.currentTarget.style.borderColor = '#555';
+                            e.currentTarget.style.color = '#888';
                           }}
                           title="Add tag"
                         >
@@ -571,12 +606,33 @@ export default function Dashboard() {
         onClose={() => {
           setEditingTags(null);
           setNewTag('');
+          setTagFeedback(null);
         }}
         title="Add Tag"
       >
-        <p style={{ color: '#999', fontSize: '14px', marginBottom: '20px' }}>
-          Add tags to organize your decks (e.g., "competitive", "budget", "tested")
+        <p style={{ color: '#aaa', fontSize: '14px', marginBottom: '20px', lineHeight: '1.5' }}>
+          Add tags to organize and categorize your decks
         </p>
+
+        {tagFeedback && (
+          <div
+            style={{
+              padding: '12px 16px',
+              marginBottom: '20px',
+              borderRadius: '8px',
+              background: tagFeedback.type === 'success' ? '#1a4d2e' : '#4d1a1a',
+              border: `1px solid ${tagFeedback.type === 'success' ? '#2d7a4f' : '#7a2d2d'}`,
+              color: tagFeedback.type === 'success' ? '#4ade80' : '#ff6b6b',
+              fontSize: '14px',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '8px',
+            }}
+          >
+            <span>{tagFeedback.type === 'success' ? '✓' : '⚠'}</span>
+            <span>{tagFeedback.message}</span>
+          </div>
+        )}
 
         <form
           onSubmit={(e) => {
@@ -592,7 +648,15 @@ export default function Dashboard() {
               value={newTag}
               onChange={(e) => setNewTag(e.target.value)}
               placeholder="Enter tag name..."
-              style={{ width: '100%', padding: '12px', fontSize: '14px' }}
+              style={{ 
+                width: '100%', 
+                padding: '14px', 
+                fontSize: '14px',
+                borderRadius: '8px',
+                border: '1px solid #444',
+                background: '#1a1a1a',
+                color: '#fff',
+              }}
               autoFocus
             />
           </div>
@@ -604,6 +668,7 @@ export default function Dashboard() {
               onClick={() => {
                 setEditingTags(null);
                 setNewTag('');
+                setTagFeedback(null);
               }}
               style={{ flex: 1 }}
             >
@@ -613,37 +678,64 @@ export default function Dashboard() {
               type="submit"
               className="btn btn-primary"
               disabled={!newTag.trim()}
-              style={{ flex: 1 }}
+              style={{ flex: 1, background: '#0066cc' }}
             >
               Add Tag
             </button>
           </div>
         </form>
 
-        <div style={{ marginTop: '20px', paddingTop: '20px', borderTop: '1px solid #333' }}>
-          <p style={{ fontSize: '12px', color: '#666', marginBottom: '10px' }}>
-            Suggested tags:
+        <div style={{ marginTop: '24px', paddingTop: '24px', borderTop: '1px solid #333' }}>
+          <p style={{ fontSize: '13px', color: '#888', marginBottom: '12px', fontWeight: '500' }}>
+            Quick Add:
           </p>
           <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
-            {['competitive', 'casual', 'budget', 'tested', 'wip', 'tournament'].map((tag) => (
+            {[
+              { label: 'competitive', icon: '🏆' },
+              { label: 'casual', icon: '🎮' },
+              { label: 'budget', icon: '💰' },
+              { label: 'tested', icon: '✓' },
+              { label: 'wip', icon: '🔨' },
+              { label: 'tournament', icon: '🎯' },
+              { label: 'combo', icon: '⚡' },
+              { label: 'aggro', icon: '⚔️' },
+              { label: 'control', icon: '🛡️' },
+              { label: 'midrange', icon: '⚖️' },
+            ].map(({ label, icon }) => (
               <button
-                key={tag}
+                key={label}
                 onClick={() => {
                   if (editingTags) {
-                    handleAddTag(editingTags, tag);
+                    handleAddTag(editingTags, label);
                   }
                 }}
                 style={{
-                  background: '#333',
-                  border: 'none',
-                  color: '#0066cc',
-                  borderRadius: '12px',
-                  padding: '6px 12px',
+                  background: 'linear-gradient(135deg, #2a2a2a 0%, #1f1f1f 100%)',
+                  border: '1px solid #444',
+                  color: '#4a9eff',
+                  borderRadius: '14px',
+                  padding: '8px 14px',
                   cursor: 'pointer',
-                  fontSize: '12px',
+                  fontSize: '13px',
+                  fontWeight: '500',
+                  transition: 'all 0.2s ease',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '6px',
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.background = 'linear-gradient(135deg, #0066cc 0%, #0052a3 100%)';
+                  e.currentTarget.style.color = '#fff';
+                  e.currentTarget.style.transform = 'translateY(-2px)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.background = 'linear-gradient(135deg, #2a2a2a 0%, #1f1f1f 100%)';
+                  e.currentTarget.style.color = '#4a9eff';
+                  e.currentTarget.style.transform = 'translateY(0)';
                 }}
               >
-                {tag}
+                <span>{icon}</span>
+                <span>{label}</span>
               </button>
             ))}
           </div>
