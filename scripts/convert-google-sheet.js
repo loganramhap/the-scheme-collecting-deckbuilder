@@ -13,24 +13,59 @@ const path = require('path');
 
 function parseCSV(csvText) {
   const lines = csvText.split('\n');
-  const headers = lines[0].split(',').map(h => h.trim().replace(/"/g, ''));
   const cards = [];
   
+  // Parse CSV properly handling quoted fields with commas
+  function parseCSVLine(line) {
+    const result = [];
+    let current = '';
+    let inQuotes = false;
+    
+    for (let i = 0; i < line.length; i++) {
+      const char = line[i];
+      const nextChar = line[i + 1];
+      
+      if (char === '"') {
+        if (inQuotes && nextChar === '"') {
+          // Escaped quote
+          current += '"';
+          i++; // Skip next quote
+        } else {
+          // Toggle quote state
+          inQuotes = !inQuotes;
+        }
+      } else if (char === ',' && !inQuotes) {
+        // Field separator
+        result.push(current.trim());
+        current = '';
+      } else {
+        current += char;
+      }
+    }
+    
+    // Add last field
+    result.push(current.trim());
+    return result;
+  }
+  
+  // Parse header
+  const headers = parseCSVLine(lines[0]).map(h => h.toLowerCase().replace(/\s+/g, '_'));
+  
+  // Parse data rows
   for (let i = 1; i < lines.length; i++) {
     const line = lines[i].trim();
     if (!line) continue;
     
-    // Simple CSV parser (may need adjustment based on actual format)
-    const values = line.split(',').map(v => v.trim().replace(/^"|"$/g, ''));
-    
+    const values = parseCSVLine(line);
     const card = {};
+    
     headers.forEach((header, index) => {
       if (values[index]) {
-        card[header.toLowerCase().replace(/\s+/g, '_')] = values[index];
+        card[header] = values[index];
       }
     });
     
-    if (card.name || card.card_name) {
+    if (card.card_name || card.name) {
       cards.push(card);
     }
   }
