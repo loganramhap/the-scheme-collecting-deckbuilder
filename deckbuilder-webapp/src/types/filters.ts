@@ -42,26 +42,37 @@ export const MTG_COLORS = [
   { code: 'G', name: 'Green' },
 ];
 
-// Riftbound specific filter options
+// Riftbound specific filter options (based on Riot API data)
 export const RIFTBOUND_CARD_TYPES = [
   'Unit',
+  'Champion Unit',
+  'Token Unit',
   'Spell',
-  'Artifact',
-  'Legend',
+  'Signature Spell',
+  'Gear',
+  'Basic Rune',
   'Battlefield',
+  'Legend',
 ];
 
 export const RIFTBOUND_RARITIES = [
   'Common',
+  'Uncommon',
   'Rare',
   'Epic',
   'Legendary',
+  'Showcase',
 ];
 
-export const RIFTBOUND_FACTIONS = [
-  'Neutral',
-  'Order',
-  'Chaos',
-  'Nature',
-  'Tech',
+// Riftbound Domains (not factions)
+export const RIFTBOUND_DOMAINS = [
+  { code: 'Fury', name: 'Fury', color: '#ff5722' },
+  { code: 'Calm', name: 'Calm', color: '#2196f3' },
+  { code: 'Mind', name: 'Mind', color: '#9c27b0' },
+  { code: 'Body', name: 'Body', color: '#ff9800' },
+  { code: 'Order', name: 'Order', color: '#ffc107' },
+  { code: 'Colorless', name: 'Colorless', color: '#757575' },
 ];
+
+// Keep for backward compatibility but deprecated
+export const RIFTBOUND_FACTIONS = RIFTBOUND_DOMAINS.map(d => d.code);

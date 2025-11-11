@@ -1,29 +1,51 @@
 import { RiftboundCard } from '../types/card';
 
 /**
- * Extract domain from a legend card
- * The domain determines which cards are legal in the deck
+ * Extract domains from a legend card
+ * Legends can have multiple domains (e.g., "Fury, Body")
+ * The domains determine which cards are legal in the deck
  */
-export function extractLegendDomain(legendCard: RiftboundCard | undefined): string | null {
+export function extractLegendDomains(legendCard: RiftboundCard | undefined): string[] {
   if (!legendCard) {
-    return null;
+    return [];
   }
   
-  // Return the domain field from the card
-  return legendCard.domain || null;
+  // If domain is an array, return it
+  if (Array.isArray(legendCard.domain)) {
+    return legendCard.domain;
+  }
+  
+  // If domain is a string, split by comma
+  if (typeof legendCard.domain === 'string') {
+    return legendCard.domain
+      .split(',')
+      .map(d => d.trim())
+      .filter(d => d.length > 0);
+  }
+  
+  return [];
 }
 
 /**
- * Filter Riftbound cards based on the Legend's domain
- * Cards with Colorless domain are available to all decks
- * Cards with a specific domain must match the Legend's domain
+ * @deprecated Use extractLegendDomains instead
+ * Extract domain from a legend card (returns first domain only)
  */
-export function filterByDomain(
+export function extractLegendDomain(legendCard: RiftboundCard | undefined): string | null {
+  const domains = extractLegendDomains(legendCard);
+  return domains.length > 0 ? domains[0] : null;
+}
+
+/**
+ * Filter Riftbound cards based on the Legend's domains
+ * Cards with Colorless domain are available to all decks
+ * Cards must match at least ONE of the Legend's domains
+ */
+export function filterByDomains(
   cards: RiftboundCard[], 
-  legendDomain: string | null
+  legendDomains: string[]
 ): RiftboundCard[] {
-  // If no domain is active (no legend selected), return all cards
-  if (!legendDomain) {
+  // If no domains are active (no legend selected), return all cards
+  if (legendDomains.length === 0) {
     return cards;
   }
   
@@ -33,25 +55,43 @@ export function filterByDomain(
       return true;
     }
     
+    // Get card's domains (could be array or comma-separated string)
+    const cardDomains = Array.isArray(card.domain)
+      ? card.domain
+      : typeof card.domain === 'string'
+      ? card.domain.split(',').map(d => d.trim())
+      : [];
+    
     // Colorless domain cards are always legal
-    if (card.domain === 'Colorless') {
+    if (cardDomains.includes('Colorless')) {
       return true;
     }
     
-    // Card must match the legend's domain
-    return card.domain === legendDomain;
+    // Card must have at least ONE domain that matches the legend's domains
+    return cardDomains.some(cardDomain => legendDomains.includes(cardDomain));
   });
 }
 
 /**
- * Check if a card is legal for the given domain
+ * @deprecated Use filterByDomains instead
+ * Filter Riftbound cards based on the Legend's domain (single domain only)
  */
-export function isCardLegalForDomain(
-  card: RiftboundCard,
+export function filterByDomain(
+  cards: RiftboundCard[], 
   legendDomain: string | null
+): RiftboundCard[] {
+  return filterByDomains(cards, legendDomain ? [legendDomain] : []);
+}
+
+/**
+ * Check if a card is legal for the given domains
+ */
+export function isCardLegalForDomains(
+  card: RiftboundCard,
+  legendDomains: string[]
 ): boolean {
-  // If no domain is active, all cards are legal
-  if (!legendDomain) {
+  // If no domains are active, all cards are legal
+  if (legendDomains.length === 0) {
     return true;
   }
   
@@ -60,13 +100,30 @@ export function isCardLegalForDomain(
     return true;
   }
   
+  // Get card's domains
+  const cardDomains = Array.isArray(card.domain)
+    ? card.domain
+    : typeof card.domain === 'string'
+    ? card.domain.split(',').map(d => d.trim())
+    : [];
+  
   // Colorless domain cards are always legal
-  if (card.domain === 'Colorless') {
+  if (cardDomains.includes('Colorless')) {
     return true;
   }
   
-  // Card must match the legend's domain
-  return card.domain === legendDomain;
+  // Card must have at least ONE domain that matches the legend's domains
+  return cardDomains.some(cardDomain => legendDomains.includes(cardDomain));
+}
+
+/**
+ * @deprecated Use isCardLegalForDomains instead
+ */
+export function isCardLegalForDomain(
+  card: RiftboundCard,
+  legendDomain: string | null
+): boolean {
+  return isCardLegalForDomains(card, legendDomain ? [legendDomain] : []);
 }
 
 /**

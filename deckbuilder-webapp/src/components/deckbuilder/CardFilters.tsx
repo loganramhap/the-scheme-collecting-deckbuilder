@@ -6,7 +6,7 @@ import {
   MTG_COLORS,
   RIFTBOUND_CARD_TYPES,
   RIFTBOUND_RARITIES,
-  RIFTBOUND_FACTIONS,
+  RIFTBOUND_DOMAINS,
 } from '../../types/filters';
 import './CardFilters.css';
 
@@ -213,18 +213,22 @@ export const CardFilters: React.FC<CardFiltersProps> = ({
         </div>
       )}
 
-      {/* Faction Filter (Riftbound only) */}
+      {/* Domain Filter (Riftbound only) */}
       {gameType === 'riftbound' && (
         <div className="filter-section">
-          <label>Faction</label>
+          <label>Domain</label>
           <div className="filter-options">
-            {RIFTBOUND_FACTIONS.map(faction => (
+            {RIFTBOUND_DOMAINS.map(domain => (
               <button
-                key={faction}
-                className={`filter-chip ${filters.colors.includes(faction) ? 'active' : ''}`}
-                onClick={() => handleColorToggle(faction)}
+                key={domain.code}
+                className={`filter-chip ${filters.colors.includes(domain.code) ? 'active' : ''}`}
+                onClick={() => handleColorToggle(domain.code)}
+                style={{
+                  borderColor: filters.colors.includes(domain.code) ? domain.color : undefined,
+                  color: filters.colors.includes(domain.code) ? domain.color : undefined,
+                }}
               >
-                {faction}
+                {domain.name}
               </button>
             ))}
           </div>

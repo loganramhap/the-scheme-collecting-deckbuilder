@@ -11,6 +11,7 @@ interface RuneDeckZoneProps {
   runeDeck: DeckCard[];
   onRuneAdd: (card: DeckCard) => void;
   onRuneRemove: (cardId: string) => void;
+  onRuneCountChange?: (cardId: string, newCount: number) => void;
   availableCards: RiftboundCard[];
 }
 
@@ -18,9 +19,11 @@ export const RuneDeckZone: React.FC<RuneDeckZoneProps> = ({
   runeDeck,
   onRuneAdd,
   onRuneRemove,
+  onRuneCountChange,
   availableCards,
 }) => {
   const [showModal, setShowModal] = useState(false);
+  const [hoveredCard, setHoveredCard] = useState<string | null>(null);
 
   // Calculate total rune count
   const totalRuneCount = runeDeck.reduce((sum, card) => sum + card.count, 0);
@@ -47,6 +50,25 @@ export const RuneDeckZone: React.FC<RuneDeckZoneProps> = ({
 
   const handleRemoveRune = (cardId: string) => {
     onRuneRemove(cardId);
+  };
+
+  const handleIncrement = (cardId: string, currentCount: number, e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (totalRuneCount >= 12) {
+      return; // Can't add more if at limit
+    }
+    if (onRuneCountChange) {
+      onRuneCountChange(cardId, currentCount + 1);
+    }
+  };
+
+  const handleDecrement = (cardId: string, currentCount: number, e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (currentCount <= 1) {
+      handleRemoveRune(cardId);
+    } else if (onRuneCountChange) {
+      onRuneCountChange(cardId, currentCount - 1);
+    }
   };
 
   // Setup drop zone for Rune Deck
@@ -150,10 +172,10 @@ export const RuneDeckZone: React.FC<RuneDeckZoneProps> = ({
                 key={card.id}
                 style={{
                   position: 'relative',
-                  cursor: 'pointer',
                 }}
-                onClick={() => handleRemoveRune(card.id)}
-                title={`${card.name || card.id} (x${card.count}) - Click to remove`}
+                onMouseEnter={() => setHoveredCard(card.id)}
+                onMouseLeave={() => setHoveredCard(null)}
+                title={`${card.name || card.id} (x${card.count})`}
               >
                 <CardImage
                   card={{
@@ -162,23 +184,89 @@ export const RuneDeckZone: React.FC<RuneDeckZoneProps> = ({
                     image_url: card.image_url,
                   } as RiftboundCard}
                 />
-                {card.count > 1 && (
+                
+                {/* Count badge */}
+                <div style={{
+                  position: 'absolute',
+                  bottom: '2px',
+                  right: '2px',
+                  background: 'rgba(0, 0, 0, 0.8)',
+                  color: '#fff',
+                  borderRadius: '50%',
+                  width: '20px',
+                  height: '20px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  fontSize: '11px',
+                  fontWeight: 'bold',
+                }}>
+                  {card.count}
+                </div>
+
+                {/* +/- Controls on hover */}
+                {hoveredCard === card.id && (
                   <div style={{
                     position: 'absolute',
-                    bottom: '2px',
-                    right: '2px',
-                    background: 'rgba(0, 0, 0, 0.8)',
-                    color: '#fff',
-                    borderRadius: '50%',
-                    width: '20px',
-                    height: '20px',
+                    top: '0',
+                    left: '0',
+                    right: '0',
+                    bottom: '0',
+                    background: 'rgba(0, 0, 0, 0.7)',
                     display: 'flex',
+                    flexDirection: 'column',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    fontSize: '11px',
-                    fontWeight: 'bold',
+                    gap: '4px',
+                    borderRadius: '4px',
                   }}>
-                    {card.count}
+                    <button
+                      onClick={(e) => handleIncrement(card.id, card.count, e)}
+                      disabled={totalRuneCount >= 12}
+                      style={{
+                        background: totalRuneCount >= 12 ? '#555' : '#4caf50',
+                        color: '#fff',
+                        border: 'none',
+                        borderRadius: '4px',
+                        width: '32px',
+                        height: '24px',
+                        cursor: totalRuneCount >= 12 ? 'not-allowed' : 'pointer',
+                        fontSize: '16px',
+                        fontWeight: 'bold',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                      }}
+                    >
+                      +
+                    </button>
+                    <div style={{
+                      color: '#fff',
+                      fontSize: '14px',
+                      fontWeight: 'bold',
+                      fontFamily: 'monospace',
+                    }}>
+                      {card.count}
+                    </div>
+                    <button
+                      onClick={(e) => handleDecrement(card.id, card.count, e)}
+                      style={{
+                        background: '#f44336',
+                        color: '#fff',
+                        border: 'none',
+                        borderRadius: '4px',
+                        width: '32px',
+                        height: '24px',
+                        cursor: 'pointer',
+                        fontSize: '16px',
+                        fontWeight: 'bold',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                      }}
+                    >
+                      −
+                    </button>
                   </div>
                 )}
               </div>

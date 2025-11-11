@@ -6,7 +6,7 @@ import { CardFilters } from './CardFilters';
 import { CardGrid } from './CardGrid';
 import { useCardFiltering } from '../../hooks/useCardFiltering';
 import { getMainDeckCards, getRuneCards, getBattlefieldCards } from '../../utils/riftboundCardTypes';
-import { filterByDomain } from '../../utils/domainFiltering';
+import { filterByDomains } from '../../utils/domainFiltering';
 import './VisualCardBrowser.css';
 
 type CardTypeTab = 'main' | 'runes' | 'battlefields';
@@ -21,7 +21,7 @@ interface VisualCardBrowserProps {
   onCardIncrement?: (card: Card) => void;
   onCardDecrement?: (card: Card) => void;
   maxCopiesPerCard?: number;
-  legendDomain?: string | null;
+  legendDomains?: string[];
   activeTab?: CardTypeTab;
   onTabChange?: (tab: CardTypeTab) => void;
 }
@@ -36,7 +36,7 @@ export const VisualCardBrowser: React.FC<VisualCardBrowserProps> = ({
   onCardIncrement,
   onCardDecrement,
   maxCopiesPerCard = 4,
-  legendDomain,
+  legendDomains = [],
   activeTab: externalActiveTab,
   onTabChange,
 }) => {
@@ -79,8 +79,8 @@ export const VisualCardBrowser: React.FC<VisualCardBrowserProps> = ({
       return cardsByType;
     }
     
-    return filterByDomain(cardsByType as RiftboundCard[], legendDomain || null);
-  }, [cardsByType, activeTab, gameType, legendDomain]);
+    return filterByDomains(cardsByType as RiftboundCard[], legendDomains);
+  }, [cardsByType, activeTab, gameType, legendDomains]);
   
   // Use memoized filtering on the domain-filtered cards
   const filteredCards = useCardFiltering(domainFilteredCards, filters);

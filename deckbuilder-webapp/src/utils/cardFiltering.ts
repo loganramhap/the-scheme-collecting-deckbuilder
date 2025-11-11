@@ -12,11 +12,11 @@ function isMTGCard(card: Card): card is MTGCard {
  * Check if a card is a Riftbound card
  */
 function isRiftboundCard(card: Card): card is RiftboundCard {
-  return 'faction' in card && 'rank' in card;
+  return 'domain' in card || 'card_type' in card || 'energy' in card;
 }
 
 /**
- * Extract card types from type_line (MTG) or type (Riftbound)
+ * Extract card types from type_line (MTG) or card_type (Riftbound)
  */
 function getCardTypes(card: Card): string[] {
   if (isMTGCard(card)) {
@@ -34,20 +34,22 @@ function getCardTypes(card: Card): string[] {
     
     return types;
   } else if (isRiftboundCard(card)) {
-    return [card.type];
+    // Riot API uses 'card_type' field
+    return card.card_type ? [card.card_type] : (card.type ? [card.type] : []);
   }
   
   return [];
 }
 
 /**
- * Get card cost (cmc for MTG, cost for Riftbound)
+ * Get card cost (cmc for MTG, energy for Riftbound)
  */
 function getCardCost(card: Card): number {
   if (isMTGCard(card)) {
     return card.cmc;
   } else if (isRiftboundCard(card)) {
-    return card.cost ?? 0;
+    // Riot API uses 'energy' field for cost
+    return card.energy ?? card.cost ?? 0;
   }
   return 0;
 }
@@ -61,7 +63,8 @@ function getCardRarity(card: Card): string | null {
     // For now, return null as it's not in the current type definition
     return null;
   } else if (isRiftboundCard(card)) {
-    return card.rank ?? card.rarity ?? null;
+    // Riot API uses 'rarity' field
+    return card.rarity ?? null;
   }
   return null;
 }
@@ -103,7 +106,7 @@ function matchesRarityFilter(card: Card, rarityFilters: string[]): boolean {
 }
 
 /**
- * Check if card matches color/faction filter
+ * Check if card matches color/domain filter
  */
 function matchesColorFilter(card: Card, colorFilters: string[]): boolean {
   if (colorFilters.length === 0) return true;
@@ -115,9 +118,21 @@ function matchesColorFilter(card: Card, colorFilters: string[]): boolean {
     
     return cardColors.some(color => colorFilters.includes(color));
   } else if (isRiftboundCard(card)) {
-    // Riftbound: Check faction or color
-    const cardFaction = card.faction || card.color;
-    return cardFaction ? colorFilters.includes(cardFaction) : true;
+    // Riftbound: Check domain field (can be string or array)
+    const cardDomain = card.domain;
+    
+    if (!cardDomain) return true; // No domain = pass
+    
+    // Handle array of domains
+    if (Array.isArray(cardDomain)) {
+      return cardDomain.some(domain => colorFilters.includes(domain));
+    }
+    
+    // Handle comma-separated string
+    if (typeof cardDomain === 'string') {
+      const domains = cardDomain.split(',').map(d => d.trim());
+      return domains.some(domain => colorFilters.includes(domain));
+    }
   }
   
   return true;
@@ -139,9 +154,10 @@ function matchesSearchQuery(card: Card, query: string): boolean {
     if (card.oracle_text.toLowerCase().includes(lowerQuery)) return true;
   }
   
-  // Search in text for Riftbound cards
-  if (isRiftboundCard(card) && card.text) {
-    if (card.text.toLowerCase().includes(lowerQuery)) return true;
+  // Search in ability text for Riftbound cards
+  if (isRiftboundCard(card)) {
+    const cardText = card.ability || card.text;
+    if (cardText && cardText.toLowerCase().includes(lowerQuery)) return true;
   }
   
   return false;

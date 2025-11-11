@@ -11,7 +11,7 @@ import { DeckStatistics } from './DeckStatistics';
 import { ValidationPanel } from './ValidationPanel';
 import { CardDataRefreshButton } from '../CardDataRefreshButton';
 import { useDeckStore } from '../../store/deck';
-import { extractLegendDomain } from '../../utils/domainFiltering';
+import { extractLegendDomains } from '../../utils/domainFiltering';
 import { isBasicRune, isBattlefield, isLegend } from '../../utils/riftboundCardTypes';
 import { validateRiftboundDeckComprehensive } from '../../utils/deckValidation';
 
@@ -50,18 +50,77 @@ export const RiftboundBuilder: React.FC<RiftboundBuilderProps> = ({
     searchQuery: '',
   });
 
-  // Extract legend's domain
-  const legendDomain = useMemo(() => {
+  // Extract legend's domains (can be multiple)
+  const legendDomains = useMemo(() => {
     if (!deck.legend) {
-      return null;
+      return [];
     }
     const legendCard = availableCards.find(c => c.id === deck.legend?.id);
-    return extractLegendDomain(legendCard);
+    return extractLegendDomains(legendCard);
   }, [deck.legend, availableCards]);
+
+  // Auto-populate runes when Legend is selected
+  const autoPopulateRunes = (domains: string[]) => {
+    if (domains.length === 0) {
+      return; // No domains, don't add runes
+    }
+    
+    // Clear existing runes first
+    const currentRunes = deck.runeDeck || [];
+    currentRunes.forEach(rune => {
+      removeRune(rune.id);
+    });
+    
+    // Get all available runes
+    const allRunes = availableCards.filter(isBasicRune);
+    
+    if (domains.length === 1) {
+      // Single domain: add 12 runes of that domain
+      const domainRunes = allRunes.filter(rune => {
+        const runeDomain = Array.isArray(rune.domain) ? rune.domain[0] : rune.domain;
+        return runeDomain === domains[0] || rune.name.toLowerCase().includes(domains[0].toLowerCase());
+      });
+      
+      if (domainRunes.length > 0) {
+        const runeToAdd = domainRunes[0];
+        addRune({
+          id: runeToAdd.id,
+          count: 12,
+          name: runeToAdd.name,
+          image_url: runeToAdd.image_url,
+        });
+      }
+    } else if (domains.length >= 2) {
+      // Multi-domain: add 6 runes of each domain (up to 2 domains)
+      const domainsToUse = domains.slice(0, 2); // Use first 2 domains
+      domainsToUse.forEach(domain => {
+        const domainRunes = allRunes.filter(rune => {
+          const runeDomain = Array.isArray(rune.domain) ? rune.domain[0] : rune.domain;
+          return runeDomain === domain || rune.name.toLowerCase().includes(domain.toLowerCase());
+        });
+        
+        if (domainRunes.length > 0) {
+          const runeToAdd = domainRunes[0];
+          addRune({
+            id: runeToAdd.id,
+            count: 6,
+            name: runeToAdd.name,
+            image_url: runeToAdd.image_url,
+          });
+        }
+      });
+    }
+  };
 
   const handleLegendSelect = (card: DeckCard) => {
     setLegend(card);
-    // The domain will be extracted automatically through the legendDomain useMemo
+    
+    // Auto-populate runes based on Legend's domains
+    const legendCard = availableCards.find(c => c.id === card.id);
+    if (legendCard) {
+      const domains = extractLegendDomains(legendCard);
+      autoPopulateRunes(domains);
+    }
   };
 
   const handleCardAdd = (card: Card) => {
@@ -214,6 +273,7 @@ export const RiftboundBuilder: React.FC<RiftboundBuilderProps> = ({
             runeDeck={deck.runeDeck || []}
             onRuneAdd={addRune}
             onRuneRemove={removeRune}
+            onRuneCountChange={updateRuneCount}
             availableCards={availableCards}
           />
         </div>
@@ -269,7 +329,7 @@ export const RiftboundBuilder: React.FC<RiftboundBuilderProps> = ({
           }}>
             Main Deck Cards
           </h2>
-          {legendDomain && (
+          {legendDomains.length > 0 && (
             <span style={{
               padding: '4px 12px',
               background: 'rgba(156, 39, 176, 0.2)',
@@ -280,7 +340,7 @@ export const RiftboundBuilder: React.FC<RiftboundBuilderProps> = ({
               color: '#9c27b0',
               textTransform: 'uppercase',
             }}>
-              {legendDomain} Domain
+              {legendDomains.join(' + ')} Domain{legendDomains.length > 1 ? 's' : ''}
             </span>
           )}
           <div style={{ marginLeft: 'auto' }}>
@@ -292,7 +352,7 @@ export const RiftboundBuilder: React.FC<RiftboundBuilderProps> = ({
         <DeckZone 
           onCardDrop={handleCardAdd}
           gameType="riftbound"
-          legendDomain={legendDomain}
+          legendDomains={legendDomains}
         >
           <VisualCardBrowser 
             cards={availableCards}
@@ -304,7 +364,7 @@ export const RiftboundBuilder: React.FC<RiftboundBuilderProps> = ({
             onCardIncrement={handleCardIncrement}
             onCardDecrement={handleCardDecrement}
             maxCopiesPerCard={4}
-            legendDomain={legendDomain}
+            legendDomains={legendDomains}
             activeTab={activeCardTab}
             onTabChange={setActiveCardTab}
           />
