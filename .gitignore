@@ -44,7 +44,3 @@ docker-compose.override.yml
 tmp/
 temp/
 *.tmp
-
-# Package Lock Files
-package-lock.json
-**/package-lock.json
