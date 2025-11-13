@@ -56,7 +56,7 @@ export const useAuthStore = create<AuthState>((set) => {
       set({
         user: null, // No Riot user for legacy auth
         isAuthenticated: true,
-        giteaUsername: giteaUser.login,
+        giteaUsername: giteaUser.username,
       });
     },
 

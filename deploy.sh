@@ -50,6 +50,15 @@ echo -e "${GREEN}✓ Permissions fixed${NC}"
 echo ""
 
 echo -e "${BLUE}🔄 Step 6: Restarting services...${NC}"
+
+# Restart PM2 backend API
+if command -v pm2 &> /dev/null; then
+    cd deckbuilder-api
+    pm2 restart deckbuilder-api || pm2 start src/index.js --name deckbuilder-api
+    cd ..
+    echo -e "${GREEN}✓ PM2 backend restarted${NC}"
+fi
+
 # Restart Docker containers if using docker-compose
 if [ -f "docker-compose.yml" ]; then
     docker-compose restart
