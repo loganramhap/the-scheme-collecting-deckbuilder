@@ -1,13 +1,16 @@
 import { create } from 'zustand';
 import type { RiotUser } from '../types/riot';
+import type { GiteaUser } from '../types/gitea';
 import { clearAllCaches } from '../utils/cacheManager';
 import * as authApi from '../services/authApi';
+import { giteaService } from '../services/gitea';
 
 interface AuthState {
   user: RiotUser | null;
   isAuthenticated: boolean;
   giteaUsername: string | null;
   login: () => void;
+  loginWithGitea: (token: string) => Promise<void>;
   logout: () => Promise<void>;
   refreshAuth: () => Promise<void>;
 }
@@ -36,6 +39,25 @@ export const useAuthStore = create<AuthState>((set) => {
         console.error('Failed to initiate OAuth flow:', error);
         throw error;
       }
+    },
+
+    /**
+     * Legacy Gitea authentication (temporary during migration)
+     * Logs in with username/password via Gitea token
+     */
+    loginWithGitea: async (token: string) => {
+      giteaService.setToken(token);
+      const giteaUser: GiteaUser = await giteaService.getCurrentUser();
+      
+      // Store in localStorage for legacy auth
+      localStorage.setItem('auth-token', token);
+      localStorage.setItem('auth-user', JSON.stringify(giteaUser));
+      
+      set({
+        user: null, // No Riot user for legacy auth
+        isAuthenticated: true,
+        giteaUsername: giteaUser.login,
+      });
     },
 
     /**
