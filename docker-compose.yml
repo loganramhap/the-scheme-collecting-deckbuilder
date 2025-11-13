@@ -1,6 +1,42 @@
 version: "3.9"
 
 services:
+  # Backend API
+  api:
+    build:
+      context: ./deckbuilder-api
+      dockerfile: Dockerfile
+    container_name: deckbuilder-api
+    restart: always
+    ports:
+      - "3001:3001"
+    environment:
+      - PORT=3001
+      - NODE_ENV=${NODE_ENV:-production}
+      - GITEA_URL=http://gitea:3000
+      - GITEA_ADMIN_TOKEN=${GITEA_ADMIN_TOKEN}
+      - RIOT_CLIENT_ID=${RIOT_CLIENT_ID}
+      - RIOT_CLIENT_SECRET=${RIOT_CLIENT_SECRET}
+      - RIOT_REDIRECT_URI=${RIOT_REDIRECT_URI}
+      - RIOT_AUTHORIZATION_URL=${RIOT_AUTHORIZATION_URL:-https://auth.riotgames.com/authorize}
+      - RIOT_TOKEN_URL=${RIOT_TOKEN_URL:-https://auth.riotgames.com/token}
+      - RIOT_USERINFO_URL=${RIOT_USERINFO_URL:-https://auth.riotgames.com/userinfo}
+      - RIOT_REVOKE_URL=${RIOT_REVOKE_URL:-https://auth.riotgames.com/revoke}
+      - FRONTEND_URL=${FRONTEND_URL}
+      - AWS_REGION=${AWS_REGION}
+      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+      - DYNAMODB_USERS_TABLE=${DYNAMODB_USERS_TABLE}
+      - DYNAMODB_SESSIONS_TABLE=${DYNAMODB_SESSIONS_TABLE}
+      - SESSION_SECRET=${SESSION_SECRET}
+      - SESSION_EXPIRY=${SESSION_EXPIRY:-86400}
+      - ENCRYPTION_KEY=${ENCRYPTION_KEY}
+    depends_on:
+      - gitea
+    networks:
+      - deckbuilder-network
+
+  # Gitea Git Server
   gitea:
     image: gitea/gitea:latest
     container_name: deckbuilder-gitea
@@ -12,7 +48,7 @@ services:
       - GITEA__database__NAME=gitea
       - GITEA__database__USER=gitea
       - GITEA__database__PASSWD=gitea
-      - GITEA__server__ROOT_URL=http://localhost:3000
+      - GITEA__server__ROOT_URL=${GITEA_ROOT_URL:-http://localhost:3000}
       - GITEA__security__INSTALL_LOCK=true
     restart: always
     volumes:
@@ -24,7 +60,10 @@ services:
       - "2222:22"
     depends_on:
       - db
+    networks:
+      - deckbuilder-network
 
+  # PostgreSQL Database
   db:
     image: postgres:14
     container_name: deckbuilder-db
@@ -35,7 +74,13 @@ services:
       - POSTGRES_DB=gitea
     volumes:
       - postgres-data:/var/lib/postgresql/data
+    networks:
+      - deckbuilder-network
 
 volumes:
   gitea-data:
   postgres-data:
+
+networks:
+  deckbuilder-network:
+    driver: bridge

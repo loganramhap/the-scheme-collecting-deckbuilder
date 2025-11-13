@@ -25,18 +25,23 @@ A full-featured multi-user deck builder for Magic: The Gathering and Riftbound, 
 # 1. Start Gitea instance
 docker-compose up -d
 
-# 2. Setup backend API (required for account creation)
+# 2. Setup backend API (required for Riot Sign-On authentication)
 cd deckbuilder-api
 npm install
 cp .env.example .env
-# Edit .env and add GITEA_ADMIN_TOKEN (see docs/SETUP.md)
+# Edit .env and configure:
+#   - Riot OAuth credentials (RIOT_CLIENT_ID, RIOT_CLIENT_SECRET)
+#   - AWS credentials and DynamoDB table names
+#   - Session secrets (SESSION_SECRET, ENCRYPTION_KEY)
+#   - Gitea admin token (GITEA_ADMIN_TOKEN)
+# See deckbuilder-api/README.md for detailed configuration
 npm run dev
 
 # 3. Install and run web app
 cd ../deckbuilder-webapp
 npm install
 cp .env.example .env
-# Edit .env with Gitea OAuth credentials and API URL
+# Edit .env with backend API URL (VITE_API_URL)
 npm run dev
 
 # 4. Access at http://localhost:5173
@@ -44,7 +49,7 @@ npm run dev
 
 See [docs/SETUP.md](docs/SETUP.md) for detailed setup instructions.
 
-**Note**: The backend API is required for the "Sign Up" feature. Without it, users must be created manually in Gitea.
+**Note**: The backend API is required for Riot Sign-On authentication. Users sign in with their Riot Games accounts, and Gitea accounts are automatically provisioned.
 
 ## Project Structure
 

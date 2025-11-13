@@ -52,8 +52,10 @@ export async function loadRiftboundCards(
       console.log('[Card Loading] Attempting to load from Riot API...');
       
       // Initialize Riot API service if needed
-      if (!riotCardService && RIOT_API_KEY) {
-        riotCardService = new RiftboundCardService(RIOT_API_KEY);
+      // Use backend API by default (true), or direct API with key if provided
+      if (!riotCardService) {
+        const useBackendApi = !RIOT_API_KEY; // Use backend if no API key provided
+        riotCardService = new RiftboundCardService(RIOT_API_KEY || '', useBackendApi);
       }
       
       if (riotCardService) {

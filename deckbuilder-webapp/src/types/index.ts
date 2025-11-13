@@ -44,3 +44,6 @@ export type {
   AnnotatedCommit,
   AnnotationTemplate,
 } from './versioning';
+
+// Riot types
+export type { RiotUser, AuthState } from './riot';

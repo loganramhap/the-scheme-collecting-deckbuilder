@@ -1,28 +1,36 @@
 import { RiftboundCard } from '../types/card';
 import { isValidAPIKeyFormat } from '../config/riot';
 import { RiotAPIError } from './RiotAPIError';
+import authApi from './authApi';
 
 /**
  * Service for fetching Riftbound card data from the Riot Games API
+ * Now uses backend endpoint with RSO authentication
  */
 export class RiftboundCardService {
   private apiKey: string;
   private cacheKey = 'riftbound_cards_cache';
   private cacheTimestampKey = 'riftbound_cards_timestamp';
   private cacheDuration = 24 * 60 * 60 * 1000; // 24 hours in milliseconds
+  private useBackendApi: boolean;
 
-  constructor(apiKey: string) {
-    if (!apiKey || apiKey.trim().length === 0) {
-      throw new Error(
-        'Riot API key is required. Please set VITE_RIOT_API_KEY in your .env file. ' +
-        'Get your API key from: https://developer.riotgames.com/'
-      );
-    }
+  constructor(apiKey: string = '', useBackendApi: boolean = true) {
+    this.useBackendApi = useBackendApi;
+    
+    // API key is optional when using backend API
+    if (!useBackendApi) {
+      if (!apiKey || apiKey.trim().length === 0) {
+        throw new Error(
+          'Riot API key is required. Please set VITE_RIOT_API_KEY in your .env file. ' +
+          'Get your API key from: https://developer.riotgames.com/'
+        );
+      }
 
-    if (!isValidAPIKeyFormat(apiKey)) {
-      console.warn(
-        'Riot API key format appears invalid. Expected format: RGAPI-xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx'
-      );
+      if (!isValidAPIKeyFormat(apiKey)) {
+        console.warn(
+          'Riot API key format appears invalid. Expected format: RGAPI-xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx'
+        );
+      }
     }
 
     this.apiKey = apiKey;
@@ -95,6 +103,12 @@ export class RiftboundCardService {
    * @throws {RiotAPIError} When API request fails with detailed error information
    */
   private async fetchFromAPI(): Promise<RiftboundCard[]> {
+    // Use backend API if enabled (default for RSO authentication)
+    if (this.useBackendApi) {
+      return this.fetchFromBackendAPI();
+    }
+
+    // Legacy direct API call (requires API key)
     try {
       const response = await fetch(
         'https://americas.api.riotgames.com/riftbound/content/v1/contents',
@@ -140,6 +154,84 @@ export class RiftboundCardService {
 
       // Re-throw unknown errors
       throw error;
+    }
+  }
+
+  /**
+   * Fetch card data from backend API using RSO authentication
+   * @private
+   * @throws {RiotAPIError} When API request fails
+   */
+  private async fetchFromBackendAPI(): Promise<RiftboundCard[]> {
+    try {
+      const response = await authApi.get('/api/cards/riftbound');
+
+      if (response.data.success && response.data.cards) {
+        return this.transformAPIResponse({ cards: response.data.cards });
+      }
+
+      throw new RiotAPIError(
+        0,
+        'Invalid response from backend',
+        'Received an invalid response from the server.',
+        false
+      );
+    } catch (error: any) {
+      // Handle axios errors
+      if (error.response) {
+        const status = error.response.status;
+        const data = error.response.data;
+
+        // Handle token expiration - trigger refresh
+        if (status === 401 && data.shouldRefresh) {
+          throw new RiotAPIError(
+            401,
+            'TOKEN_EXPIRED',
+            'Your session has expired. Please refresh the page.',
+            true
+          );
+        }
+
+        // Handle rate limiting
+        if (status === 429) {
+          throw new RiotAPIError(
+            429,
+            'RATE_LIMITED',
+            'Too many requests. Please try again in a moment.',
+            true
+          );
+        }
+
+        throw new RiotAPIError(
+          status,
+          data.error || 'API_ERROR',
+          data.message || 'Failed to fetch card data',
+          status === 401 || status === 403
+        );
+      }
+
+      // Handle network errors
+      if (error.code === 'ECONNABORTED' || error.code === 'ETIMEDOUT') {
+        throw new RiotAPIError(
+          0,
+          'TIMEOUT',
+          'Request timed out. Please try again.',
+          true
+        );
+      }
+
+      // If it's already a RiotAPIError, re-throw it
+      if (error instanceof RiotAPIError) {
+        throw error;
+      }
+
+      // Generic error
+      throw new RiotAPIError(
+        0,
+        'UNKNOWN_ERROR',
+        error.message || 'An unexpected error occurred',
+        false
+      );
     }
   }
 

@@ -1,4 +1,5 @@
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { useEffect } from 'react';
+import { BrowserRouter, Routes, Route, Navigate, useNavigate } from 'react-router-dom';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { useAuthStore } from './store/auth';
@@ -8,6 +9,7 @@ import DeckEditor from './pages/DeckEditor';
 import DeckList from './pages/DeckList';
 import PullRequests from './pages/PullRequests';
 import AuthCallback from './pages/AuthCallback';
+import SessionExpiryHandler from './components/SessionExpiryHandler';
 import './App.css';
 
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
@@ -19,6 +21,7 @@ function App() {
   return (
     <DndProvider backend={HTML5Backend}>
       <BrowserRouter>
+        <SessionExpiryHandler />
         <Routes>
           <Route path="/login" element={<Login />} />
           <Route path="/auth/callback" element={<AuthCallback />} />

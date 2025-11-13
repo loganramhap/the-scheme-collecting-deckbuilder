@@ -23,15 +23,17 @@ cp .env.example .env
 ```
 
 Edit `.env` and set:
-- `VITE_GITEA_URL`: Your Gitea instance URL
-- `VITE_GITEA_CLIENT_ID`: OAuth application client ID
-- `VITE_GITEA_CLIENT_SECRET`: OAuth application client secret
+- `VITE_API_URL`: Backend API URL (default: `http://localhost:3001/api`)
+- `VITE_GITEA_URL`: Your Gitea instance URL (for deck storage)
 - `VITE_RIOT_API_KEY`: (Optional) Riot Games API key for Riftbound card updates
+- `VITE_USE_RIOT_API`: (Optional) Set to `true` to enable Riot API for card loading
 
-3. Create OAuth application in Gitea:
-   - Go to Settings → Applications → Create OAuth2 Application
-   - Set redirect URI to `http://localhost:5173/auth/callback`
-   - Copy client ID and secret to `.env`
+**Note**: Authentication is now handled via Riot Sign-On through the backend API. The old Gitea OAuth variables (`VITE_GITEA_CLIENT_ID`, `VITE_GITEA_CLIENT_SECRET`) are no longer used for authentication but are kept for backward compatibility.
+
+3. Ensure backend API is running:
+   - The backend API must be configured and running for authentication to work
+   - See `deckbuilder-api/README.md` for backend setup instructions
+   - Backend handles Riot OAuth flow and Gitea account provisioning
 
 4. Start development server:
 ```bash

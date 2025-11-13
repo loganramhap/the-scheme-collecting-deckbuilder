@@ -1,60 +1,84 @@
 import { create } from 'zustand';
-import type { GiteaUser } from '../types/gitea';
-import { giteaService } from '../services/gitea';
+import type { RiotUser } from '../types/riot';
 import { clearAllCaches } from '../utils/cacheManager';
+import * as authApi from '../services/authApi';
 
 interface AuthState {
-  user: GiteaUser | null;
-  token: string | null;
+  user: RiotUser | null;
   isAuthenticated: boolean;
-  login: (token: string) => Promise<void>;
-  logout: () => void;
+  giteaUsername: string | null;
+  login: () => void;
+  logout: () => Promise<void>;
+  refreshAuth: () => Promise<void>;
 }
 
 export const useAuthStore = create<AuthState>((set) => {
-  // Initialize from localStorage
-  const savedToken = localStorage.getItem('auth-token');
-  const savedUser = localStorage.getItem('auth-user');
-  
-  let initialState = {
-    user: null as GiteaUser | null,
-    token: null as string | null,
+  // Initial state - no localStorage, auth is managed via httpOnly cookies
+  const initialState = {
+    user: null as RiotUser | null,
     isAuthenticated: false,
+    giteaUsername: null as string | null,
   };
-
-  if (savedToken && savedUser) {
-    try {
-      initialState = {
-        user: JSON.parse(savedUser),
-        token: savedToken,
-        isAuthenticated: true,
-      };
-      giteaService.setToken(savedToken);
-    } catch (e) {
-      // Invalid saved data, clear it
-      localStorage.removeItem('auth-token');
-      localStorage.removeItem('auth-user');
-    }
-  }
 
   return {
     ...initialState,
 
-    login: async (token: string) => {
-      giteaService.setToken(token);
-      const user = await giteaService.getCurrentUser();
-      set({ user, token, isAuthenticated: true });
-      localStorage.setItem('auth-token', token);
-      localStorage.setItem('auth-user', JSON.stringify(user));
+    /**
+     * Initiates the Riot Sign-On OAuth flow
+     * Redirects the user to Riot's authorization page
+     */
+    login: async () => {
+      try {
+        const { authorizationUrl } = await authApi.initAuth();
+        // Redirect to Riot's authorization page
+        window.location.href = authorizationUrl;
+      } catch (error) {
+        console.error('Failed to initiate OAuth flow:', error);
+        throw error;
+      }
     },
 
-    logout: () => {
-      set({ user: null, token: null, isAuthenticated: false });
-      localStorage.removeItem('auth-token');
-      localStorage.removeItem('auth-user');
-      
-      // Clear all caches on logout
-      clearAllCaches();
+    /**
+     * Logs out the user by calling the backend logout endpoint
+     * Clears session and cookies on the backend
+     */
+    logout: async () => {
+      try {
+        await authApi.logout();
+      } catch (error) {
+        console.error('Logout failed:', error);
+        // Continue with local cleanup even if backend call fails
+      } finally {
+        // Clear local state
+        set({ user: null, isAuthenticated: false, giteaUsername: null });
+        
+        // Clear all caches on logout
+        clearAllCaches();
+      }
+    },
+
+    /**
+     * Refreshes the authentication state from the backend
+     * Fetches current user info if session is valid
+     */
+    refreshAuth: async () => {
+      try {
+        const { user } = await authApi.getCurrentUser();
+        set({
+          user: {
+            puuid: user.puuid,
+            gameName: user.gameName,
+            tagLine: user.tagLine,
+            summonerIcon: user.summonerIcon,
+          },
+          giteaUsername: user.giteaUsername,
+          isAuthenticated: true,
+        });
+      } catch (error) {
+        // Session is invalid or expired
+        set({ user: null, isAuthenticated: false, giteaUsername: null });
+        throw error;
+      }
     },
   };
 });

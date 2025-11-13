@@ -6,7 +6,7 @@ import type { GiteaRepo } from '../types/gitea';
 import Modal from '../components/Modal';
 
 export default function Dashboard() {
-  const { user, logout } = useAuthStore();
+  const { user, giteaUsername, logout } = useAuthStore();
   const [decks, setDecks] = useState<GiteaRepo[]>([]);
   const [loading, setLoading] = useState(true);
   const [creating, setCreating] = useState(false);
@@ -23,9 +23,9 @@ export default function Dashboard() {
 
   useEffect(() => {
     const loadDecks = async () => {
-      if (user) {
+      if (giteaUsername) {
         try {
-          const userRepos = await giteaService.getUserRepos(user.username);
+          const userRepos = await giteaService.getUserRepos(giteaUsername);
           // Filter to only show deck repos (exclude system repos)
           const deckRepos = userRepos.filter(repo => !repo.name.startsWith('.'));
           setDecks(deckRepos);
@@ -34,7 +34,7 @@ export default function Dashboard() {
           const metadata: Record<string, { game: string; format: string; tags?: string[]; commanderImage?: string }> = {};
           for (const repo of deckRepos) {
             try {
-              const fileContent = await giteaService.getFileContent(user.username, repo.name, 'deck.json');
+              const fileContent = await giteaService.getFileContent(giteaUsername, repo.name, 'deck.json');
               const content = atob(fileContent.content);
               const deck = JSON.parse(content);
               
@@ -73,7 +73,7 @@ export default function Dashboard() {
     };
 
     loadDecks();
-  }, [user]);
+  }, [giteaUsername]);
 
   const handleCreateDeck = async () => {
     if (!newDeckName.trim()) return;
@@ -93,7 +93,7 @@ export default function Dashboard() {
         cards: [],
         sideboard: [],
         metadata: {
-          author: user?.username || 'unknown',
+          author: giteaUsername || 'unknown',
           created: new Date().toISOString().split('T')[0],
           description: '',
         },
@@ -102,7 +102,7 @@ export default function Dashboard() {
       const content = JSON.stringify(newDeck, null, 2);
       
       await giteaService.createOrUpdateFile(
-        user!.username,
+        giteaUsername!,
         repoName,
         'deck.json',
         content,
@@ -111,8 +111,8 @@ export default function Dashboard() {
       );
 
       // Reload decks
-      if (user) {
-        const userRepos = await giteaService.getUserRepos(user.username);
+      if (giteaUsername) {
+        const userRepos = await giteaService.getUserRepos(giteaUsername);
         const deckRepos = userRepos.filter(repo => !repo.name.startsWith('.'));
         setDecks(deckRepos);
       }
@@ -138,7 +138,7 @@ export default function Dashboard() {
     setDeletingDeck(deckName);
 
     try {
-      await giteaService.deleteRepo(user!.username, deckName);
+      await giteaService.deleteRepo(giteaUsername!, deckName);
       
       // Remove from local state
       setDecks(decks.filter(d => d.name !== deckName));
@@ -158,7 +158,7 @@ export default function Dashboard() {
 
     try {
       // Load current deck
-      const deck = await giteaService.getDeck(user!.username, deckName);
+      const deck = await giteaService.getDeck(giteaUsername!, deckName);
 
       // Add tag (prevent duplicates)
       if (!deck.metadata.tags) {
@@ -176,7 +176,7 @@ export default function Dashboard() {
 
       // Save with commit message
       await giteaService.updateDeck(
-        user!.username,
+        giteaUsername!,
         deckName,
         deck,
         `Add tag: ${trimmedTag}`
@@ -207,7 +207,7 @@ export default function Dashboard() {
   const handleRemoveTag = async (deckName: string, tagToRemove: string) => {
     try {
       // Load current deck
-      const deck = await giteaService.getDeck(user!.username, deckName);
+      const deck = await giteaService.getDeck(giteaUsername!, deckName);
 
       // Remove tag
       if (deck.metadata.tags) {
@@ -216,7 +216,7 @@ export default function Dashboard() {
 
       // Save with commit message
       await giteaService.updateDeck(
-        user!.username,
+        giteaUsername!,
         deckName,
         deck,
         `Remove tag: ${tagToRemove}`
@@ -247,7 +247,28 @@ export default function Dashboard() {
       <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '30px' }}>
         <h1>🃏 My Decks</h1>
         <div style={{ display: 'flex', gap: '15px', alignItems: 'center' }}>
-          <span style={{ color: '#999' }}>Welcome, <strong>{user?.username}</strong></span>
+          {user && (
+            <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+              {user.summonerIcon && (
+                <img
+                  src={`https://ddragon.leagueoflegends.com/cdn/14.1.1/img/profileicon/${user.summonerIcon}.png`}
+                  alt="Summoner Icon"
+                  style={{
+                    width: '40px',
+                    height: '40px',
+                    borderRadius: '50%',
+                    border: '2px solid #0066cc',
+                  }}
+                />
+              )}
+              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
+                <span style={{ color: '#999', fontSize: '12px' }}>Welcome,</span>
+                <strong style={{ color: '#fff', fontSize: '16px' }}>
+                  {user.gameName}#{user.tagLine}
+                </strong>
+              </div>
+            </div>
+          )}
           <button className="btn btn-secondary" onClick={logout}>Sign Out</button>
         </div>
       </header>

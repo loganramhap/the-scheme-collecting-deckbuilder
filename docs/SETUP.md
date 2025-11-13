@@ -80,9 +80,15 @@ go build -o deck-plugin
 
 4. Access viewer at `http://localhost:8080/viewer/`
 
-## Step 4: Setup Backend API (Required for Account Creation)
+## Step 4: Setup Backend API (Required for Riot Sign-On)
 
-The backend API is **required** if you want users to create accounts through the web interface. Without it, users must be created manually in Gitea.
+The backend API is **required** for Riot Sign-On authentication. Users sign in with their Riot Games accounts, and Gitea accounts are automatically provisioned.
+
+### Quick Setup
+
+For detailed Riot Sign-On configuration, see [RIOT_SIGN_ON_SETUP.md](RIOT_SIGN_ON_SETUP.md).
+
+### Basic Configuration
 
 1. Navigate to API directory:
 ```bash
@@ -99,7 +105,13 @@ npm install
 cp .env.example .env
 ```
 
-4. Get admin token from Gitea:
+4. Configure Riot OAuth:
+   - Visit [Riot Developer Portal](https://developer.riotgames.com/)
+   - Create a new application
+   - Set redirect URI to `http://localhost:5173/auth/callback`
+   - Copy client ID and secret
+
+5. Get Gitea admin token:
    - Log in to Gitea as admin
    - Go to Settings → Applications
    - Click "Generate New Token"
@@ -107,39 +119,66 @@ cp .env.example .env
    - Select all permissions (especially `admin:user`)
    - Copy the generated token
 
-5. Edit `.env`:
-```
-PORT=3001
+6. Set up AWS DynamoDB:
+   - Create two tables: `deckbuilder-users` and `deckbuilder-sessions`
+   - Get AWS access key and secret
+   - See [RIOT_SIGN_ON_SETUP.md](RIOT_SIGN_ON_SETUP.md) for detailed instructions
+
+7. Edit `.env` with all required values:
+```bash
+# Riot OAuth
+RIOT_CLIENT_ID=<your_riot_client_id>
+RIOT_CLIENT_SECRET=<your_riot_client_secret>
+RIOT_REDIRECT_URI=http://localhost:5173/auth/callback
+
+# Session & Security (generate secure random strings)
+SESSION_SECRET=<generate_32_char_random_string>
+ENCRYPTION_KEY=<generate_32_char_random_string>
+
+# AWS
+AWS_REGION=us-east-1
+AWS_ACCESS_KEY_ID=<your_aws_access_key>
+AWS_SECRET_ACCESS_KEY=<your_aws_secret_key>
+DYNAMODB_USERS_TABLE=deckbuilder-users
+DYNAMODB_SESSIONS_TABLE=deckbuilder-sessions
+
+# Gitea
 GITEA_URL=http://localhost:3000
 GITEA_ADMIN_TOKEN=<paste_admin_token_here>
-GITEA_CLIENT_ID=<client_id>
-GITEA_CLIENT_SECRET=<client_secret>
+
+# Other
+PORT=3001
+FRONTEND_URL=http://localhost:5173
 ```
 
-6. Update web app `.env` to include API URL:
+8. Update web app `.env` to include API URL:
 ```bash
 cd ../deckbuilder-webapp
 ```
 
-Add to `.env`:
+Edit `.env`:
 ```
 VITE_API_URL=http://localhost:3001/api
 ```
 
-7. Start API server:
+9. Start API server:
 ```bash
 cd ../deckbuilder-api
 npm run dev
 ```
 
-**Note**: The API server must be running for the "Sign Up" feature to work. If the API is not running, users will see an error when trying to create accounts.
+The server will validate all environment variables on startup. If any are missing or invalid, you'll see detailed error messages.
+
+**Note**: The API server must be running for authentication to work. Users sign in with Riot Games accounts, and Gitea accounts are automatically created for deck storage.
 
 ## Step 5: First Login
 
 1. Open web app at `http://localhost:5173`
-2. Click "Sign in with Gitea"
-3. Authorize the application
-4. Create your first deck repository
+2. Click "Sign in with Riot Games"
+3. Sign in with your Riot account
+4. Authorize the application
+5. A Gitea account will be automatically created
+6. Create your first deck repository
 
 ## Production Deployment
 
